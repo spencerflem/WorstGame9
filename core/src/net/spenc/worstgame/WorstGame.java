@@ -60,7 +60,9 @@ public class WorstGame extends ApplicationAdapter {
         Music music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
         music.setLooping(true);
         music.setVolume(.02f);
-        music.play();
+        if (!System.getenv("DEV").equals("1")) { // example: DEV=1 sh gradlew run
+            music.play();
+        }
     }
 
     @Override
