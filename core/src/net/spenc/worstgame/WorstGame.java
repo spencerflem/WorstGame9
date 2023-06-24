@@ -98,6 +98,8 @@ public class WorstGame extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         img.dispose();
+        map.dispose();
+        renderer.dispose();
     }
 
     private void updatePlayer(float deltaTime) {
