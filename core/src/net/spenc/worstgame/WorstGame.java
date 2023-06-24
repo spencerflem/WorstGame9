@@ -44,15 +44,18 @@ public class WorstGame extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         img = new Texture("tentacle_guy.png");
-        Player.WIDTH = img.getWidth() * PIXEL2TILE;
-        Player.HEIGHT = img.getHeight() * PIXEL2TILE;
+        map = new TmxMapLoader().load("level1.tmx");
+
         camera = new OrthographicCamera();
         camera.position.y = 10;
-        viewport = new FitViewport(30, 20, camera);
-        map = new TmxMapLoader().load("level1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, PIXEL2TILE);
+        viewport = new FitViewport(30, 20, camera);
+
+        Player.WIDTH = img.getWidth() * PIXEL2TILE;
+        Player.HEIGHT = img.getHeight() * PIXEL2TILE;
         player = new Player();
         player.position.set(20, 20);
+
         Music music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
         music.setLooping(true);
         music.play();
