@@ -30,7 +30,7 @@ public class WorstGame extends ApplicationAdapter {
     private Player player;
     private final Pool<Rectangle> rectPool = new Pool<Rectangle>() {
         @Override
-        protected Rectangle newObject () {
+        protected Rectangle newObject() {
             return new Rectangle();
         }
     };
@@ -40,23 +40,23 @@ public class WorstGame extends ApplicationAdapter {
     private static final float TILE2PIXEL = 16f;
     private static final float PIXEL2TILE = 1 / TILE2PIXEL;
 
-	@Override
-	public void create() {
-		batch = new SpriteBatch();
-		img = new Texture("tentacle_guy.png");
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
+        img = new Texture("tentacle_guy.png");
         Player.WIDTH = img.getWidth() * PIXEL2TILE;
         Player.HEIGHT = img.getHeight() * PIXEL2TILE;
-		camera = new OrthographicCamera();
+        camera = new OrthographicCamera();
         camera.position.y = 10;
-		viewport = new FitViewport(30, 20, camera);
+        viewport = new FitViewport(30, 20, camera);
         map = new TmxMapLoader().load("level1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, PIXEL2TILE);
         player = new Player();
         player.position.set(20, 20);
         Music music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
-		music.setLooping(true);
-		music.play();
-	}
+        music.setLooping(true);
+        music.play();
+    }
 
     @Override
     public void render() {
@@ -68,7 +68,8 @@ public class WorstGame extends ApplicationAdapter {
 
         // move the camera
         camera.position.x = player.position.x;
-        // TODO: I kinda like the celeste aesthetic of keeping the level all shown on one screen
+        // TODO: I kinda like the celeste aesthetic of keeping the level all shown on
+        // one screen
         // when we make our own levels, I propose we do that, and remove this line
         camera.update();
 
@@ -94,10 +95,12 @@ public class WorstGame extends ApplicationAdapter {
         img.dispose();
     }
 
-    private void updatePlayer (float deltaTime) {
-        if (deltaTime == 0) return;
+    private void updatePlayer(float deltaTime) {
+        if (deltaTime == 0)
+            return;
 
-        if (deltaTime > 0.1f) deltaTime = 0.1f;
+        if (deltaTime > 0.1f)
+            deltaTime = 0.1f;
 
         player.stateTime += deltaTime;
 
@@ -110,13 +113,15 @@ public class WorstGame extends ApplicationAdapter {
 
         if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A) || isTouched(0, 0.25f)) {
             player.velocity.x = -Player.MAX_VELOCITY;
-            if (player.grounded) player.state = Player.State.Walking;
+            if (player.grounded)
+                player.state = Player.State.Walking;
             player.facesRight = false;
         }
 
         if (Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D) || isTouched(0.25f, 0.5f)) {
             player.velocity.x = Player.MAX_VELOCITY;
-            if (player.grounded) player.state = Player.State.Walking;
+            if (player.grounded)
+                player.state = Player.State.Walking;
             player.facesRight = true;
         }
 
@@ -129,7 +134,8 @@ public class WorstGame extends ApplicationAdapter {
         // If the velocity is < 1, set it to 0 and set state to Standing
         if (Math.abs(player.velocity.x) < 1) {
             player.velocity.x = 0;
-            if (player.grounded) player.state = Player.State.Standing;
+            if (player.grounded)
+                player.state = Player.State.Standing;
         }
 
         // multiply by delta time so we know how far we go
@@ -143,12 +149,12 @@ public class WorstGame extends ApplicationAdapter {
         playerRect.set(player.position.x, player.position.y, Player.WIDTH, Player.HEIGHT);
         int startX, startY, endX, endY;
         if (player.velocity.x > 0) {
-            startX = endX = (int)(player.position.x + Player.WIDTH + player.velocity.x);
+            startX = endX = (int) (player.position.x + Player.WIDTH + player.velocity.x);
         } else {
-            startX = endX = (int)(player.position.x + player.velocity.x);
+            startX = endX = (int) (player.position.x + player.velocity.x);
         }
-        startY = (int)(player.position.y);
-        endY = (int)(player.position.y + Player.HEIGHT);
+        startY = (int) (player.position.y);
+        endY = (int) (player.position.y + Player.HEIGHT);
         getTiles(startX, startY, endX, endY, tiles);
         playerRect.x += player.velocity.x;
         for (Rectangle tile : tiles) {
@@ -162,12 +168,12 @@ public class WorstGame extends ApplicationAdapter {
         // if the koala is moving upwards, check the tiles to the top of its
         // top bounding box edge, otherwise check the ones to the bottom
         if (player.velocity.y > 0) {
-            startY = endY = (int)(player.position.y + Player.HEIGHT + player.velocity.y);
+            startY = endY = (int) (player.position.y + Player.HEIGHT + player.velocity.y);
         } else {
-            startY = endY = (int)(player.position.y + player.velocity.y);
+            startY = endY = (int) (player.position.y + player.velocity.y);
         }
-        startX = (int)(player.position.x);
-        endX = (int)(player.position.x + Player.WIDTH);
+        startX = (int) (player.position.x);
+        endX = (int) (player.position.x + Player.WIDTH);
         getTiles(startX, startY, endX, endY, tiles);
         playerRect.y += player.velocity.y;
         for (Rectangle tile : tiles) {
@@ -178,8 +184,8 @@ public class WorstGame extends ApplicationAdapter {
                 if (player.velocity.y > 0) {
                     player.position.y = tile.y - Player.HEIGHT;
                     // we hit a block jumping upwards, let's destroy it!
-                    TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get("walls");
-                    layer.setCell((int)tile.x, (int)tile.y, null);
+                    TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("walls");
+                    layer.setCell((int) tile.x, (int) tile.y, null);
                 } else {
                     player.position.y = tile.y + tile.height;
                     // if we hit the ground, mark us as grounded so we can jump
@@ -201,11 +207,12 @@ public class WorstGame extends ApplicationAdapter {
         player.velocity.x *= Player.DAMPING;
     }
 
-    private boolean isTouched (float startX, float endX) {
+    private boolean isTouched(float startX, float endX) {
         // Check for touch inputs between startX and endX
-        // startX/endX are given between 0 (left edge of the screen) and 1 (right edge of the screen)
+        // startX/endX are given between 0 (left edge of the screen) and 1 (right edge
+        // of the screen)
         for (int i = 0; i < 2; i++) {
-            float x = Gdx.input.getX(i) / (float)Gdx.graphics.getWidth();
+            float x = Gdx.input.getX(i) / (float) Gdx.graphics.getWidth();
             if (Gdx.input.isTouched(i) && (x >= startX && x <= endX)) {
                 return true;
             }
@@ -213,8 +220,8 @@ public class WorstGame extends ApplicationAdapter {
         return false;
     }
 
-    private void getTiles (int startX, int startY, int endX, int endY, Array<Rectangle> tiles) {
-        TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get("walls");
+    private void getTiles(int startX, int startY, int endX, int endY, Array<Rectangle> tiles) {
+        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("walls");
         rectPool.freeAll(tiles);
         tiles.clear();
         for (int y = startY; y <= endY; y++) {
