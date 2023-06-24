@@ -2,28 +2,44 @@ package net.spenc.worstgame;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class WorstGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+	private SpriteBatch batch;
+	private Texture img;
+	private Viewport viewport;
+	private Camera camera;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+		camera = new OrthographicCamera();
+		viewport = new FitViewport(800, 480, camera);
 	}
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
+		ScreenUtils.clear(0, 0, 0, 1);
+		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(img, Gdx.input.getX() - img.getWidth()/2,  Gdx.graphics.getHeight() -Gdx.input.getY() - img.getHeight()/2);
+		Vector2 mousePos = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+		batch.draw(img, mousePos.x - Math.round(img.getWidth()/2.0), mousePos.y - Math.round(img.getHeight()/2.0));
 		batch.end();
 	}
-	
+
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();
