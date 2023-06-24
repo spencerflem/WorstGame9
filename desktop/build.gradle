@@ -18,7 +18,7 @@ else {
 }
 
 sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
-mainClassName = 'net.spenc.worst.desktop.DesktopLauncher'
+mainClassName = 'net.spenc.worstgame.desktop.DesktopLauncher'
 eclipse.project.name = appName + '-desktop'
 sourceCompatibility = 17
 
