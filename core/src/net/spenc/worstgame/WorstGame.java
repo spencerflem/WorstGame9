@@ -20,9 +20,9 @@ public class WorstGame extends ApplicationAdapter {
 	private Camera camera;
 
 	@Override
-	public void create () {
+	public void create() {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		img = new Texture("tentacle_guy.png");
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(800, 480, camera);
 		music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
@@ -31,12 +31,12 @@ public class WorstGame extends ApplicationAdapter {
 	}
 
 	@Override
-	public void render () {
+	public void render() {
 		ScreenUtils.clear(0, 0, 0, 1);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		Vector2 mousePos = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
-		batch.draw(img, mousePos.x - Math.round(img.getWidth()/2.0), mousePos.y - Math.round(img.getHeight()/2.0));
+		batch.draw(img, mousePos.x - Math.round(img.getWidth() / 2.0), mousePos.y - Math.round(img.getHeight() / 2.0));
 		batch.end();
 	}
 
@@ -46,7 +46,7 @@ public class WorstGame extends ApplicationAdapter {
 	}
 
 	@Override
-	public void dispose () {
+	public void dispose() {
 		batch.dispose();
 		img.dispose();
 	}
