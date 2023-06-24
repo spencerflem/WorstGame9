@@ -1,4 +1,4 @@
-package net.spenc.worstgame;
+package net.spenc.worst;
 
 import com.badlogic.gdx.math.Vector2;
 

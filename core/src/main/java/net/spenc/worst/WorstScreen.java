@@ -1,13 +1,12 @@
-package net.spenc.worstgame;
+package net.spenc.worst;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -20,8 +19,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class WorstGame extends ApplicationAdapter {
-    private SpriteBatch batch;
+/** First screen of the application. Displayed after the application is created. */
+public class WorstScreen implements Screen {
     private Texture img;
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -29,7 +28,7 @@ public class WorstGame extends ApplicationAdapter {
     private OrthogonalTiledMapRenderer renderer;
     private Player player;
 
-    private final Pool<Rectangle> rectPool = new Pool<Rectangle>() {
+    private final Pool<Rectangle> rectPool = new Pool<>() {
         @Override
         protected Rectangle newObject() {
             return new Rectangle();
@@ -42,8 +41,7 @@ public class WorstGame extends ApplicationAdapter {
     private static final float PIXEL2TILE = 1 / TILE2PIXEL;
 
     @Override
-    public void create() {
-        batch = new SpriteBatch();
+    public void show() {
         img = new Texture("tentacle_guy.png");
         map = new TmxMapLoader().load("level1.tmx");
 
@@ -66,12 +64,11 @@ public class WorstGame extends ApplicationAdapter {
     }
 
     @Override
-    public void render() {
+    public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
 
         // update positions
-        float deltaTime = Gdx.graphics.getDeltaTime();
-        updatePlayer(deltaTime);
+        updatePlayer(delta);
 
         // move the camera
         camera.position.x = player.position.x;
@@ -97,11 +94,26 @@ public class WorstGame extends ApplicationAdapter {
     }
 
     @Override
+    public void pause() {
+        // Invoked when your application is paused.
+    }
+
+    @Override
+    public void resume() {
+        // Invoked when your application is resumed after pause.
+    }
+
+    @Override
+    public void hide() {
+        // This method is called when another screen replaces this one.
+    }
+
+    @Override
     public void dispose() {
-        batch.dispose();
         img.dispose();
         map.dispose();
         renderer.dispose();
+        // TODO: I think I'm missing something here
     }
 
     private void updatePlayer(float deltaTime) {
@@ -114,20 +126,20 @@ public class WorstGame extends ApplicationAdapter {
         player.stateTime += deltaTime;
 
         // check input and apply to velocity & state
-        if ((Gdx.input.isKeyPressed(Keys.SPACE) || isTouched(0.5f, 1)) && player.grounded) {
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || isTouched(0.5f, 1)) && player.grounded) {
             player.velocity.y += Player.JUMP_VELOCITY;
             player.state = Player.State.Jumping;
             player.grounded = false;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A) || isTouched(0, 0.25f)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)) {
             player.velocity.x = -Player.MAX_VELOCITY;
             if (player.grounded)
                 player.state = Player.State.Walking;
             player.facesRight = false;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D) || isTouched(0.25f, 0.5f)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D) || isTouched(0.25f, 0.5f)) {
             player.velocity.x = Player.MAX_VELOCITY;
             if (player.grounded)
                 player.state = Player.State.Walking;
