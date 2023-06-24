@@ -31,18 +31,12 @@ jobs:
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
           arguments: desktop:jpackageImage
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Package
-          path: desktop/build/libs
-      - name: Zip Folder
-        run: powershell Compress-Archive desktop/build/jpackage desktop/build/jpackageZip/worstgame9.zip
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }} 
-          asset_path: desktop/build/jpackageZip/worstgame9.zip
+          asset_path: desktop/build/jpackage/WorstGame9/WorstGame9.exe
           asset_name: WorstGame9
           asset_content_type: application/octet-stream
