@@ -14,7 +14,7 @@
  */
 //Note, the above license and copyright applies to this file only.
 
-package net.spenc.worst.desktop;
+package net.spenc.worstgame.desktop;
 
 import org.lwjgl.system.macosx.LibC;
 

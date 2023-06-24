@@ -1,4 +1,4 @@
-package net.spenc.worst;
+package net.spenc.worstgame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
