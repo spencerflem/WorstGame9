@@ -28,6 +28,7 @@ public class WorstGame extends ApplicationAdapter {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private Player player;
+
     private final Pool<Rectangle> rectPool = new Pool<Rectangle>() {
         @Override
         protected Rectangle newObject() {
