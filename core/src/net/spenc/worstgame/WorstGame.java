@@ -2,6 +2,7 @@ package net.spenc.worstgame;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class WorstGame extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Texture img;
+	private Music music;
 	private Viewport viewport;
 	private Camera camera;
 
@@ -23,6 +25,9 @@ public class WorstGame extends ApplicationAdapter {
 		img = new Texture("badlogic.jpg");
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(800, 480, camera);
+		music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
+		music.setLooping(true);
+		music.play();
 	}
 
 	@Override
