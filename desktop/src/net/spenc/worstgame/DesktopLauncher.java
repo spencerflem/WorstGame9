@@ -9,6 +9,8 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("Worst Game Ever");
-		new Lwjgl3Application(new WorstGame(), config);
+		while (true) {
+			new Lwjgl3Application(new WorstGame(), config);
+		}
 	}
 }
