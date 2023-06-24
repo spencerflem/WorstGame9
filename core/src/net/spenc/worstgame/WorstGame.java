@@ -20,7 +20,7 @@ public class WorstGame extends ApplicationAdapter {
 	public void render () {
 		ScreenUtils.clear(1, 0, 0, 1);
 		batch.begin();
-		batch.draw(img, Gdx.input.getX(), -Gdx.input.getY());
+		batch.draw(img, Gdx.input.getX() - img.getWidth()/2,  Gdx.graphics.getHeight() -Gdx.input.getY() - img.getHeight()/2);
 		batch.end();
 	}
 	
