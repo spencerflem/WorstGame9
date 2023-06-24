@@ -19,7 +19,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-/** First screen of the application. Displayed after the application is created. */
+/**
+ * First screen of the application. Displayed after the application is created.
+ */
 public class WorstScreen implements Screen {
     private Texture img;
     private Viewport viewport;
@@ -51,8 +53,8 @@ public class WorstScreen implements Screen {
         viewport = new FitViewport(30, 20, camera);
 
         player = new Player();
-        player.WIDTH = img.getWidth() * PIXEL2TILE;
-        player.HEIGHT = img.getHeight() * PIXEL2TILE;
+        player.width = img.getWidth() * PIXEL2TILE;
+        player.height = img.getHeight() * PIXEL2TILE;
         player.texture = img;
         player.position.set(20, 20);
 
@@ -168,15 +170,15 @@ public class WorstScreen implements Screen {
         // if the koala is moving right, check the tiles to the right of it's
         // right bounding box edge, otherwise check the ones to the left
         Rectangle playerRect = rectPool.obtain();
-        playerRect.set(player.position.x, player.position.y, player.WIDTH, player.HEIGHT);
+        playerRect.set(player.position.x, player.position.y, player.width, player.height);
         int startX, startY, endX, endY;
         if (player.velocity.x > 0) {
-            startX = endX = (int) (player.position.x + player.WIDTH + player.velocity.x);
+            startX = endX = (int) (player.position.x + player.width + player.velocity.x);
         } else {
             startX = endX = (int) (player.position.x + player.velocity.x);
         }
         startY = (int) (player.position.y);
-        endY = (int) (player.position.y + player.HEIGHT);
+        endY = (int) (player.position.y + player.height);
         getTiles(startX, startY, endX, endY, tiles);
         playerRect.x += player.velocity.x;
         for (Rectangle tile : tiles) {
@@ -190,12 +192,12 @@ public class WorstScreen implements Screen {
         // if the koala is moving upwards, check the tiles to the top of its
         // top bounding box edge, otherwise check the ones to the bottom
         if (player.velocity.y > 0) {
-            startY = endY = (int) (player.position.y + player.HEIGHT + player.velocity.y);
+            startY = endY = (int) (player.position.y + player.height + player.velocity.y);
         } else {
             startY = endY = (int) (player.position.y + player.velocity.y);
         }
         startX = (int) (player.position.x);
-        endX = (int) (player.position.x + player.WIDTH);
+        endX = (int) (player.position.x + player.width);
         getTiles(startX, startY, endX, endY, tiles);
         playerRect.y += player.velocity.y;
         for (Rectangle tile : tiles) {
@@ -204,7 +206,7 @@ public class WorstScreen implements Screen {
                 // so it is just below/above the tile we collided with
                 // this removes bouncing :)
                 if (player.velocity.y > 0) {
-                    player.position.y = tile.y - player.HEIGHT;
+                    player.position.y = tile.y - player.height;
                     // we hit a block jumping upwards, let's destroy it!
                     TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("walls");
                     layer.setCell((int) tile.x, (int) tile.y, null);
