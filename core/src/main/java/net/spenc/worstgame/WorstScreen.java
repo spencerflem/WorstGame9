@@ -53,6 +53,7 @@ public class WorstScreen extends ScreenAdapter {
     public void show() {
         if (game.type == WorstGame.GameType.HOST) {
             game.popupWindowCreator.newPopup(WorstGame.GameType.MAIN);
+            return;
         }
         playerImg = new Texture("tentacle_guy.png");
         disposeStack.push(playerImg::dispose);
@@ -124,6 +125,10 @@ public class WorstScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if (game.type == WorstGame.GameType.HOST) {
+            return;
+        }
+
         if (game.type == WorstGame.GameType.OVERLAY) {
             ScreenUtils.clear(0, 0, 0, 0);
         } else {
@@ -167,6 +172,10 @@ public class WorstScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
+        if (game.type == WorstGame.GameType.HOST) {
+            return;
+        }
+
         render(Gdx.graphics.getDeltaTime());
         viewport.update(width, height);
     }
