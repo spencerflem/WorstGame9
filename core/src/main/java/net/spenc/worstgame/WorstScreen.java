@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -24,12 +25,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class WorstScreen extends ScreenAdapter {
     private final WorstGame game;
-    private Texture img;
+    private Texture playerImg;
+    private Texture biblImg;
     private Viewport viewport;
     private OrthographicCamera camera;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private Player player;
+    private Entity bibl;
 
     private final Pool<Rectangle> rectPool = new Pool<>() {
         @Override
@@ -49,7 +52,8 @@ public class WorstScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        img = new Texture("tentacle_guy.png");
+        playerImg = new Texture("tentacle_guy.png");
+        biblImg = new Texture("bibl.png");
         map = new TmxMapLoader().load("level1.tmx");
 
         camera = new OrthographicCamera();
@@ -57,11 +61,17 @@ public class WorstScreen extends ScreenAdapter {
         renderer = new OrthogonalTiledMapRenderer(map, PIXEL2TILE);
         viewport = new FitViewport(30, 20, camera);
 
-        player = new Player();
-        player.width = img.getWidth() * PIXEL2TILE;
-        player.height = img.getHeight() * PIXEL2TILE;
-        player.texture = img;
-        player.position.set(20, 20);
+        player = (Player) new Player()
+            .WithPosition(new Vector2(20, 20))
+            .WithTexture(playerImg)
+            .WithSize(playerImg.getWidth() * PIXEL2TILE, playerImg.getHeight() * PIXEL2TILE);
+
+        bibl = new Entity()
+            
+            .WithPosition(new Vector2(32, 2))
+            .WithTexture(biblImg)
+            .WithSize(biblImg.getWidth() * PIXEL2TILE, biblImg.getHeight() * PIXEL2TILE);
+        
 
         Music music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
         music.setLooping(true);
@@ -80,6 +90,7 @@ public class WorstScreen extends ScreenAdapter {
 
         // move the camera
         camera.position.x = player.position.x;
+
         // TODO: I kinda like the celeste aesthetic of keeping the level all shown on
         // one screen
         // when we make our own levels, I propose we do that, and remove this line
@@ -92,6 +103,7 @@ public class WorstScreen extends ScreenAdapter {
         // draw the player
         Batch batch = renderer.getBatch();
         batch.begin();
+        bibl.draw(batch);
         player.draw(batch);
         batch.end();
 
@@ -113,7 +125,7 @@ public class WorstScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        img.dispose();
+        playerImg.dispose();
         map.dispose();
         renderer.dispose();
         // TODO: I think I'm missing something here

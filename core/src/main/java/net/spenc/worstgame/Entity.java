@@ -11,6 +11,22 @@ public class Entity {
     public final Vector2 position = new Vector2();
     public Texture texture;
 
+    public Entity WithTexture(Texture texture) {
+        this.texture = texture;
+        return this;
+    }
+
+    public Entity WithPosition(Vector2 position) {
+        this.position.set(position.x, position.y);
+        return this;
+    }
+
+    public Entity WithSize(float width, float height) {
+        this.width = width;
+        this.height = height;
+        return this;
+    }
+
     public void draw(Batch batch) {
         batch.draw(texture, position.x, position.y, width, height);
     }
