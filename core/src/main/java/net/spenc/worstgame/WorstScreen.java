@@ -1,7 +1,7 @@
 package net.spenc.worstgame;
 
 import java.util.ArrayList;
-// import java.util.Stack;
+import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -37,7 +37,8 @@ public class WorstScreen extends ScreenAdapter {
     private static final float TILE2PIXEL = 16f;
     private static final float PIXEL2TILE = 1 / TILE2PIXEL;
 
-    // private Stack<AutoCloseable> disposables = new Stack<AutoCloseable>();
+    // stack for disposing libGDX (OpenGL) resources
+    private Stack<Runnable> disposeStack = new Stack<Runnable>();
 
     private int frame = 0;
 
@@ -51,13 +52,23 @@ public class WorstScreen extends ScreenAdapter {
             game.popupWindowCreator.newPopup(WorstGame.GameType.MAIN);
         }
         playerImg = new Texture("tentacle_guy.png");
+        disposeStack.push(playerImg::dispose);
+
         biblImg = new Texture("bibl.png");
+        disposeStack.push(biblImg::dispose);
+
         doNUTImg = new Texture("doNUT.png");
+        disposeStack.push(doNUTImg::dispose);
+
         map = new TmxMapLoader().load("level1.tmx");
+        disposeStack.push(map::dispose);
 
         MainCamera = new OrthographicCamera();
         MainCamera.position.y = 10;
+
         renderer = new OrthogonalTiledMapRenderer(map, PIXEL2TILE);
+        disposeStack.push(renderer::dispose);
+
         viewport = new FitViewport(30, 20, MainCamera);
 
         Player player = (Player) new Player()
@@ -96,6 +107,9 @@ public class WorstScreen extends ScreenAdapter {
         entities.sort((a, b) -> a.layer - b.layer);
 
         music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
+        disposeStack.push(music::stop);
+        disposeStack.push(music::dispose);
+
         music.setLooping(true);
         music.setVolume(.02f);
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
@@ -108,9 +122,6 @@ public class WorstScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         if (game.type == WorstGame.GameType.MAIN) {
-            if (frame % 50 == 0) {
-                Gdx.app.log("adas", "frame " + frame);
-            }
             frame++;
         }
 
@@ -155,9 +166,6 @@ public class WorstScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
-        if (game.type == WorstGame.GameType.MAIN) {
-            Gdx.app.log("adas", "frame " + frame);
-        }
         render(Gdx.graphics.getDeltaTime());
         viewport.update(width, height);
     }
@@ -167,11 +175,10 @@ public class WorstScreen extends ScreenAdapter {
         if (game.type == WorstGame.GameType.MAIN) {
             Gdx.app.log("adas", "dispose " + frame);
         }
-        playerImg.dispose();
-        map.dispose();
-        renderer.dispose();
-        music.stop();
-        music.dispose();
-        // TODO: I think I'm missing something here
+        // log the number of items being disposed
+        Gdx.app.log("adas", "dispose stack size: " + disposeStack.size());
+        while (!disposeStack.empty()) {
+            disposeStack.pop().run();
+        }
     }
 }
