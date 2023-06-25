@@ -28,6 +28,7 @@ public class WorstScreen extends ScreenAdapter {
     private Texture biblImg;
     private Texture doNUTImg;
     private Texture spikeImg;
+    private Texture springImg;
     private Viewport viewport;
     private Music music;
     public static OrthographicCamera MainCamera; // this is dumb, fix later
@@ -66,6 +67,9 @@ public class WorstScreen extends ScreenAdapter {
 
         spikeImg = new Texture("spike.png");
         disposeStack.push(spikeImg::dispose);
+
+        springImg = new Texture("spring.png");
+        disposeStack.push(springImg::dispose);
 
         map = new TmxMapLoader().load("level1.tmx");
         disposeStack.push(map::dispose);
@@ -118,6 +122,14 @@ public class WorstScreen extends ScreenAdapter {
 
             entities.add(spike);
         }
+
+        Spring spring = (Spring) new Spring()
+                .WithSpringiness(100)
+                .WithImpulseDir(Vector2.Y)
+                .WithSpawnPosition(new Vector2(10, 2))
+                .WithSize(1, 1)
+                .WithTexture(springImg);
+        entities.add(spring);
 
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
