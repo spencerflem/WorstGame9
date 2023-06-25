@@ -138,6 +138,7 @@ public class WorstScreen extends ScreenAdapter {
             // entity logic
             for (Entity entity : entities) {
                 entity.update(TIMESTEP);
+                entity.updateCollsions(entities);
             }
         }
 

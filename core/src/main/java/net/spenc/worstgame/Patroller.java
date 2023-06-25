@@ -2,7 +2,7 @@ package net.spenc.worstgame;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class Patroller extends Entity{
+public class Patroller extends Entity {
     public Vector2[] waypoints;
     public int currentWaypoint = 0;
     public float speed = 1f;
@@ -17,6 +17,7 @@ public class Patroller extends Entity{
         return this;
     }
 
+    @Override
     public void update(float delta) {
         Vector2 target = waypoints[currentWaypoint];
         Vector2 direction = target.cpy().sub(position);
