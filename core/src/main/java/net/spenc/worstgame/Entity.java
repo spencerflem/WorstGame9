@@ -8,6 +8,8 @@ public class Entity {
     public float width = 1;
     public float height = 1;
 
+    public int layer = 0;
+
     public final Vector2 position = new Vector2();
     public Texture texture;
 
@@ -27,7 +29,15 @@ public class Entity {
         return this;
     }
 
+    public Entity WithLayer(int layer) {
+        this.layer = layer;
+        return this;
+    }
+
     public void draw(Batch batch) {
         batch.draw(texture, position.x, position.y, width, height);
+    }
+
+    public void update(float delta) {
     }
 }
