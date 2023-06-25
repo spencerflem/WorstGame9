@@ -129,8 +129,10 @@ public class WorstScreen extends ScreenAdapter {
         }
 
         // entity logic
+
         for (Entity entity : entities) {
             entity.update(delta);
+            entity.updateCollsions(entities);
         }
 
         MainCamera.update();
