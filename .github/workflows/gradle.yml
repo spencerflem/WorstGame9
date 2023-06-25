@@ -1,24 +1,13 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
-
+name: Release On Tag
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "v*.*.*"
 permissions:
-  contents: read
-  
-
+  contents: read|write
 jobs:
   build:
-
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -32,12 +21,7 @@ jobs:
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
           arguments: desktop:jpackageZip
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Craft Release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }} 
-          asset_path: ./desktop/build/jpackageZip/worstgame9.zip
-          asset_name: worstgame9.zip
-          asset_content_type: application/octet-stream
+          files: desktop/build/jpackageZip/worstgame9.zip
