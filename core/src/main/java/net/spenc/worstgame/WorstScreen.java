@@ -32,7 +32,7 @@ public class WorstScreen extends ScreenAdapter {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private Player player;
-    private Entity bibl;
+    private Patroller bibl;
 
     private final Pool<Rectangle> rectPool = new Pool<>() {
         @Override
@@ -66,8 +66,12 @@ public class WorstScreen extends ScreenAdapter {
             .WithTexture(playerImg)
             .WithSize(playerImg.getWidth() * PIXEL2TILE, playerImg.getHeight() * PIXEL2TILE);
 
-        bibl = new Entity()
-            
+        bibl = (Patroller) new Patroller()
+            .WithSpeed(5)
+            .WithWaypoints(new Vector2[] {
+                new Vector2(30, 2),
+                new Vector2(36, 2),
+            })
             .WithPosition(new Vector2(32, 2))
             .WithTexture(biblImg)
             .WithSize(biblImg.getWidth() * PIXEL2TILE, biblImg.getHeight() * PIXEL2TILE);
@@ -95,6 +99,8 @@ public class WorstScreen extends ScreenAdapter {
         // one screen
         // when we make our own levels, I propose we do that, and remove this line
         camera.update();
+
+        bibl.update(delta);
 
         // draw the map
         renderer.setView(camera);
