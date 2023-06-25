@@ -100,9 +100,14 @@ tasks.register('dist') {
   dependsOn['jar']
 }
 
-task jpackageImageZip(type: Zip) {
-  dependsOn['jpackageImage']
+def zip = task zipJpackageDir(type: Zip) {
   archiveFileName = "worstgame9.zip"
   destinationDirectory = file("$buildDir/jpackageZip")
   from "$buildDir/jpackage/WorstGame9"
+}
+
+zip.configure { dependsOn('jpackageImage') }
+
+tasks.register('jpackageImageZip') {
+  dependsOn zip
 }
