@@ -73,15 +73,15 @@ public class Entity {
     }
 
     // on collision events
-    private void onCollision(Entity other) {
+    public void onCollision(Entity other) {
         // Gdx.app.log("Entity", "collision with " + other);
     }
 
-    private void onCollisionEnter(Entity other) {
+    public void onCollisionEnter(Entity other) {
         // Gdx.app.log("Entity", "collision enter with " + other);
     }
 
-    private void onCollisionExit(Entity other) {
+    public void onCollisionExit(Entity other) {
         // Gdx.app.log("Entity", "collision exit with " + other);
     }
 

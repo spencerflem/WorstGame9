@@ -37,6 +37,7 @@ public class Player extends Entity {
 
     // END @TODO
 
+    @Override
     public void update(float deltaTime) {
         if (deltaTime == 0)
             return;
@@ -178,6 +179,14 @@ public class Player extends Entity {
                     tiles.add(rect);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onCollisionEnter(Entity other) {
+        if (other instanceof Patroller) {
+            // log
+            Gdx.app.log("Player", "Collided with patroller");
         }
     }
 
