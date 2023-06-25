@@ -17,6 +17,7 @@ public class Entity {
     public int layer = 0;
 
     public final Vector2 position = new Vector2();
+    public final Vector2 spawnPosition = new Vector2();
     public Texture texture;
 
     private HashSet<UUID> collidingWith = new HashSet<UUID>();
@@ -26,8 +27,10 @@ public class Entity {
         return this;
     }
 
-    public Entity WithPosition(Vector2 position) {
+    /** sets the spawn position of the entity, (re)-starting position */
+    public Entity WithSpawnPosition(Vector2 position) {
         this.position.set(position.x, position.y);
+        this.spawnPosition.set(position.x, position.y);
         return this;
     }
 

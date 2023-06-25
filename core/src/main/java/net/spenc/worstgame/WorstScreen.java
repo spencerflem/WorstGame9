@@ -75,7 +75,7 @@ public class WorstScreen extends ScreenAdapter {
         viewport = new FitViewport(30, 20, MainCamera);
 
         Player player = (Player) new Player()
-                .WithPosition(new Vector2(20, 20))
+                .WithSpawnPosition(new Vector2(20, 20))
                 .WithTexture(playerImg)
                 .WithSize(playerImg.getWidth() * PIXEL2TILE, playerImg.getHeight() * PIXEL2TILE)
                 .WithLayer(1);
@@ -88,7 +88,7 @@ public class WorstScreen extends ScreenAdapter {
                         new Vector2(30, 2),
                         new Vector2(36, 2),
                 })
-                .WithPosition(new Vector2(32, 2))
+                .WithSpawnPosition(new Vector2(32, 2))
                 .WithTexture(biblImg)
                 .WithSize(biblImg.getWidth() * PIXEL2TILE, biblImg.getHeight() * PIXEL2TILE);
 
@@ -100,7 +100,7 @@ public class WorstScreen extends ScreenAdapter {
                         new Vector2(46, 5),
                         new Vector2(46, 12),
                 })
-                .WithPosition(new Vector2(46, 4))
+                .WithSpawnPosition(new Vector2(46, 4))
                 .WithTexture(doNUTImg)
                 .WithSize(doNUTImg.getWidth() * PIXEL2TILE, doNUTImg.getHeight() * PIXEL2TILE);
 

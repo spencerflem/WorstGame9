@@ -185,8 +185,8 @@ public class Player extends Entity {
     @Override
     public void onCollisionEnter(Entity other) {
         if (other instanceof Patroller) {
-            // log
-            Gdx.app.log("Player", "Collided with patroller");
+            this.position.x = this.spawnPosition.x;
+            this.position.y = this.spawnPosition.y;
         }
     }
 
