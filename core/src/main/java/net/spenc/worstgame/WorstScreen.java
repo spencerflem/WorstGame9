@@ -39,12 +39,17 @@ public class WorstScreen extends ScreenAdapter {
 
     // private Stack<AutoCloseable> disposables = new Stack<AutoCloseable>();
 
+    private int frame = 0;
+
     public WorstScreen(WorstGame game) {
         this.game = game;
     }
 
     @Override
     public void show() {
+        if (game.type == WorstGame.GameType.HOST) {
+            game.popupWindowCreator.newPopup(WorstGame.GameType.MAIN);
+        }
         playerImg = new Texture("tentacle_guy.png");
         biblImg = new Texture("bibl.png");
         doNUTImg = new Texture("doNUT.png");
@@ -94,13 +99,26 @@ public class WorstScreen extends ScreenAdapter {
         music.setLooping(true);
         music.setVolume(.02f);
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
-            music.play();
+            if (game.type == WorstGame.GameType.MAIN) {
+                music.play();
+            }
         }
     }
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0, 0, 0);
+        if (game.type == WorstGame.GameType.MAIN) {
+            if (frame % 50 == 0) {
+                Gdx.app.log("adas", "frame " + frame);
+            }
+            frame++;
+        }
+
+        if (game.type == WorstGame.GameType.OVERLAY) {
+            ScreenUtils.clear(0, 0, 0, 0);
+        } else {
+            ScreenUtils.clear(0.7f, 0.7f, 1, 1);
+        }
 
         // entity logic
         for (Entity entity : entities) {
@@ -126,22 +144,29 @@ public class WorstScreen extends ScreenAdapter {
 
         // if 'P' just pressed - make a pop-up
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            game.popupWindowCreator.newPopup();
+            game.popupWindowCreator.newPopup(WorstGame.GameType.POPUP);
         }
 
         // if 'O' just pressed - make an overlay pop-up
         if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
-            game.popupWindowCreator.newPopup(true);
+            game.popupWindowCreator.newPopup(WorstGame.GameType.OVERLAY, true);
         }
     }
 
     @Override
     public void resize(int width, int height) {
+        if (game.type == WorstGame.GameType.MAIN) {
+            Gdx.app.log("adas", "frame " + frame);
+        }
+        render(Gdx.graphics.getDeltaTime());
         viewport.update(width, height);
     }
 
     @Override
     public void dispose() {
+        if (game.type == WorstGame.GameType.MAIN) {
+            Gdx.app.log("adas", "dispose " + frame);
+        }
         playerImg.dispose();
         map.dispose();
         renderer.dispose();

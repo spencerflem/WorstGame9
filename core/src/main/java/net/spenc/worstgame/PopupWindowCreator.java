@@ -1,7 +1,7 @@
 package net.spenc.worstgame;
 
 public interface PopupWindowCreator {
-    void newPopup();
+    void newPopup(WorstGame.GameType type);
 
     /**
      * Creates a new popup
@@ -9,5 +9,5 @@ public interface PopupWindowCreator {
      * For the special effect of the character falling off the edge of a window
      * Idealy, this would also not have an icon.
      */
-    void newPopup(boolean overlay);
+    void newPopup(WorstGame.GameType type, boolean overlay);
 }

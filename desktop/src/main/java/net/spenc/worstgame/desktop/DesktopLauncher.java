@@ -9,11 +9,11 @@ import net.spenc.worstgame.WorstGame;
 public class DesktopLauncher {
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
-        createApplication();
+        var app = createApplication();
     }
 
     private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new WorstGame(new DesktopPopupWindowCreator()), getDefaultConfiguration());
+        return new Lwjgl3Application(new WorstGame(new DesktopPopupWindowCreator(), WorstGame.GameType.HOST), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
@@ -28,6 +28,7 @@ public class DesktopLauncher {
         configuration.setWindowedMode(640, 480);
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
         configuration.setTransparentFramebuffer(true);
+        configuration.setInitialVisible(false);
         return configuration;
     }
 }

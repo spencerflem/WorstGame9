@@ -17,13 +17,13 @@ public class DesktopPopupWindowCreator implements PopupWindowCreator {
     //StartupHelper.startNewJvm("net.spenc.worstgame.desktop.DesktopLauncher");
 
     @Override
-    public void newPopup() {
-        newPopup(false);
+    public void newPopup(WorstGame.GameType type) {
+        newPopup(type, false);
     }
 
     @Override
-    public void newPopup(boolean overlay) {
-        var window = ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(this), overlay? getOverlayConfiguration() : getDefaultConfiguration());
+    public void newPopup(WorstGame.GameType type, boolean overlay) {
+        var window = ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(this, type), overlay? getOverlayConfiguration() : getDefaultConfiguration());
         window.setWindowListener(new Lwjgl3WindowListener() {
             @Override
             public void created(Lwjgl3Window window) {
@@ -31,7 +31,6 @@ public class DesktopPopupWindowCreator implements PopupWindowCreator {
                     GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_MOUSE_PASSTHROUGH, GLFW.GLFW_TRUE);
                     GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FLOATING, GLFW.GLFW_TRUE);
                 }
-//                GLFW.glfwHideWindow(window.getWindowHandle());
             }
 
             @Override
