@@ -27,6 +27,7 @@ public class WorstScreen extends ScreenAdapter {
     private Texture playerImg;
     private Texture biblImg;
     private Texture doNUTImg;
+    private Texture spikeImg;
     private Viewport viewport;
     private Music music;
     public static OrthographicCamera MainCamera; // this is dumb, fix later
@@ -43,7 +44,6 @@ public class WorstScreen extends ScreenAdapter {
     private static final float TIMESTEP = 0.01f;
     private static final float MAX_ACCUMULATOR = 0.1f;
     private double accumulator = 0.0;
-
 
     public WorstScreen(WorstGame game) {
         this.game = game;
@@ -63,6 +63,9 @@ public class WorstScreen extends ScreenAdapter {
 
         doNUTImg = new Texture("doNUT.png");
         disposeStack.push(doNUTImg::dispose);
+
+        spikeImg = new Texture("spike.png");
+        disposeStack.push(spikeImg::dispose);
 
         map = new TmxMapLoader().load("level1.tmx");
         disposeStack.push(map::dispose);
@@ -106,6 +109,15 @@ public class WorstScreen extends ScreenAdapter {
                 .WithSize(doNUTImg.getWidth() * PIXEL2TILE, doNUTImg.getHeight() * PIXEL2TILE);
 
         entities.add(doNUT);
+
+        for (int i = 0; i < 3; i++) {
+            Entity spike = new Entity()
+                    .WithSpawnPosition(new Vector2(51 + i, 10))
+                    .WithSize(1, 1)
+                    .WithTexture(spikeImg);
+
+            entities.add(spike);
+        }
 
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
