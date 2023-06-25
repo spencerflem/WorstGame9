@@ -35,6 +35,7 @@ public class WorstScreen extends ScreenAdapter {
     private Player player;
     private Patroller bibl;
     private Patroller doNUT;
+    private Music music;
 
     private final Pool<Rectangle> rectPool = new Pool<>() {
         @Override
@@ -88,9 +89,9 @@ public class WorstScreen extends ScreenAdapter {
             .WithPosition(new Vector2(46, 4))
             .WithTexture(doNUTImg)
             .WithSize(doNUTImg.getWidth() * PIXEL2TILE, doNUTImg.getHeight() * PIXEL2TILE);
-        
 
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
         music.setLooping(true);
         music.setVolume(.02f);
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
@@ -149,6 +150,8 @@ public class WorstScreen extends ScreenAdapter {
         playerImg.dispose();
         map.dispose();
         renderer.dispose();
+        music.stop();
+        music.dispose();
         // TODO: I think I'm missing something here
     }
 
