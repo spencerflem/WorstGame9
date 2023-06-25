@@ -2,6 +2,7 @@ package net.spenc.worstgame.desktop;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+
 import net.spenc.worstgame.WorstGame;
 
 /** Launches the desktop (LWJGL3) application. */
@@ -12,7 +13,7 @@ public class DesktopLauncher {
     }
 
     private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new WorstGame(), getDefaultConfiguration());
+        return new Lwjgl3Application(new WorstGame(new DesktopPopupWindowCreator()), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
@@ -26,6 +27,7 @@ public class DesktopLauncher {
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
         configuration.setWindowedMode(640, 480);
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+        configuration.setTransparentFramebuffer(true);
         return configuration;
     }
 }

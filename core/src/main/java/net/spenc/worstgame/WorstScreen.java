@@ -2,7 +2,7 @@ package net.spenc.worstgame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,7 +22,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * First screen of the application. Displayed after the application is created.
  */
-public class WorstScreen implements Screen {
+public class WorstScreen extends ScreenAdapter {
+    private final WorstGame game;
     private Texture img;
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -41,6 +42,10 @@ public class WorstScreen implements Screen {
     private static final float GRAVITY = -2.5f;
     private static final float TILE2PIXEL = 16f;
     private static final float PIXEL2TILE = 1 / TILE2PIXEL;
+
+    public WorstScreen(WorstGame game) {
+        this.game = game;
+    }
 
     @Override
     public void show() {
@@ -68,7 +73,7 @@ public class WorstScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0, 0, 1);
+        ScreenUtils.clear(0, 0, 0, 0);
 
         // update positions
         updatePlayer(delta);
@@ -89,26 +94,21 @@ public class WorstScreen implements Screen {
         batch.begin();
         player.draw(batch);
         batch.end();
+
+        // if 'P' just pressed - make a pop-up
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            game.popupWindowCreator.newPopup();
+        }
+
+        // if 'O' just pressed - make an overlay pop-up
+        if(Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+            game.popupWindowCreator.newPopup(true);
+        }
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
-    }
-
-    @Override
-    public void pause() {
-        // Invoked when your application is paused.
-    }
-
-    @Override
-    public void resume() {
-        // Invoked when your application is resumed after pause.
-    }
-
-    @Override
-    public void hide() {
-        // This method is called when another screen replaces this one.
     }
 
     @Override

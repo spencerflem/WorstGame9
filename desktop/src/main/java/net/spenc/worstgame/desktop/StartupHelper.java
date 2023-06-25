@@ -66,17 +66,11 @@ public class StartupHelper {
      *         in this one
      */
     public static boolean startNewJvmIfRequired(boolean redirectOutput) {
-        String osName = System.getProperty("os.name").toLowerCase();
-        if (!osName.contains("mac")) {
-            if (osName.contains("windows")) {
-// Here, we are trying to work around an issue with how LWJGL3 loads its extracted .dll files.
-// By default, LWJGL3 extracts to the directory specified by "java.io.tmpdir", which is usually the user's home.
-// If the user's name has non-ASCII (or some non-alphanumeric) characters in it, that would fail.
-// By extracting to the relevant "ProgramData" folder, which is usually "C:\ProgramData", we avoid this.
-                System.setProperty("java.io.tmpdir", System.getenv("ProgramData") + "/libGDX-temp");
-            }
+        if (fixWindowsPath()) {
             return false;
         }
+
+        // MAC OS ONLY AT THIS POINT
 
         long pid = LibC.getpid();
 
@@ -85,69 +79,10 @@ public class StartupHelper {
             return false;
         }
 
-        // check whether the JVM was previously restarted
-        // avoids looping, but most certainly leads to a crash
-        if ("true".equals(System.getProperty(JVM_RESTARTED_ARG))) {
-            System.err.println(
-                    "There was a problem evaluating whether the JVM was started with the -XstartOnFirstThread argument.");
-            return false;
-        }
+        String mainClass = System.getenv("JAVA_MAIN_CLASS_" + pid);
 
         // Restart the JVM with -XstartOnFirstThread
-        ArrayList<String> jvmArgs = new ArrayList<>();
-        String separator = System.getProperty("file.separator");
-        // The following line is used assuming you target Java 8, the minimum for LWJGL3.
-        String javaExecPath = System.getProperty("java.home") + separator + "bin" + separator + "java";
-        // If targeting Java 9 or higher, you could use the following instead of the above line:
-        //String javaExecPath = ProcessHandle.current().info().command().orElseThrow();
-
-        if (!(new File(javaExecPath)).exists()) {
-            System.err.println(
-                    "A Java installation could not be found. If you are distributing this app with a bundled JRE, be sure to set the -XstartOnFirstThread argument manually!");
-            return false;
-        }
-
-        jvmArgs.add(javaExecPath);
-        jvmArgs.add("-XstartOnFirstThread");
-        jvmArgs.add("-D" + JVM_RESTARTED_ARG + "=true");
-        jvmArgs.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
-        jvmArgs.add("-cp");
-        jvmArgs.add(System.getProperty("java.class.path"));
-        String mainClass = System.getenv("JAVA_MAIN_CLASS_" + pid);
-        if (mainClass == null) {
-            StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-            if (trace.length > 0) {
-                mainClass = trace[trace.length - 1].getClassName();
-            } else {
-                System.err.println("The main class could not be determined.");
-                return false;
-            }
-        }
-        jvmArgs.add(mainClass);
-
-        try {
-            if (!redirectOutput) {
-                ProcessBuilder processBuilder = new ProcessBuilder(jvmArgs);
-                processBuilder.start();
-            } else {
-                Process process = (new ProcessBuilder(jvmArgs))
-                        .redirectErrorStream(true).start();
-                BufferedReader processOutput = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                String line;
-
-                while ((line = processOutput.readLine()) != null) {
-                    System.out.println(line);
-                }
-
-                process.waitFor();
-            }
-        } catch (Exception e) {
-            System.err.println("There was a problem restarting the JVM");
-            e.printStackTrace();
-        }
-
-        return true;
+        return startNewJvm(mainClass, true, redirectOutput);
     }
 
     /**
@@ -170,5 +105,101 @@ public class StartupHelper {
      */
     public static boolean startNewJvmIfRequired() {
         return startNewJvmIfRequired(true);
+    }
+
+    /**
+     * Starts a new JVM
+     */
+    public static boolean startNewJvm(String mainClass, boolean isRestart, boolean redirectOutput) {
+        // check whether the JVM was previously restarted
+        // avoids looping, but most certainly leads to a crash
+        if ("true".equals(System.getProperty(JVM_RESTARTED_ARG))) {
+            System.err.println(
+                "There was a problem evaluating whether the JVM was started with the -XstartOnFirstThread argument.");
+            return false;
+        }
+
+        // Restart the JVM with -XstartOnFirstThread
+        ArrayList<String> jvmArgs = new ArrayList<>();
+//        String separator = System.getProperty("file.separator");
+        // The following line is used assuming you target Java 8, the minimum for LWJGL3.
+//        String javaExecPath = System.getProperty("java.home") + separator + "bin" + separator + "java";
+        // If targeting Java 9 or higher, you could use the following instead of the above line:
+        String javaExecPath = ProcessHandle.current().info().command().orElseThrow();
+
+        if (!(new File(javaExecPath)).exists()) {
+            System.err.println(
+                "A Java installation could not be found. If you are distributing this app with a bundled JRE, be sure to set the -XstartOnFirstThread argument manually!");
+            return false;
+        }
+
+        jvmArgs.add(javaExecPath);
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.contains("mac")) {
+            jvmArgs.add("-XstartOnFirstThread");
+        }
+        if (isRestart) {
+            jvmArgs.add("-D" + JVM_RESTARTED_ARG + "=true");
+        }
+        jvmArgs.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
+        jvmArgs.add("-cp");
+        jvmArgs.add(System.getProperty("java.class.path"));
+        if (mainClass == null) {
+            StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+            if (trace.length > 0) {
+                mainClass = trace[trace.length - 1].getClassName();
+            } else {
+                System.err.println("The main class could not be determined.");
+                return false;
+            }
+        }
+        jvmArgs.add(mainClass);
+
+        try {
+            if (!redirectOutput) {
+                ProcessBuilder processBuilder = new ProcessBuilder(jvmArgs);
+                processBuilder.start();
+            } else {
+                Process process = (new ProcessBuilder(jvmArgs))
+                    .redirectErrorStream(true).start();
+                BufferedReader processOutput = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+                String line;
+
+                while ((line = processOutput.readLine()) != null) {
+                    System.out.println(line);
+                }
+
+                process.waitFor();
+            }
+        } catch (Exception e) {
+            System.err.println("There was a problem restarting the JVM");
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    public static boolean fixWindowsPath() {
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (!osName.contains("mac")) {
+            if (osName.contains("windows")) {
+// Here, we are trying to work around an issue with how LWJGL3 loads its extracted .dll files.
+// By default, LWJGL3 extracts to the directory specified by "java.io.tmpdir", which is usually the user's home.
+// If the user's name has non-ASCII (or some non-alphanumeric) characters in it, that would fail.
+// By extracting to the relevant "ProgramData" folder, which is usually "C:\ProgramData", we avoid this.
+                System.setProperty("java.io.tmpdir", System.getenv("ProgramData") + "/libGDX-temp");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Starts a new JVM always
+     * Useful for running a second instance of the game simultaneously.
+     */
+    public static boolean startNewJvm(String mainClass) {
+        return startNewJvm(mainClass, false, true);
     }
 }
