@@ -2,6 +2,7 @@ package net.spenc.worstgame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -24,6 +25,8 @@ public class Player extends Entity {
     public boolean facesRight = true;
     public boolean grounded = false;
 
+    private TiledMap mapRef; // @TODO remove this
+
     // BEGIN @TODO: may be able to be handled in the world scope, fix later
     private final Pool<Rectangle> rectPool = new Pool<>() {
         @Override
@@ -34,6 +37,11 @@ public class Player extends Entity {
     private final Array<Rectangle> tiles = new Array<>();
 
     private static final float GRAVITY = -2.5f;
+
+    public Player WithMapRef(TiledMap map) {
+        this.mapRef = map;
+        return this;
+    }
 
     // END @TODO
 
@@ -128,7 +136,7 @@ public class Player extends Entity {
                 if (this.velocity.y > 0) {
                     this.position.y = tile.y - this.height;
                     // we hit a block jumping upwards, let's destroy it!
-                    TiledMapTileLayer layer = (TiledMapTileLayer) WorstScreen.map.getLayers().get("walls");
+                    TiledMapTileLayer layer = (TiledMapTileLayer) mapRef.getLayers().get("walls");
                     layer.setCell((int) tile.x, (int) tile.y, null);
                 } else {
                     this.position.y = tile.y + tile.height;
@@ -167,7 +175,7 @@ public class Player extends Entity {
     }
 
     private void getTiles(int startX, int startY, int endX, int endY, Array<Rectangle> tiles) {
-        TiledMapTileLayer layer = (TiledMapTileLayer) WorstScreen.map.getLayers().get("walls");
+        TiledMapTileLayer layer = (TiledMapTileLayer) mapRef.getLayers().get("walls");
         rectPool.freeAll(tiles);
         tiles.clear();
         for (int y = startY; y <= endY; y++) {
