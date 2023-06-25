@@ -130,8 +130,6 @@ public class WorstScreen extends ScreenAdapter {
             ScreenUtils.clear(0.7f, 0.7f, 1, 1);
         }
 
-        Gdx.app.log("delta", "d: " + delta);
-
         accumulator = Math.min(accumulator + delta, MAX_ACCUMULATOR);
         while (accumulator >= TIMESTEP) {
             accumulator -= TIMESTEP;
