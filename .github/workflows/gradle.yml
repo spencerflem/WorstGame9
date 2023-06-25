@@ -31,13 +31,13 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
-          arguments: desktop:jpackageImage
+          arguments: desktop:jpackageZip
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }} 
-          asset_path: desktop/build/jpackage/WorstGame9/WorstGame9.exe
-          asset_name: WorstGame9
+          asset_path: ./desktop/build/jpackageZip/
+          asset_name: worstgame9.zip
           asset_content_type: application/octet-stream
