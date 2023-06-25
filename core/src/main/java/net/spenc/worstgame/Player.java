@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Pool;
 
 public class Player extends Entity {
     public static float MAX_VELOCITY = 10f;
-    public static float JUMP_VELOCITY = 40f;
+    public static float JUMP_VELOCITY = 50f;
     public static float DAMPING = 0.87f;
 
     enum State {
