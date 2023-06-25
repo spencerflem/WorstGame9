@@ -27,12 +27,14 @@ public class WorstScreen extends ScreenAdapter {
     private final WorstGame game;
     private Texture playerImg;
     private Texture biblImg;
+    private Texture doNUTImg;
     private Viewport viewport;
     private OrthographicCamera camera;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private Player player;
     private Patroller bibl;
+    private Patroller doNUT;
 
     private final Pool<Rectangle> rectPool = new Pool<>() {
         @Override
@@ -54,6 +56,7 @@ public class WorstScreen extends ScreenAdapter {
     public void show() {
         playerImg = new Texture("tentacle_guy.png");
         biblImg = new Texture("bibl.png");
+        doNUTImg = new Texture("doNUT.png");
         map = new TmxMapLoader().load("level1.tmx");
 
         camera = new OrthographicCamera();
@@ -75,6 +78,16 @@ public class WorstScreen extends ScreenAdapter {
             .WithPosition(new Vector2(32, 2))
             .WithTexture(biblImg)
             .WithSize(biblImg.getWidth() * PIXEL2TILE, biblImg.getHeight() * PIXEL2TILE);
+
+        doNUT = (Patroller) new Patroller()
+            .WithSpeed(5)
+            .WithWaypoints(new Vector2[] {
+                new Vector2(46, 5),
+                new Vector2(46, 12),
+            })
+            .WithPosition(new Vector2(46, 4))
+            .WithTexture(doNUTImg)
+            .WithSize(doNUTImg.getWidth() * PIXEL2TILE, doNUTImg.getHeight() * PIXEL2TILE);
         
 
         Music music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
@@ -92,6 +105,9 @@ public class WorstScreen extends ScreenAdapter {
         // update positions
         updatePlayer(delta);
 
+        bibl.update(delta);
+        doNUT.update(delta);
+
         // move the camera
         camera.position.x = player.position.x;
 
@@ -99,8 +115,6 @@ public class WorstScreen extends ScreenAdapter {
         // one screen
         // when we make our own levels, I propose we do that, and remove this line
         camera.update();
-
-        bibl.update(delta);
 
         // draw the map
         renderer.setView(camera);
@@ -110,6 +124,7 @@ public class WorstScreen extends ScreenAdapter {
         Batch batch = renderer.getBatch();
         batch.begin();
         bibl.draw(batch);
+        doNUT.draw(batch);
         player.draw(batch);
         batch.end();
 
