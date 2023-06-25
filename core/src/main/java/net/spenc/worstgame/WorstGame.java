@@ -8,7 +8,7 @@ public class WorstGame extends Game {
         HOST,
         MAIN,
         POPUP,
-        OVERLAY;
+        OVERLAY
     }
     public final PopupWindowCreator popupWindowCreator;
     public final GameType type;

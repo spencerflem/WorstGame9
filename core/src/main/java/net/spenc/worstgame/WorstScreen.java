@@ -2,6 +2,7 @@ package net.spenc.worstgame;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.Comparator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -104,7 +105,7 @@ public class WorstScreen extends ScreenAdapter {
         entities.add(doNUT);
 
         // after creating all entities, sort them by layer for rendering
-        entities.sort((a, b) -> a.layer - b.layer);
+        entities.sort(Comparator.comparingInt(a -> a.layer));
 
         music = Gdx.audio.newMusic(Gdx.files.internal("background_music.mp3"));
         disposeStack.push(music::stop);
@@ -121,10 +122,6 @@ public class WorstScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        if (game.type == WorstGame.GameType.MAIN) {
-            frame++;
-        }
-
         if (game.type == WorstGame.GameType.OVERLAY) {
             ScreenUtils.clear(0, 0, 0, 0);
         } else {
@@ -136,9 +133,6 @@ public class WorstScreen extends ScreenAdapter {
             entity.update(delta);
         }
 
-        // TODO: I kinda like the celeste aesthetic of keeping the level all shown on
-        // one screen
-        // when we make our own levels, I propose we do that, and remove this line
         MainCamera.update();
 
         // draw the map
@@ -179,6 +173,9 @@ public class WorstScreen extends ScreenAdapter {
         Gdx.app.log("adas", "dispose stack size: " + disposeStack.size());
         while (!disposeStack.empty()) {
             disposeStack.pop().run();
+        }
+        if (game.type == WorstGame.GameType.MAIN) {
+            Gdx.app.exit();
         }
     }
 }
