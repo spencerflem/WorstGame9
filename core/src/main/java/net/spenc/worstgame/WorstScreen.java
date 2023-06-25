@@ -40,8 +40,10 @@ public class WorstScreen extends ScreenAdapter {
 
     // stack for disposing libGDX (OpenGL) resources
     private Stack<Runnable> disposeStack = new Stack<Runnable>();
+    private static final float TIMESTEP = 0.01f;
+    private static final float MAX_ACCUMULATOR = 0.1f;
+    private double accumulator = 0.0;
 
-    private int frame = 0;
 
     public WorstScreen(WorstGame game) {
         this.game = game;
@@ -128,9 +130,15 @@ public class WorstScreen extends ScreenAdapter {
             ScreenUtils.clear(0.7f, 0.7f, 1, 1);
         }
 
-        // entity logic
-        for (Entity entity : entities) {
-            entity.update(delta);
+        Gdx.app.log("delta", "d: " + delta);
+
+        accumulator = Math.min(accumulator + delta, MAX_ACCUMULATOR);
+        while (accumulator >= TIMESTEP) {
+            accumulator -= TIMESTEP;
+            // entity logic
+            for (Entity entity : entities) {
+                entity.update(TIMESTEP);
+            }
         }
 
         MainCamera.update();
@@ -166,9 +174,6 @@ public class WorstScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        if (game.type == WorstGame.GameType.MAIN) {
-            Gdx.app.log("adas", "dispose " + frame);
-        }
         // log the number of items being disposed
         Gdx.app.log("adas", "dispose stack size: " + disposeStack.size());
         while (!disposeStack.empty()) {
