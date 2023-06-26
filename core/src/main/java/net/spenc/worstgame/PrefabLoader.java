@@ -36,6 +36,15 @@ public class PrefabLoader {
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
 
+    public Chaser NewBuffChickPrefab() {
+        Texture texture = managerRef.get(Filenames.BfChicken.getFilename(), Texture.class);
+        return (Chaser) new Chaser()
+            .WithSpeed(3)
+            .WithSpawnPosition(new Vector2(32, 2))
+            .WithTexture(texture)
+            .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
+    }
+
     public Patroller NewDoNUTPrefab() {
         Texture texture = managerRef.get(Filenames.DONUT.getFilename(), Texture.class);
         return (Patroller) new Patroller()

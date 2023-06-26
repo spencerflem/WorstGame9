@@ -100,7 +100,9 @@ public class WorstScreen extends ScreenAdapter {
     }
 
     private void createEntities() {
-        entities.add((prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)));
+        Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera);
+        entities.add(p);
+        entities.add(prefabLoader.NewBuffChickPrefab().WithTarget(p));
         entities.add(prefabLoader.NewBiblPrefab());
         entities.add(prefabLoader.NewDoNUTPrefab());
         for (int i = 0; i < 3; i++) {
