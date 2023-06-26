@@ -40,7 +40,7 @@ public class HostApplication extends ApplicationAdapter {
         loadAssetsFolder(assets, "textures", Texture.class, resolver);
         assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
         loadAssetsFolder(assets, "maps", TiledMap.class, resolver);
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/background_music.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal(Filenames.MUSIC.getFilename()));
         music.setLooping(true);
         music.setVolume(.02f);
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run

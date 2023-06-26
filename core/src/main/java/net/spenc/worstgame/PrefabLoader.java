@@ -67,4 +67,11 @@ public class PrefabLoader {
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
 
+    public Portal NewPortalPrefab() {
+        Texture texture = managerRef.get(Filenames.PORTAL.getFilename(), Texture.class);
+        return (Portal) new Portal()
+            .WithSpawnPosition(new Vector2(4, 2))
+            .WithTexture(texture)
+            .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
+    }
 }

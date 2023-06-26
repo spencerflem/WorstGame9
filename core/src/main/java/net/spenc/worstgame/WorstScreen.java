@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -29,14 +28,16 @@ public class WorstScreen extends ScreenAdapter {
     private final Viewport viewport;
     private double accumulator = 0.0;
     private final ArrayList<Entity> entities = new ArrayList<>();
+    private final PrefabLoader prefabLoader;
 
-    public WorstScreen(WorstGame game) {
+    public WorstScreen(WorstGame game, String level) {
         this.game = game;
-        this.map = game.assets.get("maps/" + game.level + ".tmx");
+        this.map = game.assets.get("maps/" + level + ".tmx");
         this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles);
         this.camera = new OrthographicCamera();
         this.camera.position.y = 10;
         this.viewport = new FitViewport(30, 20, camera);
+        this.prefabLoader = new PrefabLoader(game.assets, pixels2tiles);
         createEntities();
     }
 
@@ -70,7 +71,7 @@ public class WorstScreen extends ScreenAdapter {
 
         // if 'P' just pressed - make a pop-up
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            game.popupWindowCreator.newPopup(game.assets, game.level);
+            game.popupWindowCreator.newPopup(game.assets, game.initialLevel);
         }
 
         // if 'O' just pressed - make an overlay pop-up
@@ -87,70 +88,21 @@ public class WorstScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        map.dispose();
         renderer.dispose();
         for (Entity entity : entities) {
             entity.dispose();
         }
-        if (game.main) {
-            Gdx.app.exit();
-        }
     }
 
     private void createEntities() {
-        Texture playerTex = game.assets.get("textures/tentacle_guy.png");
-        Player player = (Player) new Player()
-            .WithSpawnPosition(new Vector2(20, 20))
-            .WithTexture(playerTex)
-            .WithSize(playerTex.getWidth() * pixels2tiles, playerTex.getHeight() * pixels2tiles)
-            .WithLayer(1);
-        entities.add(player);
-
-        Texture biblTex = game.assets.get("textures/bibl.png");
-        Patroller bibl = (Patroller) new Patroller()
-            .WithSpeed(5)
-            .WithWaypoints(new Vector2[] {
-                new Vector2(30, 2),
-                new Vector2(36, 2),
-            })
-            .WithSpawnPosition(new Vector2(32, 2))
-            .WithTexture(biblTex)
-            .WithSize(biblTex.getWidth() * pixels2tiles, biblTex.getHeight() * pixels2tiles);
-
-        entities.add(bibl);
-
-        Texture doNUTTex = game.assets.get("textures/doNUT.png");
-        Patroller doNUT = (Patroller) new Patroller()
-            .WithSpeed(5)
-            .WithWaypoints(new Vector2[] {
-                new Vector2(46, 5),
-                new Vector2(46, 12),
-            })
-            .WithSpawnPosition(new Vector2(46, 4))
-            .WithTexture(doNUTTex)
-            .WithSize(doNUTTex.getWidth() * pixels2tiles, doNUTTex.getHeight() * pixels2tiles);
-
-        entities.add(doNUT);
-
-        Texture spikeTex = game.assets.get("textures/spike.png");
+        entities.add((prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)));
+        entities.add(prefabLoader.NewBiblPrefab());
+        entities.add(prefabLoader.NewDoNUTPrefab());
         for (int i = 0; i < 3; i++) {
-            Entity spike = new Entity()
-                .WithSpawnPosition(new Vector2(51 + i, 10))
-                .WithSize(1, 1)
-                .WithTexture(spikeTex);
-
-            entities.add(spike);
+            entities.add(prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(51 + i, 10)));
         }
-
-        Texture springTex = game.assets.get("textures/spring.png");
-        Spring spring = (Spring) new Spring()
-            .WithSpringiness(100)
-            .WithImpulseDir(Vector2.Y)
-            .WithSpawnPosition(new Vector2(10, 2))
-            .WithSize(1, 1)
-            .WithTexture(springTex);
-        entities.add(spring);
-
+        entities.add(prefabLoader.NewSpringPrefab());
+        entities.add(prefabLoader.NewPortalPrefab().WithGame(game).WithLevelTarget("level1"));
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
     }

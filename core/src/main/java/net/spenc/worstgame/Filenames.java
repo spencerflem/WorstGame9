@@ -1,13 +1,13 @@
 package net.spenc.worstgame;
 
 public enum Filenames {
-    PLAYER("tentacle_guy.png"),
-    BIBL("bibl.png"),
-    DONUT("doNUT.png"),
-    SPIKE("spike.png"),
-    SPRING("spring.png"),
-    MUSIC("background_music.mp3"),
-    MAP("level1.tmx");
+    PLAYER("textures/tentacle_guy.png"),
+    BIBL("textures/bibl.png"),
+    DONUT("textures/doNUT.png"),
+    SPIKE("textures/spike.png"),
+    SPRING("textures/spring.png"),
+    PORTAL("textures/level_portal.png"),
+    MUSIC("music/background_music.mp3");
 
     private String filename = "";
 
