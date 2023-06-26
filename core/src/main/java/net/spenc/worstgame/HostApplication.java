@@ -37,12 +37,12 @@ public class HostApplication extends ApplicationAdapter {
 
     @Override
     public void create() {
-        shared.assets = new AssetManager();
+        assets = new AssetManager();
         shared.popupCreator = level -> windowCreator.newPopup(shared, level);
         FileHandleResolver resolver = new InternalFileHandleResolver();
-        loadAssetsFolder(shared.assets, "textures", "png", Texture.class, resolver);
-        shared.assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
-        loadAssetsFolder(shared.assets, "maps", "tmx", TiledMap.class, resolver);
+        loadAssetsFolder(assets, "textures", "png", Texture.class, resolver);
+        assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
+        loadAssetsFolder(assets, "maps", "tmx", TiledMap.class, resolver);
         music = Gdx.audio.newMusic(Gdx.files.internal(Filenames.MUSIC.getFilename()));
         music.setLooping(true);
         music.setVolume(.02f);
