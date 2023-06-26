@@ -38,7 +38,6 @@ public class HostApplication extends ApplicationAdapter {
     @Override
     public void create() {
         assets = new AssetManager();
-        shared.popupCreator = level -> windowCreator.newPopup(shared, level);
         FileHandleResolver resolver = new InternalFileHandleResolver();
         loadAssetsFolder(assets, "textures", "png", Texture.class, resolver);
         assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
