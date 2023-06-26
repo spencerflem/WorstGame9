@@ -6,6 +6,8 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -98,7 +100,48 @@ public class WorstScreen extends ScreenAdapter {
         Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera);
         entities.add(p);
         entities.add(prefabLoader.NewBuffChickPrefab().WithTarget(p));
-        entities.add(prefabLoader.NewBiblPrefab());
+        // loads entities from map @TODO replace all the other loaded prefabs
+        map.getLayers().forEach(layer -> {
+            // log the layer name
+            Gdx.app.log("Layer Name", layer.getName());
+            layer.getObjects().forEach(obj -> {
+                // log the type
+                if (!obj.getProperties().containsKey("type")) {
+                    return;
+                }
+
+                String type = obj.getProperties().get("type").toString();
+
+                Gdx.app.log("Parsed Type", type);
+
+                if (type.toLowerCase().equals("patroller")) {
+                    // log found a bibl
+                    Gdx.app.log("Patroller", "Found a patroller");
+                    // get the position
+                    float x = obj.getProperties().get("x", Float.class) * pixels2tiles;
+                    float y = obj.getProperties().get("y", Float.class) * pixels2tiles;
+
+                    int pathLength = obj.getProperties().get("PathLength", Integer.class);
+                    Vector2[] path = new Vector2[pathLength];
+                    for (int i = 0; i < pathLength; i++) {
+                        String pathPointStr = obj.getProperties().get("Path" + i, String.class); // this is "x,y"
+                        String[] pathPointStrSplit = pathPointStr.split(",");
+                        float pathX = Float.parseFloat(pathPointStrSplit[0]) * pixels2tiles;
+                        // remember for y that the map is upside down
+                        float pathY = map.getProperties().get("height", Integer.class)
+                                - Float.parseFloat(pathPointStrSplit[1]) * pixels2tiles;
+                        // log the xy
+                        Gdx.app.log("Path Point", pathX + "," + pathY);
+                        path[i] = new Vector2(pathX, pathY);
+                    }
+
+                    entities.add(
+                            prefabLoader.NewBiblPrefab().WithWaypoints(path).WithSpawnPosition(new Vector2(x, y)));
+
+                }
+            });
+        });
+
         entities.add(prefabLoader.NewDoNUTPrefab());
         for (int i = 0; i < 3; i++) {
             entities.add(prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(51 + i, 10)));
