@@ -93,14 +93,19 @@ public class WorstScreen extends ScreenAdapter {
                     int pathLength = obj.getProperties().get("PathLength", Integer.class);
                     Vector2[] path = new Vector2[pathLength];
                     for (int i = 0; i < pathLength; i++) {
-                        TiledMapTileMapObject pathPoint = (TiledMapTileMapObject) obj.getProperties().get("Path" + i);
-                        float pathX = pathPoint.getProperties().get("x", Float.class) * PIXEL2TILE;
-                        float pathY = pathPoint.getProperties().get("y", Float.class) * PIXEL2TILE;
+                        String pathPointStr = obj.getProperties().get("Path" + i, String.class); // this is "x,y"
+                        String[] pathPointStrSplit = pathPointStr.split(",");
+                        float pathX = Float.parseFloat(pathPointStrSplit[0]) * PIXEL2TILE;
+                        // remember for y that the map is upside down
+                        float pathY = map.getProperties().get("height", Integer.class)
+                                - Float.parseFloat(pathPointStrSplit[1]) * PIXEL2TILE;
+                        // log the xy
+                        Gdx.app.log("Path Point", pathX + "," + pathY);
                         path[i] = new Vector2(pathX, pathY);
                     }
 
                     entities.add(
-                            prefabLoader.NewBiblPrefab().WithSpawnPosition(new Vector2(x, y)));
+                            prefabLoader.NewBiblPrefab().WithWaypoints(path).WithSpawnPosition(new Vector2(x, y)));
 
                 }
             });
@@ -115,8 +120,6 @@ public class WorstScreen extends ScreenAdapter {
 
         Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map);
         entities.add(p);
-
-        entities.add(prefabLoader.NewBiblPrefab());
 
         entities.add(prefabLoader.NewDoNUTPrefab());
 
