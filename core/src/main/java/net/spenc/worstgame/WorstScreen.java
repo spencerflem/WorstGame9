@@ -73,11 +73,6 @@ public class WorstScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             game.popupWindowCreator.newPopup(game.assets, game.initialLevel);
         }
-
-        // if 'O' just pressed - make an overlay pop-up
-        if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
-            game.popupWindowCreator.newOverlay(game.assets);
-        }
     }
 
     @Override

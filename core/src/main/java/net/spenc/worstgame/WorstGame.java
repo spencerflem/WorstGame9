@@ -6,17 +6,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 
 public class WorstGame extends Game {
-
-    public final PopupWindowCreator popupWindowCreator;
     public final boolean main;
     public final String initialLevel;
-    public final AssetManager assets;
+    public final SharedData shared;
 
-    public WorstGame(PopupWindowCreator popupWindowCreator, boolean main, String initialLevel, AssetManager assets) {
-        this.popupWindowCreator = popupWindowCreator;
+    public WorstGame(SharedData shared, boolean main, String initialLevel) {
+        this.shared = shared;
         this.main = main;
         this.initialLevel = initialLevel;
-        this.assets = assets;
     }
 
     @Override

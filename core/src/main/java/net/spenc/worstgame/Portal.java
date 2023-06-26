@@ -1,7 +1,5 @@
 package net.spenc.worstgame;
 
-import com.badlogic.gdx.math.Vector2;
-
 public class Portal extends Entity {
     private WorstGame game;
     private String target;
