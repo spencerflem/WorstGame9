@@ -2,6 +2,7 @@ package net.spenc.worstgame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
@@ -26,6 +27,7 @@ public class Player extends Entity {
     public boolean grounded = false;
 
     private TiledMap mapRef; // @TODO remove this
+    private OrthographicCamera cameraRef; // @TODO remove this
 
     // BEGIN @TODO: may be able to be handled in the world scope, fix later
     private final Pool<Rectangle> rectPool = new Pool<>() {
@@ -40,6 +42,11 @@ public class Player extends Entity {
 
     public Player WithMapRef(TiledMap map) {
         this.mapRef = map;
+        return this;
+    }
+
+    public Player WithCameraRef(OrthographicCamera camera) {
+        this.cameraRef = camera;
         return this;
     }
 
@@ -158,7 +165,7 @@ public class Player extends Entity {
         // walk infinitely once a key was pressed
         this.velocity.x *= Player.DAMPING;
 
-        WorstScreen.MainCamera.position.x = this.position.x;
+        cameraRef.position.x = this.position.x;
     }
 
     private boolean isTouched(float startX, float endX) {

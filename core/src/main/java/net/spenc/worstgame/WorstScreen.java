@@ -29,6 +29,7 @@ public class WorstScreen extends ScreenAdapter {
     private final Viewport viewport;
     private double accumulator = 0.0;
     private final ArrayList<Entity> entities = new ArrayList<>();
+    private PrefabLoader prefabLoader;
 
     public WorstScreen(WorstGame game) {
         this.game = game;
@@ -37,6 +38,7 @@ public class WorstScreen extends ScreenAdapter {
         this.camera = new OrthographicCamera();
         this.camera.position.y = 10;
         this.viewport = new FitViewport(30, 20, camera);
+        this.prefabLoader = new PrefabLoader(game.assets, pixels2tiles);
         createEntities();
     }
 
@@ -98,59 +100,13 @@ public class WorstScreen extends ScreenAdapter {
     }
 
     private void createEntities() {
-        Texture playerTex = game.assets.get("textures/tentacle_guy.png");
-        Player player = (Player) new Player()
-            .WithSpawnPosition(new Vector2(20, 20))
-            .WithTexture(playerTex)
-            .WithSize(playerTex.getWidth() * pixels2tiles, playerTex.getHeight() * pixels2tiles)
-            .WithLayer(1);
-        entities.add(player);
-
-        Texture biblTex = game.assets.get("textures/bibl.png");
-        Patroller bibl = (Patroller) new Patroller()
-            .WithSpeed(5)
-            .WithWaypoints(new Vector2[] {
-                new Vector2(30, 2),
-                new Vector2(36, 2),
-            })
-            .WithSpawnPosition(new Vector2(32, 2))
-            .WithTexture(biblTex)
-            .WithSize(biblTex.getWidth() * pixels2tiles, biblTex.getHeight() * pixels2tiles);
-
-        entities.add(bibl);
-
-        Texture doNUTTex = game.assets.get("textures/doNUT.png");
-        Patroller doNUT = (Patroller) new Patroller()
-            .WithSpeed(5)
-            .WithWaypoints(new Vector2[] {
-                new Vector2(46, 5),
-                new Vector2(46, 12),
-            })
-            .WithSpawnPosition(new Vector2(46, 4))
-            .WithTexture(doNUTTex)
-            .WithSize(doNUTTex.getWidth() * pixels2tiles, doNUTTex.getHeight() * pixels2tiles);
-
-        entities.add(doNUT);
-
-        Texture spikeTex = game.assets.get("textures/spike.png");
+        entities.add((prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)));
+        entities.add(prefabLoader.NewBiblPrefab());
+        entities.add(prefabLoader.NewDoNUTPrefab());
         for (int i = 0; i < 3; i++) {
-            Entity spike = new Entity()
-                .WithSpawnPosition(new Vector2(51 + i, 10))
-                .WithSize(1, 1)
-                .WithTexture(spikeTex);
-
-            entities.add(spike);
+            entities.add(prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(51 + i, 10)));
         }
-
-        Texture springTex = game.assets.get("textures/spring.png");
-        Spring spring = (Spring) new Spring()
-            .WithSpringiness(100)
-            .WithImpulseDir(Vector2.Y)
-            .WithSpawnPosition(new Vector2(10, 2))
-            .WithSize(1, 1)
-            .WithTexture(springTex);
-        entities.add(spring);
-
+        entities.add(prefabLoader.NewSpringPrefab());
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
     }
