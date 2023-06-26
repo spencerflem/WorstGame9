@@ -8,51 +8,18 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.badlogic.gdx.graphics.Color;
 
 import net.spenc.worstgame.ManagedWindow;
-import net.spenc.worstgame.WindowListener;
 import net.spenc.worstgame.WindowManager;
 
-import org.lwjgl.glfw.GLFW;
-
 public class DesktopWindowManager implements WindowManager {
-    @Override
-    public void newMain(WindowListener app, NewWindowListener listener) {
-        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, getDefaultConfiguration());
-        window.setWindowListener(new Lwjgl3WindowAdapter() {
-            @Override
-            public void created(Lwjgl3Window window) {
-                ManagedWindow managedWindow = new DesktopManagedWindow(window);
-                app.setWindow(managedWindow);
-                if (listener != null) {
-                    listener.onWindowCreated(managedWindow);
-                }
-            }
-        });
-    }
 
     @Override
-    public void newPopup(WindowListener app, NewWindowListener listener) {
-        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, getDefaultConfiguration());
+    public void newWindow(net.spenc.worstgame.WindowListener app, boolean overlay, WindowListener listener) {
+        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, overlay? getOverlayConfiguration() : getDefaultConfiguration());
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
             public void created(Lwjgl3Window window) {
                 ManagedWindow managedWindow = new DesktopManagedWindow(window);
-                app.setWindow(managedWindow);
-                if (listener != null) {
-                    listener.onWindowCreated(managedWindow);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void newOverlay(WindowListener app, NewWindowListener listener) {
-        var window = ((Lwjgl3Application) Gdx.app).newWindow(app, getOverlayConfiguration());
-        window.setWindowListener(new Lwjgl3WindowAdapter() {
-            @Override
-            public void created(Lwjgl3Window window) {
-                GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_MOUSE_PASSTHROUGH, GLFW.GLFW_TRUE);
-                GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FLOATING, GLFW.GLFW_TRUE);
-                ManagedWindow managedWindow = new DesktopManagedWindow(window);
+                managedWindow.setOverlay(overlay);
                 app.setWindow(managedWindow);
                 if (listener != null) {
                     listener.onWindowCreated(managedWindow);
@@ -80,6 +47,7 @@ public class DesktopWindowManager implements WindowManager {
         configuration.setTransparentFramebuffer(true);
         configuration.setDecorated(false);
         configuration.setInitialBackgroundColor(Color.CLEAR);
+        configuration.setInitialVisible(false);
         return configuration;
     }
 }

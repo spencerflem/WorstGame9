@@ -9,7 +9,7 @@ import net.spenc.worstgame.WorstGame;
 public class DesktopLauncher {
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
-        var app = createApplication();
+        createApplication();
     }
 
     private static Lwjgl3Application createApplication() {

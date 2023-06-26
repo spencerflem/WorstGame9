@@ -10,4 +10,7 @@ public interface ManagedWindow {
     void setPositionListener(WindowPositionListener listener);
     Vector2 getPosition();
     boolean isFocused();
+    void swapBuffers();
+    void setVisible(boolean visible);
+    void setOverlay(boolean overlay);
 }

@@ -12,11 +12,12 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 
 public class WorstScreen extends ScreenAdapter {
@@ -26,24 +27,48 @@ public class WorstScreen extends ScreenAdapter {
     private static final float MAX_ACCUMULATOR = 0.1f;
     private double accumulator = 0.0;
     private final WorstGame game;
-    private final TiledMap map;
     private final float tiles2pixels = 16f;
     private final float pixels2tiles = 1 / tiles2pixels;
-    private final OrthogonalTiledMapRenderer renderer;
-    private final OrthographicCamera camera;
-    private final Viewport viewport;
-    private final ArrayList<Entity> entities = new ArrayList<>();
     private final PrefabLoader prefabLoader;
     private final InputCollector input = new InputCollector();
 
+    private record WindowData(OrthographicCamera camera, Viewport viewport, TiledMap map, OrthogonalTiledMapRenderer renderer, Array<Entity> entities) {}
+
+    private ManagedWindow mainWindow;
+    private ManagedWindow overlayWindow;
+
+    private final ObjectMap<ManagedWindow, WindowData> windowData = new ObjectMap<>();
+
     public WorstScreen(WorstGame game) {
         this.game = game;
-        this.map = game.assets.get("maps/level1.tmx");
-        this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, game.batch);
-        WindowListener app = newWindowApp(true);
-        game.windowManager.newMain(app, window -> {
-            windows.add(window);
-            window.setPositionListener((x, y) -> Gdx.app.log("loc", "x: " + x + ", y: " + y));
+        WindowListener mainApp = newWindowApp(mapWindowData("maps/level1.tmx"));
+        game.windowManager.newWindow(mainApp, false, new WindowManager.WindowListener() {
+            @Override
+            public void onWindowCreated(ManagedWindow window) {
+                windows.add(window);
+                mainWindow = window;
+            }
+
+            @Override
+            public void onWindowDestroyed(ManagedWindow window) {
+                windows.removeValue(window, true);
+                mainWindow = null;
+                Gdx.app.exit();
+            }
+        });
+        WindowListener overlayApp = newWindowApp(emptyWindowData());
+        game.windowManager.newWindow(overlayApp, true, new WindowManager.WindowListener() {
+            @Override
+            public void onWindowCreated(ManagedWindow window) {
+                windows.add(window);
+                overlayWindow = window;
+            }
+
+            @Override
+            public void onWindowDestroyed(ManagedWindow window) {
+                windows.removeValue(window, true);
+                overlayWindow = null;
+            }
         });
         music = Gdx.audio.newMusic(Gdx.files.internal(Filenames.MUSIC.getFilename()));
         music.setLooping(true);
@@ -51,11 +76,7 @@ public class WorstScreen extends ScreenAdapter {
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
             music.play();
         }
-        this.camera = new OrthographicCamera();
-        this.camera.position.y = 10;
-        this.viewport = new FitViewport(30, 20, camera);
         this.prefabLoader = new PrefabLoader(game.assets, pixels2tiles);
-        createEntities();
     }
 
     @Override
@@ -63,28 +84,41 @@ public class WorstScreen extends ScreenAdapter {
         accumulator = Math.min(accumulator + delta, MAX_ACCUMULATOR);
         while (accumulator >= TIMESTEP) {
             accumulator -= TIMESTEP;
-            for (Entity entity : entities) {
-                entity.update(TIMESTEP);
-                entity.updateCollisions(entities);
+            for (int i = 0; i < entities.size; i++) {
+                entities.get(i).update(TIMESTEP);
+                entities.get(i).updateCollisions(entities);
             }
         }
     }
 
-    private WindowListener newWindowApp(boolean main) {
+    private WindowData emptyWindowData() {
+        OrthographicCamera camera = new OrthographicCamera();
+        Viewport viewport = new ScreenViewport(camera);
+        return new WindowData(camera, viewport, null, null, new Array<>());
+    }
+
+    private WindowData mapWindowData(String level) {
+        OrthographicCamera camera = new OrthographicCamera();
+        camera.position.y = 10;
+        Viewport viewport = new FitViewport(30, 20, camera);
+        TiledMap map = game.assets.get("maps/" + level + ".tmx");
+        OrthogonalTiledMapRenderer renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, game.batch);
+        Array<Entity> entities = createEntities(map, camera);
+        return new WindowData(camera, viewport, map, renderer, new Array<>(entities));
+    }
+
+    private WindowListener newWindowApp(WindowData data) {
         return new WindowApplication() {
             @Override
             public void render() {
                 if (getWindow() != null && getWindow().isFocused()) {
                     collectInput();
                 }
-                renderClient();
+                renderClient(data);
             }
-
             @Override
             public void dispose() {
-                if (main) {
-                    Gdx.app.exit();
-                }
+                disposeClient(data);
             }
         };
     }
@@ -115,19 +149,19 @@ public class WorstScreen extends ScreenAdapter {
         return false;
     }
 
-    private void renderClient() {
+    private void renderClient(WindowData data) {
         ScreenUtils.clear(0.7f, 0.7f, 1, 1);
 
-        camera.update();
+        data.camera.update();
 
         // draw the map
-        renderer.setView(camera);
-        renderer.render();
+        data.renderer.setView(data.camera);
+        data.renderer.render();
 
         // draw the entities
-        Batch batch = renderer.getBatch();
+        Batch batch = data.renderer.getBatch();
         batch.begin();
-        for (Entity entity : entities) {
+        for (Entity entity : data.entities) {
             entity.draw(batch);
         }
         batch.end();
@@ -138,30 +172,36 @@ public class WorstScreen extends ScreenAdapter {
         }
     }
 
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height);
+    private void disposeClient(WindowData data) {
+        data.renderer.dispose();
+        for (Entity entity : data.entities) {
+            entity.dispose();
+        }
     }
 
     @Override
     public void dispose() {
         music.stop();
         music.dispose();
-        renderer.dispose();
-        for (Entity entity : entities) {
-            entity.dispose();
-        }
     }
 
     private void newPopup() {
-        WindowListener app = newWindowApp(false);
-        game.windowManager.newPopup(app, window -> {
-            app.setWindow(window);
-            windows.add(window);
+        WindowListener app = newWindowApp(mapWindowData("level1"));
+        game.windowManager.newWindow(app, false, new WindowManager.WindowListener() {
+            @Override
+            public void onWindowCreated(ManagedWindow window) {
+                windows.add(window);
+            }
+
+            @Override
+            public void onWindowDestroyed(ManagedWindow window) {
+                windows.removeValue(window, true);
+            }
         });
     }
 
-    private void createEntities() {
+    private Array<Entity> createEntities(TiledMap map, OrthographicCamera camera) {
+        Array<Entity> entities = new Array<>();
         Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera).WithInputRef(input);
         entities.add(p);
         entities.add(prefabLoader.NewBuffChickPrefab().WithTarget(p));
@@ -179,7 +219,7 @@ public class WorstScreen extends ScreenAdapter {
 
                 Gdx.app.log("Parsed Type", type);
 
-                if (type.toLowerCase().equals("patroller")) {
+                if (type.equalsIgnoreCase("patroller")) {
                     // log found a bibl
                     Gdx.app.log("Patroller", "Found a patroller");
                     // get the position
@@ -222,5 +262,6 @@ public class WorstScreen extends ScreenAdapter {
         entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget("level1"));
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
+        return entities;
     }
 }

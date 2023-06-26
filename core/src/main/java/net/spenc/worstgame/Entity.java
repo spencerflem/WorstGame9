@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 public class Entity {
     public UUID id = UUID.randomUUID();
@@ -54,7 +55,7 @@ public class Entity {
         return this.getHitbox().overlaps(other.getHitbox());
     }
 
-    public void updateCollisions(ArrayList<Entity> entities) {
+    public void updateCollisions(Array<Entity> entities) {
 
         for (Entity other : entities) {
             if (collidingWith.contains(other.id)) {
