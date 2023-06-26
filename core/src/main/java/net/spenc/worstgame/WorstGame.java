@@ -1,28 +1,37 @@
 package net.spenc.worstgame;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 
 public class WorstGame extends Game {
 
-    public enum GameType {
-        HOST,
-        MAIN,
-        POPUP,
-        OVERLAY
-    }
     public final PopupWindowCreator popupWindowCreator;
-    public final GameType type;
-    private final WorstScreen screen;
+    public final boolean main;
+    public final String level;
 
-    public WorstGame(PopupWindowCreator popupWindowCreator, GameType type) {
+    public final AssetManager assets;
+
+    public WorstGame(PopupWindowCreator popupWindowCreator, boolean main, String level, AssetManager assets) {
         this.popupWindowCreator = popupWindowCreator;
-        this.type = type;
-        this.screen = new WorstScreen(this);
+        this.main = main;
+        this.level = level;
+        this.assets = assets;
     }
 
     @Override
     public void create() {
-        setScreen(screen);
+        setScreen(new WorstScreen(this));
+    }
+
+    // auto-dispose
+    @Override
+    public void setScreen(Screen screen) {
+        Screen oldScreen = getScreen();
+        super.setScreen(screen);
+        if (oldScreen != null) {
+            oldScreen.dispose();
+        }
     }
 
     @Override

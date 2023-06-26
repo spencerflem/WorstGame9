@@ -35,6 +35,9 @@ import java.util.ArrayList;
  */
 public class StartupHelper {
 
+    //To avoid the top level window from affecting others
+    //StartupHelper.startNewJvm("net.spenc.worstgame.desktop.DesktopLauncher");
+
     private static final String JVM_RESTARTED_ARG = "jvmIsRestarted";
 
     private StartupHelper() {

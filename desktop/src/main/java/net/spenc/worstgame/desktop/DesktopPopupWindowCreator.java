@@ -1,71 +1,37 @@
 package net.spenc.worstgame.desktop;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowListener;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 
+import net.spenc.worstgame.OverlayApplication;
 import net.spenc.worstgame.PopupWindowCreator;
 import net.spenc.worstgame.WorstGame;
 
 import org.lwjgl.glfw.GLFW;
 
 public class DesktopPopupWindowCreator implements PopupWindowCreator {
-
-    //To avoid the top level one from affecting others
-    //StartupHelper.startNewJvm("net.spenc.worstgame.desktop.DesktopLauncher");
-
     @Override
-    public void newPopup(WorstGame.GameType type) {
-        newPopup(type, false);
+    public void newMain(AssetManager assets, String level) {
+        ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(this, true, level, assets), getDefaultConfiguration());
     }
 
     @Override
-    public void newPopup(WorstGame.GameType type, boolean overlay) {
-        var window = ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(this, type), overlay? getOverlayConfiguration() : getDefaultConfiguration());
-        window.setWindowListener(new Lwjgl3WindowListener() {
+    public void newPopup(AssetManager assets, String level) {
+        ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(this, false, level, assets), getDefaultConfiguration());
+    }
+
+    @Override
+    public void newOverlay(AssetManager assets) {
+        var window = ((Lwjgl3Application) Gdx.app).newWindow(new OverlayApplication(assets), getOverlayConfiguration());
+        window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
             public void created(Lwjgl3Window window) {
-                if (overlay) {
-                    GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_MOUSE_PASSTHROUGH, GLFW.GLFW_TRUE);
-                    GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FLOATING, GLFW.GLFW_TRUE);
-                }
-            }
-
-            @Override
-            public void iconified(boolean isIconified) {
-
-            }
-
-            @Override
-            public void maximized(boolean isMaximized) {
-
-            }
-
-            @Override
-            public void focusLost() {
-
-            }
-
-            @Override
-            public void focusGained() {
-
-            }
-
-            @Override
-            public boolean closeRequested() {
-                return true;
-            }
-
-            @Override
-            public void filesDropped(String[] files) {
-
-            }
-
-            @Override
-            public void refreshRequested() {
-
+                GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_MOUSE_PASSTHROUGH, GLFW.GLFW_TRUE);
+                GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FLOATING, GLFW.GLFW_TRUE);
             }
         });
     }

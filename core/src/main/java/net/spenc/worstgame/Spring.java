@@ -18,8 +18,7 @@ public class Spring extends Entity {
 
     @Override
     public void onCollisionEnter(Entity other) {
-        if (other instanceof Player) {
-            Player player = (Player) other;
+        if (other instanceof Player player) {
             Vector2 impulse = impulseDir.cpy().scl(springiness);
             player.velocity.x = impulse.x;
             player.velocity.y = impulse.y;

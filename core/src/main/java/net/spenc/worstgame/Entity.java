@@ -20,7 +20,7 @@ public class Entity {
     public final Vector2 spawnPosition = new Vector2();
     public Texture texture;
 
-    private HashSet<UUID> collidingWith = new HashSet<UUID>();
+    private final HashSet<UUID> collidingWith = new HashSet<>();
 
     public Entity WithTexture(Texture texture) {
         this.texture = texture;
@@ -54,7 +54,7 @@ public class Entity {
         return this.getHitbox().overlaps(other.getHitbox());
     }
 
-    public void updateCollsions(ArrayList<Entity> entities) {
+    public void updateCollisions(ArrayList<Entity> entities) {
 
         for (Entity other : entities) {
             if (collidingWith.contains(other.id)) {
@@ -93,5 +93,8 @@ public class Entity {
     }
 
     public void update(float delta) {
+    }
+
+    public void dispose() {
     }
 }
