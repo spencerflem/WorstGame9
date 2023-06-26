@@ -14,10 +14,10 @@
   </data>
  </layer>
  <objectgroup id="5" name="Entities">
-  <object id="22" name="Bibl4" type="Patroller" x="2672" y="288">
+  <object id="22" name="Bibl4" type="Patroller" x="2640" y="288">
    <properties>
-    <property name="Path0" value="2672,288"/>
-    <property name="Path1" value="2832,288"/>
+    <property name="Path0" value="2640,288"/>
+    <property name="Path1" value="2736,288"/>
     <property name="PathLength" type="int" value="2"/>
     <property name="TextureEnum" value="BIBL"/>
    </properties>
