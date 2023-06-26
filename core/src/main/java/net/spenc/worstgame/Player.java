@@ -30,6 +30,7 @@ public class Player extends Entity {
 
     private TiledMap mapRef; // @TODO remove this
     private OrthographicCamera cameraRef; // @TODO remove this
+    private InputCollector inputRef; // @TODO remove this
 
     // BEGIN @TODO: may be able to be handled in the world scope, fix later
     private final Pool<Rectangle> rectPool = new Pool<>() {
@@ -52,6 +53,11 @@ public class Player extends Entity {
         return this;
     }
 
+    public Player WithInputRef(InputCollector input) {
+        this.inputRef = input;
+        return this;
+    }
+
     // END @TODO
 
     @Override
@@ -67,50 +73,25 @@ public class Player extends Entity {
         this.stateTime += deltaTime;
 
         // check input and apply to velocity & state
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || isTouched(0.5f, 1)) && this.grounded) {
+        if (inputRef.jump && this.grounded) {
             this.velocity.y += Player.JUMP_VELOCITY;
             this.state = Player.State.Jumping;
             this.grounded = false;
         }
 
-        if(controller != null && controller.getAxis(controller.getMapping().axisLeftY) > 0)
-        {
-            this.velocity.y += Player.JUMP_VELOCITY;
-            this.state = Player.State.Jumping;
-            this.grounded = false;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)) {
+        if (inputRef.left) {
             this.velocity.x = -Player.MAX_VELOCITY;
             if (this.grounded)
                 this.state = Player.State.Walking;
             this.facesRight = false;
         }
 
-        if(controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0)
-        {
-            this.velocity.x = -Player.MAX_VELOCITY;
-            if (this.grounded)
-                this.state = Player.State.Walking;
-            this.facesRight = false;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
-                || isTouched(0.25f, 0.5f)) {
+        if (inputRef.right) {
             this.velocity.x = Player.MAX_VELOCITY;
             if (this.grounded)
                 this.state = Player.State.Walking;
             this.facesRight = true;
         }
-
-        if(controller != null && controller.getAxis(controller.getMapping().axisLeftX) < 0)
-        {
-            this.velocity.x = Player.MAX_VELOCITY;
-            if (this.grounded)
-                this.state = Player.State.Walking;
-            this.facesRight = true;
-        }
-
         // apply gravity if we are falling
         this.velocity.add(0, GRAVITY);
 
@@ -193,19 +174,6 @@ public class Player extends Entity {
         this.velocity.x *= Player.DAMPING;
 
         cameraRef.position.x = this.position.x;
-    }
-
-    private boolean isTouched(float startX, float endX) {
-        // Check for touch inputs between startX and endX
-        // startX/endX are given between 0 (left edge of the screen) and 1 (right edge
-        // of the screen)
-        for (int i = 0; i < 2; i++) {
-            float x = Gdx.input.getX(i) / (float) Gdx.graphics.getWidth();
-            if (Gdx.input.isTouched(i) && (x >= startX && x <= endX)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void getTiles(int startX, int startY, int endX, int endY, Array<Rectangle> tiles) {

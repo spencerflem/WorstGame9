@@ -3,56 +3,59 @@ package net.spenc.worstgame.desktop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.badlogic.gdx.graphics.Color;
 
 import net.spenc.worstgame.ManagedWindow;
-import net.spenc.worstgame.OverlayApplication;
+import net.spenc.worstgame.WindowListener;
 import net.spenc.worstgame.WindowManager;
-import net.spenc.worstgame.SharedData;
-import net.spenc.worstgame.WorstGame;
 
 import org.lwjgl.glfw.GLFW;
 
 public class DesktopWindowManager implements WindowManager {
     @Override
-    public void newMain(SharedData shared, String level, NewWindowListener listener) {
-        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(shared, true, level), getDefaultConfiguration());
+    public void newMain(WindowListener app, NewWindowListener listener) {
+        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, getDefaultConfiguration());
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
-            public void created (Lwjgl3Window window) {
+            public void created(Lwjgl3Window window) {
+                ManagedWindow managedWindow = new DesktopManagedWindow(window);
+                app.setWindow(managedWindow);
                 if (listener != null) {
-                    listener.onWindowCreated(new DesktopManagedWindow(window));
+                    listener.onWindowCreated(managedWindow);
                 }
             }
         });
     }
 
     @Override
-    public void newPopup(SharedData shared, String level, NewWindowListener listener) {
-        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(shared, false, level), getDefaultConfiguration());
+    public void newPopup(WindowListener app, NewWindowListener listener) {
+        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, getDefaultConfiguration());
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
-            public void created (Lwjgl3Window window) {
+            public void created(Lwjgl3Window window) {
+                ManagedWindow managedWindow = new DesktopManagedWindow(window);
+                app.setWindow(managedWindow);
                 if (listener != null) {
-                    listener.onWindowCreated(new DesktopManagedWindow(window));
+                    listener.onWindowCreated(managedWindow);
                 }
             }
         });
     }
 
     @Override
-    public void newOverlay(SharedData shared, NewWindowListener listener) {
-        var window = ((Lwjgl3Application) Gdx.app).newWindow(new OverlayApplication(shared), getOverlayConfiguration());
+    public void newOverlay(WindowListener app, NewWindowListener listener) {
+        var window = ((Lwjgl3Application) Gdx.app).newWindow(app, getOverlayConfiguration());
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
             public void created(Lwjgl3Window window) {
                 GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_MOUSE_PASSTHROUGH, GLFW.GLFW_TRUE);
                 GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FLOATING, GLFW.GLFW_TRUE);
+                ManagedWindow managedWindow = new DesktopManagedWindow(window);
+                app.setWindow(managedWindow);
                 if (listener != null) {
-                    listener.onWindowCreated(new DesktopManagedWindow(window));
+                    listener.onWindowCreated(managedWindow);
                 }
             }
         });

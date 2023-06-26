@@ -3,7 +3,7 @@ package net.spenc.worstgame.desktop;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import net.spenc.worstgame.HostApplication;
+import net.spenc.worstgame.WorstGame;
 
 /** Launches the desktop (LWJGL3) application. */
 public class DesktopLauncher {
@@ -13,7 +13,7 @@ public class DesktopLauncher {
     }
 
     private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new HostApplication(new DesktopWindowManager()), getDefaultConfiguration());
+        return new Lwjgl3Application(new WorstGame(new DesktopWindowManager()), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {

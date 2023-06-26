@@ -1,10 +1,12 @@
 package net.spenc.worstgame;
 
+import com.badlogic.gdx.ApplicationListener;
+
 public interface WindowManager {
     interface NewWindowListener {
         void onWindowCreated(ManagedWindow window);
     }
-    void newPopup(SharedData shared, String level, NewWindowListener listener);
-    void newMain(SharedData shared, String level, NewWindowListener listener);
-    void newOverlay(SharedData shared, NewWindowListener listener);
+    void newPopup(WindowListener app, NewWindowListener listener);
+    void newMain(WindowListener app, NewWindowListener listener);
+    void newOverlay(WindowListener app, NewWindowListener listener);
 }

@@ -1,24 +1,25 @@
 package net.spenc.worstgame;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class WorstGame extends Game {
-    public final boolean main;
-    public final String initialLevel;
-    public final SharedData shared;
 
-    public WorstGame(SharedData shared, boolean main, String initialLevel) {
-        this.shared = shared;
-        this.main = main;
-        this.initialLevel = initialLevel;
+    public WindowManager windowManager;
+    public AssetManager assets;
+    public SpriteBatch batch;
+
+    public WorstGame(WindowManager windowManager) {
+        this.windowManager = windowManager;
     }
 
     @Override
     public void create() {
-        setScreen(new WorstScreen(this, initialLevel));
+        this.assets = new AssetManager();
+        this.batch = new SpriteBatch();
+        setScreen(new LoadingScreen(this));
     }
 
     // auto-dispose
@@ -34,8 +35,5 @@ public class WorstGame extends Game {
     @Override
     public void dispose() {
         screen.dispose();
-        if (main) {
-            Gdx.app.exit();
-        }
     }
 }

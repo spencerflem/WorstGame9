@@ -9,4 +9,5 @@ public interface ManagedWindow {
 
     void setPositionListener(WindowPositionListener listener);
     Vector2 getPosition();
+    boolean isFocused();
 }
