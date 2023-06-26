@@ -27,11 +27,6 @@ public class PrefabLoader {
         Texture texture = managerRef.get(Filenames.BIBL.getFilename(), Texture.class);
         return (Patroller) new Patroller()
                 .WithSpeed(5)
-                .WithWaypoints(new Vector2[] {
-                        new Vector2(30, 2),
-                        new Vector2(36, 2),
-                })
-                .WithSpawnPosition(new Vector2(32, 2))
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
@@ -39,21 +34,16 @@ public class PrefabLoader {
     public Chaser NewBuffChickPrefab() {
         Texture texture = managerRef.get(Filenames.BfChicken.getFilename(), Texture.class);
         return (Chaser) new Chaser()
-            .WithSpeed(3)
-            .WithSpawnPosition(new Vector2(32, 2))
-            .WithTexture(texture)
-            .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
+                .WithSpeed(3)
+                .WithSpawnPosition(new Vector2(32, 2))
+                .WithTexture(texture)
+                .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
 
     public Patroller NewDoNUTPrefab() {
         Texture texture = managerRef.get(Filenames.DONUT.getFilename(), Texture.class);
         return (Patroller) new Patroller()
                 .WithSpeed(5)
-                .WithWaypoints(new Vector2[] {
-                        new Vector2(46, 5),
-                        new Vector2(46, 12),
-                })
-                .WithSpawnPosition(new Vector2(46, 14))
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
@@ -79,8 +69,8 @@ public class PrefabLoader {
     public Portal NewPortalPrefab() {
         Texture texture = managerRef.get(Filenames.PORTAL.getFilename(), Texture.class);
         return (Portal) new Portal()
-            .WithSpawnPosition(new Vector2(4, 2))
-            .WithTexture(texture)
-            .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
+                .WithSpawnPosition(new Vector2(4, 2))
+                .WithTexture(texture)
+                .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
 }

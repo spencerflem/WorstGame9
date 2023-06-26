@@ -135,14 +135,21 @@ public class WorstScreen extends ScreenAdapter {
                         path[i] = new Vector2(pathX, pathY);
                     }
 
+                    Patroller prefab = new Patroller();
+                    // parse the TexturerEnum
+                    String textureStr = obj.getProperties().get("TextureEnum", String.class);
+                    if (textureStr.equals("BIBL")) {
+                        prefab = prefabLoader.NewBiblPrefab();
+                    } else if (textureStr.equals("DONUT")) {
+                        prefab = prefabLoader.NewDoNUTPrefab();
+                    }
+
                     entities.add(
-                            prefabLoader.NewBiblPrefab().WithWaypoints(path).WithSpawnPosition(new Vector2(x, y)));
+                            prefab.WithWaypoints(path).WithSpawnPosition(new Vector2(x, y)));
 
                 }
             });
         });
-
-        entities.add(prefabLoader.NewDoNUTPrefab());
         for (int i = 0; i < 3; i++) {
             entities.add(prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(51 + i, 10)));
         }
