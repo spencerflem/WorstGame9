@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 public class PrefabLoader {
     private Float PIXEL2TILE;
 
-    private AssetManager managerRef = new AssetManager();
+    private AssetManager managerRef;
 
     public PrefabLoader(AssetManager AssetManager, float PIXEL2TILE) {
         this.managerRef = AssetManager;

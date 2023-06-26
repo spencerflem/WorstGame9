@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
+import java.util.Objects;
+
 public class HostApplication extends ApplicationAdapter {
 
     public final WindowCreator windowCreator;
@@ -23,23 +25,26 @@ public class HostApplication extends ApplicationAdapter {
         this.windowCreator = windowCreator;
     }
 
-    private <T> void loadAssetsFolder(AssetManager assets, String folderName, Class<T> type, FileHandleResolver resolver) {
+    private <T> void loadAssetsFolder(AssetManager assets, String folderName, String extension, Class<T> type, FileHandleResolver resolver) {
         FileHandle folder = resolver.resolve("").child(folderName);
         if (!folder.exists()) {
             return;
         }
         for (FileHandle asset : folder.list()) {
-            assets.load(asset.path(), type);
+            if (Objects.equals(asset.extension(), extension)) {
+                assets.load(asset.path(), type);
+            }
         }
     }
 
     @Override
     public void create() {
         shared.assets = new AssetManager();
+        shared.popupCreator = level -> windowCreator.newPopup(shared, level);
         FileHandleResolver resolver = new InternalFileHandleResolver();
-        loadAssetsFolder(shared.assets, "textures", Texture.class, resolver);
+        loadAssetsFolder(shared.assets, "textures", "png", Texture.class, resolver);
         shared.assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
-        loadAssetsFolder(shared.assets, "maps", TiledMap.class, resolver);
+        loadAssetsFolder(shared.assets, "maps", "tmx", TiledMap.class, resolver);
         music = Gdx.audio.newMusic(Gdx.files.internal(Filenames.MUSIC.getFilename()));
         music.setLooping(true);
         music.setVolume(.02f);

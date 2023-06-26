@@ -10,7 +10,7 @@ public enum Filenames {
     PORTAL("textures/level_portal.png"),
     MUSIC("music/background_music.mp3");
 
-    private String filename = "";
+    private String filename;
 
     Filenames(String filename) {
         this.filename = filename;
