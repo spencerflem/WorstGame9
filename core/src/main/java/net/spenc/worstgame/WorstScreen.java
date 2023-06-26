@@ -32,12 +32,12 @@ public class WorstScreen extends ScreenAdapter {
 
     public WorstScreen(WorstGame game, String level) {
         this.game = game;
-        this.map = game.assets.get("maps/" + level + ".tmx");
+        this.map = game.shared.assets.get("maps/" + level + ".tmx");
         this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles);
         this.camera = new OrthographicCamera();
         this.camera.position.y = 10;
         this.viewport = new FitViewport(30, 20, camera);
-        this.prefabLoader = new PrefabLoader(game.assets, pixels2tiles);
+        this.prefabLoader = new PrefabLoader(game.shared.assets, pixels2tiles);
         createEntities();
     }
 
@@ -71,7 +71,7 @@ public class WorstScreen extends ScreenAdapter {
 
         // if 'P' just pressed - make a pop-up
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            game.popupWindowCreator.newPopup(game.assets, game.initialLevel);
+            game.shared.popupCreator.newPopup(game.initialLevel);
         }
     }
 

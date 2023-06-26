@@ -4,9 +4,9 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 
 public class OverlayApplication extends ApplicationAdapter {
-    AssetManager assets;
+    SharedData shared;
 
-    public OverlayApplication(AssetManager assets) {
-        this.assets = assets;
+    public OverlayApplication(SharedData shared) {
+        this.shared = shared;
     }
 }

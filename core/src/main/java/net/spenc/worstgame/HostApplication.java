@@ -13,14 +13,14 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 public class HostApplication extends ApplicationAdapter {
 
-    public final PopupWindowCreator popupWindowCreator;
+    public final WindowCreator windowCreator;
     private Music music;
-    private AssetManager assets;
+    private final SharedData shared = new SharedData();
     private boolean started = false;
 
 
-    public HostApplication(PopupWindowCreator popupWindowCreator) {
-        this.popupWindowCreator = popupWindowCreator;
+    public HostApplication(WindowCreator windowCreator) {
+        this.windowCreator = windowCreator;
     }
 
     private <T> void loadAssetsFolder(AssetManager assets, String folderName, Class<T> type, FileHandleResolver resolver) {
@@ -35,11 +35,11 @@ public class HostApplication extends ApplicationAdapter {
 
     @Override
     public void create() {
-        assets = new AssetManager();
+        shared.assets = new AssetManager();
         FileHandleResolver resolver = new InternalFileHandleResolver();
-        loadAssetsFolder(assets, "textures", Texture.class, resolver);
-        assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
-        loadAssetsFolder(assets, "maps", TiledMap.class, resolver);
+        loadAssetsFolder(shared.assets, "textures", Texture.class, resolver);
+        shared.assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
+        loadAssetsFolder(shared.assets, "maps", TiledMap.class, resolver);
         music = Gdx.audio.newMusic(Gdx.files.internal(Filenames.MUSIC.getFilename()));
         music.setLooping(true);
         music.setVolume(.02f);
@@ -51,8 +51,8 @@ public class HostApplication extends ApplicationAdapter {
     @Override
     public void render() {
         if (!started) {
-            if (assets.update()) {
-                popupWindowCreator.newMain(assets, "level1");
+            if (shared.assets.update()) {
+                windowCreator.newMain(shared, "level1");
                 started = true;
             }
         }

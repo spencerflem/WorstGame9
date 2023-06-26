@@ -1,7 +1,6 @@
 package net.spenc.worstgame.desktop;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
@@ -9,25 +8,26 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.badlogic.gdx.graphics.Color;
 
 import net.spenc.worstgame.OverlayApplication;
-import net.spenc.worstgame.PopupWindowCreator;
+import net.spenc.worstgame.WindowCreator;
+import net.spenc.worstgame.SharedData;
 import net.spenc.worstgame.WorstGame;
 
 import org.lwjgl.glfw.GLFW;
 
-public class DesktopPopupWindowCreator implements PopupWindowCreator {
+public class DesktopWindowCreator implements WindowCreator {
     @Override
-    public void newMain(AssetManager assets, String level) {
-        ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(this, true, level, assets), getDefaultConfiguration());
+    public void newMain(SharedData shared, String level) {
+        ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(shared, true, level), getDefaultConfiguration());
     }
 
     @Override
-    public void newPopup(AssetManager assets, String level) {
-        ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(this, false, level, assets), getDefaultConfiguration());
+    public void newPopup(SharedData shared, String level) {
+        ((Lwjgl3Application) Gdx.app).newWindow(new WorstGame(shared, false, level), getDefaultConfiguration());
     }
 
     @Override
-    public void newOverlay(AssetManager assets) {
-        var window = ((Lwjgl3Application) Gdx.app).newWindow(new OverlayApplication(assets), getOverlayConfiguration());
+    public void newOverlay(SharedData shared) {
+        var window = ((Lwjgl3Application) Gdx.app).newWindow(new OverlayApplication(shared), getOverlayConfiguration());
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
             public void created(Lwjgl3Window window) {

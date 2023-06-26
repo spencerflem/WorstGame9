@@ -13,7 +13,7 @@ public class DesktopLauncher {
     }
 
     private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new HostApplication(new DesktopPopupWindowCreator()), getDefaultConfiguration());
+        return new Lwjgl3Application(new HostApplication(new DesktopWindowCreator()), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
