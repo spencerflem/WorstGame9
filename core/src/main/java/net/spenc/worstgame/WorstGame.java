@@ -1,6 +1,7 @@
 package net.spenc.worstgame;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 
@@ -8,20 +9,19 @@ public class WorstGame extends Game {
 
     public final PopupWindowCreator popupWindowCreator;
     public final boolean main;
-    public final String level;
-
+    public final String initialLevel;
     public final AssetManager assets;
 
-    public WorstGame(PopupWindowCreator popupWindowCreator, boolean main, String level, AssetManager assets) {
+    public WorstGame(PopupWindowCreator popupWindowCreator, boolean main, String initialLevel, AssetManager assets) {
         this.popupWindowCreator = popupWindowCreator;
         this.main = main;
-        this.level = level;
+        this.initialLevel = initialLevel;
         this.assets = assets;
     }
 
     @Override
     public void create() {
-        setScreen(new WorstScreen(this));
+        setScreen(new WorstScreen(this, initialLevel));
     }
 
     // auto-dispose
@@ -37,5 +37,8 @@ public class WorstGame extends Game {
     @Override
     public void dispose() {
         screen.dispose();
+        if (main) {
+            Gdx.app.exit();
+        }
     }
 }

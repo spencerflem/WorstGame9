@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
+import com.badlogic.gdx.graphics.Color;
 
 import net.spenc.worstgame.OverlayApplication;
 import net.spenc.worstgame.PopupWindowCreator;
@@ -54,6 +55,7 @@ public class DesktopPopupWindowCreator implements PopupWindowCreator {
         Lwjgl3ApplicationConfiguration configuration = getDefaultConfiguration();
         configuration.setTransparentFramebuffer(true);
         configuration.setDecorated(false);
+        configuration.setInitialBackgroundColor(Color.CLEAR);
         return configuration;
     }
 }

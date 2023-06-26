@@ -7,6 +7,7 @@ public enum Filenames {
     SPIKE("textures/spike.png"),
     BfChicken("textures/buffChicken.png"),
     SPRING("textures/spring.png"),
+    PORTAL("textures/level_portal.png"),
     MUSIC("music/background_music.mp3");
 
     private String filename = "";

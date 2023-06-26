@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -29,11 +28,11 @@ public class WorstScreen extends ScreenAdapter {
     private final Viewport viewport;
     private double accumulator = 0.0;
     private final ArrayList<Entity> entities = new ArrayList<>();
-    private PrefabLoader prefabLoader;
+    private final PrefabLoader prefabLoader;
 
-    public WorstScreen(WorstGame game) {
+    public WorstScreen(WorstGame game, String level) {
         this.game = game;
-        this.map = game.assets.get("maps/" + game.level + ".tmx");
+        this.map = game.assets.get("maps/" + level + ".tmx");
         this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles);
         this.camera = new OrthographicCamera();
         this.camera.position.y = 10;
@@ -72,7 +71,7 @@ public class WorstScreen extends ScreenAdapter {
 
         // if 'P' just pressed - make a pop-up
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            game.popupWindowCreator.newPopup(game.assets, game.level);
+            game.popupWindowCreator.newPopup(game.assets, game.initialLevel);
         }
 
         // if 'O' just pressed - make an overlay pop-up
@@ -89,13 +88,9 @@ public class WorstScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        map.dispose();
         renderer.dispose();
         for (Entity entity : entities) {
             entity.dispose();
-        }
-        if (game.main) {
-            Gdx.app.exit();
         }
     }
 
@@ -109,6 +104,7 @@ public class WorstScreen extends ScreenAdapter {
             entities.add(prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(51 + i, 10)));
         }
         entities.add(prefabLoader.NewSpringPrefab());
+        entities.add(prefabLoader.NewPortalPrefab().WithGame(game).WithLevelTarget("level1"));
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
     }
