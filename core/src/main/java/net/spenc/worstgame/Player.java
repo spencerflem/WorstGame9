@@ -2,6 +2,8 @@ package net.spenc.worstgame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -54,6 +56,8 @@ public class Player extends Entity {
 
     @Override
     public void update(float deltaTime) {
+        Controller controller = Controllers.getCurrent();
+
         if (deltaTime == 0)
             return;
 
@@ -63,20 +67,21 @@ public class Player extends Entity {
         this.stateTime += deltaTime;
 
         // check input and apply to velocity & state
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || isTouched(0.5f, 1)) && this.grounded) {
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) ||  controller.getAxis(controller.getMapping().axisLeftY) > 0 || isTouched(0.5f, 1)) && this.grounded) {
             this.velocity.y += Player.JUMP_VELOCITY;
             this.state = Player.State.Jumping;
             this.grounded = false;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) ||  controller.getAxis(controller.getMapping().axisLeftX) > 0 || Gdx.input.isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)) {
             this.velocity.x = -Player.MAX_VELOCITY;
             if (this.grounded)
                 this.state = Player.State.Walking;
             this.facesRight = false;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.getAxis(controller.getMapping().axisLeftX) < 0 ||
+        Gdx.input.isKeyPressed(Input.Keys.D)
                 || isTouched(0.25f, 0.5f)) {
             this.velocity.x = Player.MAX_VELOCITY;
             if (this.grounded)
