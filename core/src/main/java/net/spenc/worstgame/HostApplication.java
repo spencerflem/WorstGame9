@@ -8,21 +8,23 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.Objects;
 
 public class HostApplication extends ApplicationAdapter {
 
-    public final WindowCreator windowCreator;
+    public final WindowManager windowManager;
     private Music music;
-    private final SharedData shared = new SharedData();
+    private SharedData shared;
     private boolean started = false;
+    private final Array<ManagedWindow> windows = new Array<>();
 
-
-    public HostApplication(WindowCreator windowCreator) {
-        this.windowCreator = windowCreator;
+    public HostApplication(WindowManager windowManager) {
+        this.windowManager = windowManager;
     }
 
     private <T> void loadAssetsFolder(AssetManager assets, String folderName, String extension, Class<T> type, FileHandleResolver resolver) {
@@ -39,8 +41,8 @@ public class HostApplication extends ApplicationAdapter {
 
     @Override
     public void create() {
-        shared.assets = new AssetManager();
-        shared.popupCreator = level -> windowCreator.newPopup(shared, level);
+        PopupCreator popupCreator = level -> windowManager.newPopup(shared, level, windows::add);
+        shared = new SharedData(new AssetManager(), popupCreator, new SpriteBatch());
         FileHandleResolver resolver = new InternalFileHandleResolver();
         loadAssetsFolder(shared.assets, "textures", "png", Texture.class, resolver);
         shared.assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
@@ -57,10 +59,14 @@ public class HostApplication extends ApplicationAdapter {
     public void render() {
         if (!started) {
             if (shared.assets.update()) {
-                windowCreator.newMain(shared, "level1");
+                windowManager.newMain(shared, "level1", window -> {
+                    windows.add(window);
+                    window.setPositionListener((x, y) -> Gdx.app.log("loc", "x: " + x + ", y: " + y));
+                });
                 started = true;
             }
         }
+
     }
 
     @Override

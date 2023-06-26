@@ -35,7 +35,7 @@ public class WorstScreen extends ScreenAdapter {
     public WorstScreen(WorstGame game, String level) {
         this.game = game;
         this.map = game.shared.assets.get("maps/" + level + ".tmx");
-        this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles);
+        this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, game.shared.batch);
         this.camera = new OrthographicCamera();
         this.camera.position.y = 10;
         this.viewport = new FitViewport(30, 20, camera);
