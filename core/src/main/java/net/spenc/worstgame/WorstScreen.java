@@ -74,9 +74,9 @@ public class WorstScreen extends ScreenAdapter {
         return new WindowApplication() {
             @Override
             public void render() {
-                //if (getWindow() != null && getWindow().isFocused()) {
+                if (getWindow() != null && getWindow().isFocused()) {
                     collectInput();
-                //}
+                }
                 renderClient();
             }
 
