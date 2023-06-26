@@ -59,9 +59,6 @@ public class PrefabLoader {
     public Spring NewSpringPrefab() {
         Texture texture = managerRef.get(Filenames.SPRING.getFilename(), Texture.class);
         return (Spring) new Spring()
-                .WithSpringiness(100)
-                .WithImpulseDir(Vector2.Y)
-                .WithSpawnPosition(new Vector2(10, 2))
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }

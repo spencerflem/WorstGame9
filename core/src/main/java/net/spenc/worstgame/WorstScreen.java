@@ -93,13 +93,15 @@ public class WorstScreen extends ScreenAdapter {
         Controller controller = Controllers.getCurrent();
 
         input.jump = Gdx.input.isKeyPressed(Input.Keys.SPACE) || isTouched(0.5f, 1)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftY) > 0);
+                || (controller != null && controller.getAxis(controller.getMapping().axisLeftY) > 0);
 
-        input.right = Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D) || isTouched(0.25f, 0.5f)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
+        input.right = Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
+                || isTouched(0.25f, 0.5f)
+                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
 
-        input.left = Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
+        input.left = Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)
+                || isTouched(0, 0.25f)
+                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
     }
 
     private boolean isTouched(float startX, float endX) {
@@ -175,16 +177,16 @@ public class WorstScreen extends ScreenAdapter {
                     return;
                 }
 
+                // get the position
+                float x = obj.getProperties().get("x", Float.class) * pixels2tiles;
+                float y = obj.getProperties().get("y", Float.class) * pixels2tiles;
+
                 String type = obj.getProperties().get("type").toString();
 
                 Gdx.app.log("Parsed Type", type);
 
                 if (type.toLowerCase().equals("patroller")) {
-                    // log found a bibl
                     Gdx.app.log("Patroller", "Found a patroller");
-                    // get the position
-                    float x = obj.getProperties().get("x", Float.class) * pixels2tiles;
-                    float y = obj.getProperties().get("y", Float.class) * pixels2tiles;
 
                     int pathLength = obj.getProperties().get("PathLength", Integer.class);
                     Vector2[] path = new Vector2[pathLength];
@@ -213,14 +215,37 @@ public class WorstScreen extends ScreenAdapter {
                         prefab.WithWaypoints(path).WithSpawnPosition(new Vector2(x, y)));
 
                 }
+
+                if (type.toLowerCase().equals("spring")) {
+                    // log found a spring
+                    Gdx.app.log("Spring", "Found a spring");
+
+                    // parse the springiness
+                    float springiness = obj.getProperties().get("springiness", Float.class);
+                    // parse the impulseDir this is a string "x,y"
+                    String impulseDirStr = obj.getProperties().get("impulseDir", String.class);
+                    String[] impulseDirStrSplit = impulseDirStr.split(",");
+                    float impulseDirX = Float.parseFloat(impulseDirStrSplit[0]);
+                    float impulseDirY = Float.parseFloat(impulseDirStrSplit[1]);
+                    Vector2 impulseDir = new Vector2(impulseDirX, impulseDirY);
+
+                    entities.add(prefabLoader.NewSpringPrefab().WithSpringiness(springiness).WithImpulseDir(impulseDir)
+                            .WithSpawnPosition(new Vector2(x, y)));
+                }
             });
         });
         for (int i = 0; i < 3; i++) {
             entities.add(prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(51 + i, 10)));
         }
-        entities.add(prefabLoader.NewSpringPrefab());
         entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget("level1"));
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
     }
 }
+
+
+    
+    
+        
+    
+     
