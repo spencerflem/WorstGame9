@@ -17,7 +17,6 @@ public class PrefabLoader {
     public Player NewPlayerPrefab() {
         Texture texture = managerRef.get(Filenames.PLAYER.getFilename(), Texture.class);
         return (Player) new Player()
-                .WithSpawnPosition(new Vector2(20, 20))
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE)
                 .WithLayer(1);
@@ -66,8 +65,8 @@ public class PrefabLoader {
     public Portal NewPortalPrefab() {
         Texture texture = managerRef.get(Filenames.PORTAL.getFilename(), Texture.class);
         return (Portal) new Portal()
-            .WithSpawnPosition(new Vector2(15, 2))
-            .WithTexture(texture)
-            .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
+                .WithSpawnPosition(new Vector2(15, 2))
+                .WithTexture(texture)
+                .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
 }

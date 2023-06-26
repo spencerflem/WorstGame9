@@ -1,9 +1,5 @@
 package net.spenc.worstgame;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -62,8 +58,6 @@ public class Player extends Entity {
 
     @Override
     public void update(float deltaTime) {
-        Controller controller = Controllers.getCurrent();
-
         if (deltaTime == 0)
             return;
 

@@ -164,9 +164,6 @@ public class WorstScreen extends ScreenAdapter {
     }
 
     private void createEntities() {
-        Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera).WithInputRef(input);
-        entities.add(p);
-        entities.add(prefabLoader.NewBuffChickPrefab().WithTarget(p));
         // loads entities from map @TODO replace all the other loaded prefabs
         map.getLayers().forEach(layer -> {
             // log the layer name
@@ -185,6 +182,12 @@ public class WorstScreen extends ScreenAdapter {
 
                 Gdx.app.log("Parsed Type", type);
 
+                if (type.toLowerCase().equals("player")) {
+                    Gdx.app.log("Player", "Found a player");
+                    entities.add(prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)
+                            .WithInputRef(input).WithSpawnPosition(new Vector2(x, y)));
+                }
+
                 if (type.toLowerCase().equals("patroller")) {
                     Gdx.app.log("Patroller", "Found a patroller");
 
@@ -196,7 +199,7 @@ public class WorstScreen extends ScreenAdapter {
                         float pathX = Float.parseFloat(pathPointStrSplit[0]) * pixels2tiles;
                         // remember for y that the map is upside down
                         float pathY = map.getProperties().get("height", Integer.class)
-                            - Float.parseFloat(pathPointStrSplit[1]) * pixels2tiles;
+                                - Float.parseFloat(pathPointStrSplit[1]) * pixels2tiles;
                         // log the xy
                         Gdx.app.log("Path Point", pathX + "," + pathY);
                         path[i] = new Vector2(pathX, pathY);
@@ -211,8 +214,7 @@ public class WorstScreen extends ScreenAdapter {
                         prefab = prefabLoader.NewDoNUTPrefab();
                     }
 
-                    entities.add(
-                        prefab.WithWaypoints(path).WithSpawnPosition(new Vector2(x, y)));
+                    entities.add(prefab.WithWaypoints(path).WithSpawnPosition(new Vector2(x, y)));
 
                 }
 
@@ -237,15 +239,19 @@ public class WorstScreen extends ScreenAdapter {
         for (int i = 0; i < 3; i++) {
             entities.add(prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(51 + i, 10)));
         }
+
+        // get the entity that is the player
+        for (int i = 0; i < entities.size(); i++) {
+            Entity entity = entities.get(i);
+            if (entity instanceof Player) {
+                Player playerRef = (Player) entity;
+                entities.add(prefabLoader.NewBuffChickPrefab().WithTarget(playerRef));
+                break;
+            }
+        }
+
         entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget("level1"));
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
     }
 }
-
-
-    
-    
-        
-    
-     
