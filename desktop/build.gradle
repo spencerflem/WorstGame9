@@ -16,7 +16,8 @@ if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_14)) {
   apply plugin: 'application'
 }
 
-sourceSets.main.resources.srcDirs += [rootProject.file('assets').path]
+// _DON'T_ add the resources to the path; makes editing easier
+//sourceSets.main.resources.srcDirs += [rootProject.file('assets').path]
 mainClassName = 'net.spenc.worstgame.desktop.DesktopLauncher'
 eclipse.project.name = appName + '-desktop'
 sourceCompatibility = 17
@@ -100,13 +101,20 @@ tasks.register('dist') {
   dependsOn['jar']
 }
 
+def jPackageImageWithAssets = task jPackageImageWithAssets(type: Copy) {
+  from rootProject.file('assets')
+  into "$buildDir/jpackage/WorstGame9"
+}
+
+jPackageImageWithAssets.configure { dependsOn('jpackageImage') }
+
 def zip = task zipJpackageDir(type: Zip) {
   archiveFileName = "worstgame9.zip"
   destinationDirectory = file("$buildDir/jpackageZip")
   from "$buildDir/jpackage/WorstGame9"
 }
 
-zip.configure { dependsOn('jpackageImage') }
+zip.configure { dependsOn('jPackageImageWithAssets') }
 
 tasks.register('jpackageImageZip') {
   dependsOn zip
