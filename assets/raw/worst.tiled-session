@@ -1,0 +1,43 @@
+{
+    "activeFile": "/home/michael/Repos/WorstGame9/assets/level1.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "/home/michael/Repos/WorstGame9/assets/level1.tmx": {
+            "scale": 4.0754,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 166.97747460371986,
+                "y": 278.86833194287675
+            }
+        },
+        "/home/michael/Repos/WorstGame9/assets/level1.tmx#tileSet-hd": {
+            "scaleInDock": 1
+        }
+    },
+    "map.fixedSize": true,
+    "map.height": 10,
+    "map.orientation": 1,
+    "map.tileHeight": 32,
+    "map.tileWidth": 32,
+    "map.width": 10,
+    "openFiles": [
+        "/home/michael/Repos/WorstGame9/assets/level1.tmx"
+    ],
+    "project": "worst.tiled-project",
+    "recentFiles": [
+        "/home/michael/Repos/WorstGame9/assets/level1.tmx"
+    ],
+    "tileset.embedInMap": false,
+    "tileset.margin": 0,
+    "tileset.spacing": 0,
+    "tileset.tileSize": {
+        "height": 32,
+        "width": 32
+    },
+    "tileset.transparentColor": "#ff00ff",
+    "tileset.type": 0,
+    "tileset.useTransparentColor": false
+}

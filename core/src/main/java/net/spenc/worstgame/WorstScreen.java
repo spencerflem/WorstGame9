@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -68,6 +69,43 @@ public class WorstScreen extends ScreenAdapter {
 
         TiledMap map = manager.get(Filenames.MAP.getFilename(), TiledMap.class);
 
+        // log all of the map custom properties
+        map.getLayers().forEach(layer -> {
+            // log the layer name
+            Gdx.app.log("Layer Name", layer.getName());
+            layer.getObjects().forEach(obj -> {
+                // log the type
+                if (!obj.getProperties().containsKey("type")) {
+                    return;
+                }
+
+                String type = obj.getProperties().get("type").toString();
+
+                Gdx.app.log("Parsed Type", type);
+
+                if (type.toLowerCase().equals("patroller")) {
+                    // log found a bibl
+                    Gdx.app.log("Patroller", "Found a patroller");
+                    // get the position
+                    float x = obj.getProperties().get("x", Float.class) * PIXEL2TILE;
+                    float y = obj.getProperties().get("y", Float.class) * PIXEL2TILE;
+
+                    int pathLength = obj.getProperties().get("PathLength", Integer.class);
+                    Vector2[] path = new Vector2[pathLength];
+                    for (int i = 0; i < pathLength; i++) {
+                        TiledMapTileMapObject pathPoint = (TiledMapTileMapObject) obj.getProperties().get("Path" + i);
+                        float pathX = pathPoint.getProperties().get("x", Float.class) * PIXEL2TILE;
+                        float pathY = pathPoint.getProperties().get("y", Float.class) * PIXEL2TILE;
+                        path[i] = new Vector2(pathX, pathY);
+                    }
+
+                    entities.add(
+                            prefabLoader.NewBiblPrefab().WithSpawnPosition(new Vector2(x, y)));
+
+                }
+            });
+        });
+
         renderer = new OrthogonalTiledMapRenderer(map, PIXEL2TILE);
 
         MainCamera = new OrthographicCamera();
@@ -75,14 +113,16 @@ public class WorstScreen extends ScreenAdapter {
 
         viewport = new FitViewport(30, 20, MainCamera);
 
-        entities.add((prefabLoader.NewPlayerPrefab()
-                .WithMapRef(map)));
+        Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map);
+        entities.add(p);
 
         entities.add(prefabLoader.NewBiblPrefab());
 
         entities.add(prefabLoader.NewDoNUTPrefab());
 
-        for (int i = 0; i < 3; i++) {
+        for (
+
+                int i = 0; i < 3; i++) {
             entities.add(
                     prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(51 + i, 10)));
         }
@@ -92,7 +132,8 @@ public class WorstScreen extends ScreenAdapter {
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
 
-        Music music = manager.get(Filenames.MUSIC.getFilename(), Music.class);
+        Music music = manager.get(Filenames.MUSIC.getFilename(),
+                Music.class);
         music.setLooping(true);
         music.setVolume(.02f);
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
