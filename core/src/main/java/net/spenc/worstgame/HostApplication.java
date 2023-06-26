@@ -1,5 +1,7 @@
 package net.spenc.worstgame;
 
+import java.util.Objects;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -18,12 +20,12 @@ public class HostApplication extends ApplicationAdapter {
     private AssetManager assets;
     private boolean started = false;
 
-
     public HostApplication(PopupWindowCreator popupWindowCreator) {
         this.popupWindowCreator = popupWindowCreator;
     }
-    
-    private <T> void loadAssetsFolder(AssetManager assets, String folderName, String extension, Class<T> type, FileHandleResolver resolver) {
+
+    private <T> void loadAssetsFolder(AssetManager assets, String folderName, String extension, Class<T> type,
+            FileHandleResolver resolver) {
         FileHandle folder = resolver.resolve("").child(folderName);
         if (!folder.exists()) {
             return;
