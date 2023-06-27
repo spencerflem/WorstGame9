@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
@@ -38,13 +39,15 @@ public class HostApp extends ApplicationAdapter {
         batch = new SpriteBatch();
         FileHandleResolver resolver = new InternalFileHandleResolver();
         loadAssetsFolder(assets, "textures", "png", Texture.class, resolver);
+        loadAssetsFolder(assets, "sfx", "ogg", Sound.class, resolver);
         assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
         loadAssetsFolder(assets, "maps", "tmx", TiledMap.class, resolver);
         assets.finishLoading();
         mainWindow = newPopup(true);
     }
 
-    private <T> void loadAssetsFolder(AssetManager assets, String folderName, String extension, Class<T> type, FileHandleResolver resolver) {
+    private <T> void loadAssetsFolder(AssetManager assets, String folderName, String extension, Class<T> type,
+            FileHandleResolver resolver) {
         FileHandle folder = resolver.resolve("").child(folderName);
         if (!folder.exists()) {
             return;
@@ -87,11 +90,12 @@ public class HostApp extends ApplicationAdapter {
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, WindowUtils.getDefaultConfiguration());
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
-            public void created (Lwjgl3Window window) {
+            public void created(Lwjgl3Window window) {
                 windows.add(window);
             }
+
             @Override
-            public boolean closeRequested () {
+            public boolean closeRequested() {
                 windows.removeValue(window, true);
                 if (main) {
                     Gdx.app.exit();

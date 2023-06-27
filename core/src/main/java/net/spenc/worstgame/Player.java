@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
 public class Player extends Entity {
-    public Player root;
+    public Player root = null;
     private int cloneNumber = 0;
 
     public static float MAX_VELOCITY = 10f;
@@ -255,6 +255,9 @@ public class Player extends Entity {
     @Override
     public void onCollisionEnter(Entity other) {
         if (other instanceof Patroller) {
+            if (this.root == null) {
+                ((Patroller) other).playSound();
+            }
             respawn();
         }
         if (other instanceof Player) {
