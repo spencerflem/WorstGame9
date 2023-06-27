@@ -30,6 +30,7 @@ public class HostApp extends ApplicationAdapter {
     private static final float MAX_ACCUMULATOR = 0.1f;
     private double accumulator = 0.0;
     private final Array<Lwjgl3Window> windows = new Array<>();
+    private Lwjgl3Window mainWindow;
 
     @Override
     public void create() {
@@ -40,7 +41,7 @@ public class HostApp extends ApplicationAdapter {
         assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
         loadAssetsFolder(assets, "maps", "tmx", TiledMap.class, resolver);
         assets.finishLoading();
-        newPopup(true);
+        mainWindow = newPopup(true);
     }
 
     private <T> void loadAssetsFolder(AssetManager assets, String folderName, String extension, Class<T> type, FileHandleResolver resolver) {
@@ -83,8 +84,6 @@ public class HostApp extends ApplicationAdapter {
 
     public Lwjgl3Window newPopup(boolean main) {
         ClientApp app = new ClientApp();
-        Screen screen = new WorstScreen(this, "level1");
-        app.setScreen(screen);
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, WindowUtils.getDefaultConfiguration());
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
@@ -100,6 +99,7 @@ public class HostApp extends ApplicationAdapter {
                 return true;
             }
         });
+        setLevel("level1", window);
         return window;
     }
 
@@ -113,6 +113,20 @@ public class HostApp extends ApplicationAdapter {
             }
         }
         return Gdx.input;
+    }
+
+    public void setLevel(String level) {
+        setLevel(level, mainWindow);
+    }
+
+    public void setLevel(String level, Lwjgl3Window window) {
+        ClientApp app = getClientApp(window);
+        Screen oldScreen = app.getScreen();
+        Screen newScreen = new WorstScreen(this, level);
+        app.setScreen(newScreen);
+        if (oldScreen != null) {
+            oldScreen.dispose();
+        }
     }
 
     private ClientApp getClientApp(Lwjgl3Window window) {

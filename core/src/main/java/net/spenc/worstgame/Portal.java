@@ -1,8 +1,13 @@
 package net.spenc.worstgame;
 
 public class Portal extends Entity {
+    private HostApp host;
     private String target;
 
+    public Portal WithHost(HostApp host) {
+        this.host = host;
+        return this;
+    }
 
     public Portal WithLevelTarget(String target) {
         this.target = target;
@@ -12,7 +17,9 @@ public class Portal extends Entity {
     @Override
     public void onCollisionEnter(Entity other) {
         if (other instanceof Player) {
-            // TODO!!! new way of portaling
+            if (((Player) other).root == null) {
+                host.setLevel(target);
+            }
         }
     }
 

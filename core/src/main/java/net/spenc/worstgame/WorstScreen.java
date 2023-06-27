@@ -183,6 +183,7 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
                     // parse the level target
                     String target = obj.getProperties().get("target", String.class);
                     entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget(target)
+                            .WithHost(host)
                             .WithSpawnPosition(new Vector2(x, y)));
                 }
 
