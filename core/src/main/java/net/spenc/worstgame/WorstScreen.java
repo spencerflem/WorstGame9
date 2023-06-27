@@ -205,7 +205,7 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
 
         // get the entity that is the player
         for (Entity entity : entities) {
-            if (entity instanceof Player) {
+            if (entity instanceof Player && ((Player) entity).root == null) {
                 playerRef = (Player) entity;
             } else if (entity instanceof Chaser) {
                 chaserRefs.add((Chaser) entity);
