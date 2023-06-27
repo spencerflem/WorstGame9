@@ -184,8 +184,15 @@ public class WorstScreen extends ScreenAdapter {
 
                 if (type.toLowerCase().equals("player")) {
                     Gdx.app.log("Player", "Found a player");
+                    for (int i = 0; i < 100; i++) {
+                        x = i;
+                        entities.add(prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)
+                                .WithInputRef(input).WithSpawnPosition(new Vector2(x, y)));
+                    }
+                    // spawn an extra at x = 50
                     entities.add(prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)
-                            .WithInputRef(input).WithSpawnPosition(new Vector2(x, y)));
+                            .WithInputRef(input).WithSpawnPosition(new Vector2(50, y)));
+
                 }
 
                 if (type.toLowerCase().equals("patroller")) {
