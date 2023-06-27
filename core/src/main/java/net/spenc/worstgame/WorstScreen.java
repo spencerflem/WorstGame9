@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class WorstScreen extends ScreenAdapter implements ClientScreen {
@@ -140,7 +141,7 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
 
                 }
 
-                if (type.toLowerCase().equals("spring")) {
+                if (type.equalsIgnoreCase("spring")) {
                     // log found a spring
                     Gdx.app.log("Spring", "Found a spring");
 
@@ -157,7 +158,7 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
                             .WithSpawnPosition(new Vector2(x, y)));
                 }
 
-                if (type.toLowerCase().equals("entity")) {
+                if (type.equalsIgnoreCase("entity")) {
                     // parse the TexturerEnum
                     String textureStr = obj.getProperties().get("TextureEnum", String.class);
                     if (textureStr.equals("SPIKE")) {
@@ -166,14 +167,14 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
                     }
                 }
 
-                if (type.toLowerCase().equals("portal")) {
+                if (type.equalsIgnoreCase("portal")) {
                     // parse the level target
                     String target = obj.getProperties().get("target", String.class);
                     entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget(target)
                             .WithSpawnPosition(new Vector2(x, y)));
                 }
 
-                if (type.toLowerCase().equals("chaser")) {
+                if (type.equalsIgnoreCase("chaser")) {
                     // parse the TexturerEnum
                     String textureStr = obj.getProperties().get("TextureEnum", String.class);
                     if (textureStr.equals("BfChicken")) {

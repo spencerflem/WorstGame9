@@ -1,5 +1,9 @@
 package net.spenc.worstgame;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -58,6 +62,8 @@ public class Player extends Entity {
 
     @Override
     public void update(float deltaTime) {
+        Controller controller = Controllers.getCurrent();
+
         if (deltaTime == 0)
             return;
 
@@ -187,8 +193,8 @@ public class Player extends Entity {
         // startX/endX are given between 0 (left edge of the screen) and 1 (right edge
         // of the screen)
         for (int i = 0; i < 2; i++) {
-            float x = Gdx.input.getX(i) / (float) Gdx.graphics.getWidth();
-            if (Gdx.input.isTouched(i) && (x >= startX && x <= endX)) {
+            float x = hostRef.focusedInput().getX(i) / (float) Gdx.graphics.getWidth();
+            if (hostRef.focusedInput().isTouched(i) && (x >= startX && x <= endX)) {
                 return true;
             }
         }
