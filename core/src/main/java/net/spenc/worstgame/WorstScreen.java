@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -16,35 +14,24 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 
-public class WorstScreen extends ScreenAdapter {
+public class WorstScreen extends ScreenAdapter implements ClientScreen {
+    private final HostApp host;
     private final Music music;
-    private final Array<ManagedWindow> windows = new Array<>();
-    private static final float TIMESTEP = 0.01f;
-    private static final float MAX_ACCUMULATOR = 0.1f;
-    private double accumulator = 0.0;
-    private final WorstGame game;
     private final TiledMap map;
     private final float tiles2pixels = 16f;
     private final float pixels2tiles = 1 / tiles2pixels;
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
     private final Viewport viewport;
-    private final ArrayList<Entity> entities = new ArrayList<>();
+    private final Array<Entity> entities = new Array<>();
     private final PrefabLoader prefabLoader;
-    private final InputCollector input = new InputCollector();
 
-    public WorstScreen(WorstGame game) {
-        this.game = game;
-        this.map = game.assets.get("maps/level1.tmx");
-        this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, game.batch);
-        WindowListener app = newWindowApp(true);
-        game.windowManager.newMain(app, window -> {
-            windows.add(window);
-            window.setPositionListener((x, y) -> Gdx.app.log("loc", "x: " + x + ", y: " + y));
-        });
+    public WorstScreen(HostApp host, String level) {
+        this.host = host;
+        this.map = host.assets.get("maps/" + level + ".tmx");
+        this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, host.batch);
         music = Gdx.audio.newMusic(Gdx.files.internal(Filenames.MUSIC.getFilename()));
         music.setLooping(true);
         music.setVolume(.02f);
@@ -54,70 +41,12 @@ public class WorstScreen extends ScreenAdapter {
         this.camera = new OrthographicCamera();
         this.camera.position.y = 10;
         this.viewport = new FitViewport(30, 20, camera);
-        this.prefabLoader = new PrefabLoader(game.assets, pixels2tiles);
+        this.prefabLoader = new PrefabLoader(host.assets, pixels2tiles);
         createEntities();
     }
 
     @Override
     public void render(float delta) {
-        accumulator = Math.min(accumulator + delta, MAX_ACCUMULATOR);
-        while (accumulator >= TIMESTEP) {
-            accumulator -= TIMESTEP;
-            for (Entity entity : entities) {
-                entity.update(TIMESTEP);
-                entity.updateCollisions(entities);
-            }
-        }
-    }
-
-    private WindowListener newWindowApp(boolean main) {
-        return new WindowApplication() {
-            @Override
-            public void render() {
-                if (getWindow() != null && getWindow().isFocused()) {
-                    collectInput();
-                }
-                renderClient();
-            }
-
-            @Override
-            public void dispose() {
-                if (main) {
-                    Gdx.app.exit();
-                }
-            }
-        };
-    }
-
-    private void collectInput() {
-        Controller controller = Controllers.getCurrent();
-
-        input.jump = Gdx.input.isKeyPressed(Input.Keys.SPACE) || isTouched(0.5f, 1)
-                || (controller != null && controller.getAxis(controller.getMapping().axisLeftY) > 0);
-
-        input.right = Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
-                || isTouched(0.25f, 0.5f)
-                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
-
-        input.left = Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)
-                || isTouched(0, 0.25f)
-                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
-    }
-
-    private boolean isTouched(float startX, float endX) {
-        // Check for touch inputs between startX and endX
-        // startX/endX are given between 0 (left edge of the screen) and 1 (right edge
-        // of the screen)
-        for (int i = 0; i < 2; i++) {
-            float x = Gdx.input.getX(i) / (float) Gdx.graphics.getWidth();
-            if (Gdx.input.isTouched(i) && (x >= startX && x <= endX)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void renderClient() {
         ScreenUtils.clear(0.7f, 0.7f, 1, 1);
 
         camera.update();
@@ -136,7 +65,7 @@ public class WorstScreen extends ScreenAdapter {
 
         // if 'P' just pressed - make a pop-up
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            newPopup();
+            host.newPopup(false);
         }
     }
 
@@ -150,20 +79,13 @@ public class WorstScreen extends ScreenAdapter {
         music.stop();
         music.dispose();
         renderer.dispose();
-        for (Entity entity : entities) {
-            entity.dispose();
-        }
-    }
-
-    private void newPopup() {
-        WindowListener app = newWindowApp(false);
-        game.windowManager.newPopup(app, window -> {
-            app.setWindow(window);
-            windows.add(window);
-        });
+        host.disposeClient(this);
     }
 
     private void createEntities() {
+        Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera).WithHostRef(host);
+        entities.add(p);
+        entities.add(prefabLoader.NewBuffChickPrefab().WithTarget(p));
         // loads entities from map @TODO replace all the other loaded prefabs
         map.getLayers().forEach(layer -> {
             // log the layer name
@@ -182,13 +104,13 @@ public class WorstScreen extends ScreenAdapter {
 
                 Gdx.app.log("Parsed Type", type);
 
-                if (type.toLowerCase().equals("player")) {
+                if (type.equalsIgnoreCase("player")) {
                     Gdx.app.log("Player", "Found a player");
                     entities.add(prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)
-                            .WithInputRef(input).WithSpawnPosition(new Vector2(x, y)));
+                            .WithHostRef(host).WithSpawnPosition(new Vector2(x, y)));
                 }
 
-                if (type.toLowerCase().equals("patroller")) {
+                if (type.equalsIgnoreCase("patroller")) {
                     Gdx.app.log("Patroller", "Found a patroller");
 
                     int pathLength = obj.getProperties().get("PathLength", Integer.class);
@@ -283,5 +205,10 @@ public class WorstScreen extends ScreenAdapter {
 
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
+    }
+
+    @Override
+    public Array<Entity> getEntities() {
+        return entities;
     }
 }
