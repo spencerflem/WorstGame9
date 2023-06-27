@@ -269,8 +269,7 @@ public class WorstScreen extends ScreenAdapter {
         ArrayList<Chaser> chaserRefs = new ArrayList<Chaser>(); // we also use a search to find the chasers
 
         // get the entity that is the player
-        for (int i = 0; i < entities.size(); i++) {
-            Entity entity = entities.get(i);
+        for (Entity entity : entities) {
             if (entity instanceof Player) {
                 playerRef = (Player) entity;
             } else if (entity instanceof Chaser) {
