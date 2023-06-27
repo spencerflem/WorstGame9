@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -255,7 +256,11 @@ public class Player extends Entity {
     @Override
     public void onCollisionEnter(Entity other) {
         if (other instanceof Patroller) {
-            if (this.root == null) {
+            Camera cam = this.cameraRef;
+            if (this.root != null) {
+                cam = this.root.cameraRef;
+            }
+            if (other.isInCameraBounds(cam)) {
                 ((Patroller) other).playSound();
             }
             respawn();

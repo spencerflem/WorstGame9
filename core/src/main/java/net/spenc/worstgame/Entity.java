@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
@@ -74,6 +75,16 @@ public class Entity {
                 onCollision(other);
             }
         }
+    }
+
+    public boolean isInCameraBounds(Camera cam) {
+        if (this.position.x < cam.position.x - cam.viewportWidth / 2) {
+            return false;
+        }
+        if (this.position.x > cam.position.x + cam.viewportWidth / 2) {
+            return false;
+        }
+        return true;
     }
 
     // on collision events
