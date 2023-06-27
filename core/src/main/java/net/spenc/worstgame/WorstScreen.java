@@ -4,205 +4,86 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Comparator;
 
-public class WorstScreen extends ScreenAdapter {
+public class WorstScreen extends ScreenAdapter implements ClientScreen {
+    private final HostApp host;
     private final Music music;
-    private final Array<ManagedWindow> windows = new Array<>();
-    private static final float TIMESTEP = 0.01f;
-    private static final float MAX_ACCUMULATOR = 0.1f;
-    private double accumulator = 0.0;
-    private final WorstGame game;
+    private final TiledMap map;
     private final float tiles2pixels = 16f;
     private final float pixels2tiles = 1 / tiles2pixels;
+    private final OrthogonalTiledMapRenderer renderer;
+    private final OrthographicCamera camera;
+    private final Viewport viewport;
+    private final Array<Entity> entities = new Array<>();
     private final PrefabLoader prefabLoader;
-    private final InputCollector input = new InputCollector();
 
-    private record WindowData(OrthographicCamera camera, Viewport viewport, TiledMap map, OrthogonalTiledMapRenderer renderer, Array<Entity> entities) {}
-
-    private ManagedWindow mainWindow;
-    private ManagedWindow overlayWindow;
-
-    private final ObjectMap<ManagedWindow, WindowData> windowData = new ObjectMap<>();
-
-    public WorstScreen(WorstGame game) {
-        this.game = game;
-        WindowListener mainApp = newWindowApp(mapWindowData("maps/level1.tmx"));
-        game.windowManager.newWindow(mainApp, false, new WindowManager.WindowListener() {
-            @Override
-            public void onWindowCreated(ManagedWindow window) {
-                windows.add(window);
-                mainWindow = window;
-            }
-
-            @Override
-            public void onWindowDestroyed(ManagedWindow window) {
-                windows.removeValue(window, true);
-                mainWindow = null;
-                Gdx.app.exit();
-            }
-        });
-        WindowListener overlayApp = newWindowApp(emptyWindowData());
-        game.windowManager.newWindow(overlayApp, true, new WindowManager.WindowListener() {
-            @Override
-            public void onWindowCreated(ManagedWindow window) {
-                windows.add(window);
-                overlayWindow = window;
-            }
-
-            @Override
-            public void onWindowDestroyed(ManagedWindow window) {
-                windows.removeValue(window, true);
-                overlayWindow = null;
-            }
-        });
+    public WorstScreen(HostApp host, String level) {
+        this.host = host;
+        this.map = host.assets.get("maps/" + level + ".tmx");
+        this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, host.batch);
         music = Gdx.audio.newMusic(Gdx.files.internal(Filenames.MUSIC.getFilename()));
         music.setLooping(true);
         music.setVolume(.02f);
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
             music.play();
         }
-        this.prefabLoader = new PrefabLoader(game.assets, pixels2tiles);
+        this.camera = new OrthographicCamera();
+        this.camera.position.y = 10;
+        this.viewport = new FitViewport(30, 20, camera);
+        this.prefabLoader = new PrefabLoader(host.assets, pixels2tiles);
+        createEntities();
     }
 
     @Override
     public void render(float delta) {
-        accumulator = Math.min(accumulator + delta, MAX_ACCUMULATOR);
-        while (accumulator >= TIMESTEP) {
-            accumulator -= TIMESTEP;
-            for (int i = 0; i < entities.size; i++) {
-                entities.get(i).update(TIMESTEP);
-                entities.get(i).updateCollisions(entities);
-            }
-        }
-    }
-
-    private WindowData emptyWindowData() {
-        OrthographicCamera camera = new OrthographicCamera();
-        Viewport viewport = new ScreenViewport(camera);
-        return new WindowData(camera, viewport, null, null, new Array<>());
-    }
-
-    private WindowData mapWindowData(String level) {
-        OrthographicCamera camera = new OrthographicCamera();
-        camera.position.y = 10;
-        Viewport viewport = new FitViewport(30, 20, camera);
-        TiledMap map = game.assets.get("maps/" + level + ".tmx");
-        OrthogonalTiledMapRenderer renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, game.batch);
-        Array<Entity> entities = createEntities(map, camera);
-        return new WindowData(camera, viewport, map, renderer, new Array<>(entities));
-    }
-
-    private WindowListener newWindowApp(WindowData data) {
-        return new WindowApplication() {
-            @Override
-            public void render() {
-                if (getWindow() != null && getWindow().isFocused()) {
-                    collectInput();
-                }
-                renderClient(data);
-            }
-            @Override
-            public void dispose() {
-                disposeClient(data);
-            }
-        };
-    }
-
-    private void collectInput() {
-        Controller controller = Controllers.getCurrent();
-
-        input.jump = Gdx.input.isKeyPressed(Input.Keys.SPACE) || isTouched(0.5f, 1)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftY) > 0);
-
-        input.right = Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D) || isTouched(0.25f, 0.5f)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
-
-        input.left = Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
-    }
-
-    private boolean isTouched(float startX, float endX) {
-        // Check for touch inputs between startX and endX
-        // startX/endX are given between 0 (left edge of the screen) and 1 (right edge
-        // of the screen)
-        for (int i = 0; i < 2; i++) {
-            float x = Gdx.input.getX(i) / (float) Gdx.graphics.getWidth();
-            if (Gdx.input.isTouched(i) && (x >= startX && x <= endX)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void renderClient(WindowData data) {
         ScreenUtils.clear(0.7f, 0.7f, 1, 1);
 
-        data.camera.update();
+        camera.update();
 
         // draw the map
-        data.renderer.setView(data.camera);
-        data.renderer.render();
+        renderer.setView(camera);
+        renderer.render();
 
         // draw the entities
-        Batch batch = data.renderer.getBatch();
+        Batch batch = renderer.getBatch();
         batch.begin();
-        for (Entity entity : data.entities) {
+        for (Entity entity : entities) {
             entity.draw(batch);
         }
         batch.end();
 
         // if 'P' just pressed - make a pop-up
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            newPopup();
+            host.newPopup(false);
         }
     }
 
-    private void disposeClient(WindowData data) {
-        data.renderer.dispose();
-        for (Entity entity : data.entities) {
-            entity.dispose();
-        }
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
     }
 
     @Override
     public void dispose() {
         music.stop();
         music.dispose();
+        renderer.dispose();
+        host.disposeClient(this);
     }
 
-    private void newPopup() {
-        WindowListener app = newWindowApp(mapWindowData("level1"));
-        game.windowManager.newWindow(app, false, new WindowManager.WindowListener() {
-            @Override
-            public void onWindowCreated(ManagedWindow window) {
-                windows.add(window);
-            }
-
-            @Override
-            public void onWindowDestroyed(ManagedWindow window) {
-                windows.removeValue(window, true);
-            }
-        });
-    }
-
-    private Array<Entity> createEntities(TiledMap map, OrthographicCamera camera) {
-        Array<Entity> entities = new Array<>();
-        Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera).WithInputRef(input);
+    private void createEntities() {
+        Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera).WithHostRef(host);
         entities.add(p);
         entities.add(prefabLoader.NewBuffChickPrefab().WithTarget(p));
         // loads entities from map @TODO replace all the other loaded prefabs
@@ -262,6 +143,10 @@ public class WorstScreen extends ScreenAdapter {
         entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget("level1"));
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
+    }
+
+    @Override
+    public Array<Entity> getEntities() {
         return entities;
     }
 }

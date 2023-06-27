@@ -1,34 +1,14 @@
-package net.spenc.worstgame.desktop;
+package net.spenc.worstgame;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.badlogic.gdx.graphics.Color;
 
-import net.spenc.worstgame.ManagedWindow;
-import net.spenc.worstgame.WindowManager;
+import org.lwjgl.glfw.GLFW;
 
-public class DesktopWindowManager implements WindowManager {
+public class WindowUtils {
 
-    @Override
-    public void newWindow(net.spenc.worstgame.WindowListener app, boolean overlay, WindowListener listener) {
-        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, overlay? getOverlayConfiguration() : getDefaultConfiguration());
-        window.setWindowListener(new Lwjgl3WindowAdapter() {
-            @Override
-            public void created(Lwjgl3Window window) {
-                ManagedWindow managedWindow = new DesktopManagedWindow(window);
-                managedWindow.setOverlay(overlay);
-                app.setWindow(managedWindow);
-                if (listener != null) {
-                    listener.onWindowCreated(managedWindow);
-                }
-            }
-        });
-    }
-
-    private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
+    public static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setTitle("WorstGame9");
         configuration.useVsync(true);
@@ -42,12 +22,31 @@ public class DesktopWindowManager implements WindowManager {
         return configuration;
     }
 
-    private static Lwjgl3ApplicationConfiguration getOverlayConfiguration() {
+    public static Lwjgl3ApplicationConfiguration getHostConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = getDefaultConfiguration();
         configuration.setTransparentFramebuffer(true);
         configuration.setDecorated(false);
         configuration.setInitialBackgroundColor(Color.CLEAR);
         configuration.setInitialVisible(false);
         return configuration;
+    }
+
+    public static Lwjgl3ApplicationConfiguration getOverlayConfiguration() {
+        Lwjgl3ApplicationConfiguration configuration = getDefaultConfiguration();
+        configuration.setTransparentFramebuffer(true);
+        configuration.setDecorated(false);
+        configuration.setInitialBackgroundColor(Color.CLEAR);
+        configuration.setInitialVisible(false);
+        return configuration;
+    }
+
+    public static void setOverlay(Lwjgl3Window window, boolean overlay) {
+        if (overlay) {
+            GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_MOUSE_PASSTHROUGH, GLFW.GLFW_TRUE);
+            GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FLOATING, GLFW.GLFW_TRUE);
+        } else {
+            GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_MOUSE_PASSTHROUGH, GLFW.GLFW_FALSE);
+            GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FLOATING, GLFW.GLFW_FALSE);
+        }
     }
 }
