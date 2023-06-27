@@ -250,18 +250,38 @@ public class WorstScreen extends ScreenAdapter {
                     entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget(target)
                             .WithSpawnPosition(new Vector2(x, y)));
                 }
+
+                if (type.toLowerCase().equals("chaser")) {
+                    // parse the TexturerEnum
+                    String textureStr = obj.getProperties().get("TextureEnum", String.class);
+                    if (textureStr.equals("BfChicken")) {
+                        Entity prefab = prefabLoader.NewBuffChickPrefab().WithSpawnPosition(new Vector2(x, y));
+                        entities.add(prefab);
+                    }
+                }
             });
         });
+
+        // consider giving entities access to the world,
+        // since this is the only case where they need it (for initialization)
+        // we can just set references in here
+        Player playerRef = null; // we use a search to find the player
+        ArrayList<Chaser> chaserRefs = new ArrayList<Chaser>(); // we also use a search to find the chasers
 
         // get the entity that is the player
         for (int i = 0; i < entities.size(); i++) {
             Entity entity = entities.get(i);
             if (entity instanceof Player) {
-                Player playerRef = (Player) entity;
-                entities.add(prefabLoader.NewBuffChickPrefab().WithTarget(playerRef));
-                break;
+                playerRef = (Player) entity;
+            } else if (entity instanceof Chaser) {
+                chaserRefs.add((Chaser) entity);
             }
         }
+        // set every chaserRefs target to the player
+        for (Chaser chaser : chaserRefs) {
+            chaser = chaser.WithTarget(playerRef);
+        }
+
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
     }
