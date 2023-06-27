@@ -2,7 +2,9 @@ package net.spenc.worstgame;
 
 public enum Filenames {
     PLAYER("textures/tentacle_guy.png"),
+
     BIBL("textures/bibl.png"),
+    BIBL_SFX("sfx/bibl.ogg"),
 
     DONUT("textures/doNUT.png"),
     DONUT_SFX("sfx/doNUT.ogg"),

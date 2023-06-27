@@ -146,7 +146,8 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
                     // parse the TexturerEnum
                     String textureStr = obj.getProperties().get("TextureEnum", String.class);
                     if (textureStr.equals("BIBL")) {
-                        prefab = prefabLoader.NewBiblPrefab();
+                        Sound sound = host.assets.get(Filenames.BIBL_SFX.getFilename(), Sound.class);
+                        prefab = (Patroller) prefabLoader.NewBiblPrefab().WithSound(sound);
                     } else if (textureStr.equals("DONUT")) {
                         Sound sound = host.assets.get(Filenames.DONUT_SFX.getFilename(), Sound.class);
                         prefab = (Patroller) prefabLoader.NewDoNUTPrefab().WithSound(sound);
