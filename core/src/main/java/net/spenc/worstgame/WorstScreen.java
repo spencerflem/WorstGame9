@@ -234,11 +234,17 @@ public class WorstScreen extends ScreenAdapter {
                     entities.add(prefabLoader.NewSpringPrefab().WithSpringiness(springiness).WithImpulseDir(impulseDir)
                             .WithSpawnPosition(new Vector2(x, y)));
                 }
+
+                if (type.toLowerCase().equals("entity")) {
+                    // parse the TexturerEnum
+                    String textureStr = obj.getProperties().get("TextureEnum", String.class);
+                    if (textureStr.equals("SPIKE")) {
+                        Entity prefab = prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(x, y));
+                        entities.add(prefab);
+                    }
+                }
             });
         });
-        for (int i = 0; i < 3; i++) {
-            entities.add(prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(51 + i, 10)));
-        }
 
         // get the entity that is the player
         for (int i = 0; i < entities.size(); i++) {
