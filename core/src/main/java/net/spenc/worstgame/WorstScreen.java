@@ -107,8 +107,20 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
 
                 if (type.equalsIgnoreCase("player")) {
                     Gdx.app.log("Player", "Found a player");
-                    entities.add(prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)
-                            .WithHostRef(host).WithSpawnPosition(new Vector2(x, y)));
+                    Player root = (Player) prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)
+                            .WithHostRef(host).WithSpawnPosition(new Vector2(x, y));
+                    entities.add(root);
+                    // spawn 40 more players, spaced evenly around the root player
+                    for (int i = 0; i < 40; i++) {
+                        // first 20 are on the left, second 20 are on the right
+                        int adjustedI = (-40 / 2) + i;
+                        float spawnX = x + (adjustedI);
+                        Player clone = (Player) prefabLoader.NewPlayerPrefab().WithRoot(root, adjustedI).WithMapRef(map)
+                                .WithHostRef(host)
+                                .WithSpawnPosition(new Vector2(spawnX, y));
+                        entities.add(clone);
+                    }
+
                 }
 
                 if (type.equalsIgnoreCase("patroller")) {

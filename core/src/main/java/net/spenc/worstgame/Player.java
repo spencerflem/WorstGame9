@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,6 +15,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
 public class Player extends Entity {
+    private Player root;
+    private int cloneNumber = 0;
+
     public static float MAX_VELOCITY = 10f;
     public static float JUMP_VELOCITY = 60f;
     public static float DAMPING = 0.87f;
@@ -56,6 +60,17 @@ public class Player extends Entity {
     public Player WithHostRef(HostApp host) {
         this.hostRef = host;
         return this;
+    }
+
+    public Player WithRoot(Player root, int cloneNumber) {
+        this.root = root;
+        this.cloneNumber = cloneNumber;
+        return this;
+    }
+
+    @Override
+    public void draw(Batch batch) {
+        batch.draw(texture, position.x, position.y, width, height);
     }
 
     // END @TODO
@@ -183,7 +198,14 @@ public class Player extends Entity {
         // walk infinitely once a key was pressed
         this.velocity.x *= Player.DAMPING;
 
-        cameraRef.position.x = this.position.x;
+        // if pos.y is below -5 respawn
+        if (this.position.y < -5) {
+            respawn();
+        }
+
+        if (cameraRef != null) {
+            cameraRef.position.x = this.position.x;
+        }
     }
 
 //        Controller controller = Controllers.getCurrent();
@@ -217,11 +239,21 @@ public class Player extends Entity {
         }
     }
 
+    private void respawn() {
+        if (this.root != null) {
+            float spawnX = root.position.x + cloneNumber;
+            this.position.x = spawnX;
+            this.position.y = this.spawnPosition.y;
+            return;
+        }
+        this.position.x = this.spawnPosition.x;
+        this.position.y = this.spawnPosition.y;
+    }
+
     @Override
     public void onCollisionEnter(Entity other) {
         if (other instanceof Patroller) {
-            this.position.x = this.spawnPosition.x;
-            this.position.y = this.spawnPosition.y;
+            respawn();
         }
     }
 
