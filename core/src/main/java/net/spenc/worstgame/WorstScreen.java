@@ -243,6 +243,13 @@ public class WorstScreen extends ScreenAdapter {
                         entities.add(prefab);
                     }
                 }
+
+                if (type.toLowerCase().equals("portal")) {
+                    // parse the level target
+                    String target = obj.getProperties().get("target", String.class);
+                    entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget(target)
+                            .WithSpawnPosition(new Vector2(x, y)));
+                }
             });
         });
 
@@ -255,8 +262,6 @@ public class WorstScreen extends ScreenAdapter {
                 break;
             }
         }
-
-        entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget("level1"));
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
     }

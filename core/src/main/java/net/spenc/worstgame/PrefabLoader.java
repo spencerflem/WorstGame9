@@ -50,7 +50,6 @@ public class PrefabLoader {
     public Entity NewSpikePrefab() {
         Texture texture = managerRef.get(Filenames.SPIKE.getFilename(), Texture.class);
         return new Entity()
-                .WithSpawnPosition(new Vector2(0, 0))
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
@@ -65,7 +64,6 @@ public class PrefabLoader {
     public Portal NewPortalPrefab() {
         Texture texture = managerRef.get(Filenames.PORTAL.getFilename(), Texture.class);
         return (Portal) new Portal()
-                .WithSpawnPosition(new Vector2(15, 2))
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
