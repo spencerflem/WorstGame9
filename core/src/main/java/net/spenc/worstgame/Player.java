@@ -254,10 +254,10 @@ public class Player extends Entity {
 
     @Override
     public void onCollisionEnter(Entity other) {
+        if (this.root == null) {
+            other.playSound();
+        }
         if (other instanceof Patroller) {
-            if (this.root == null) {
-                ((Patroller) other).playSound();
-            }
             respawn();
         }
         if (other instanceof Player) {

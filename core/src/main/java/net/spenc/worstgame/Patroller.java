@@ -1,13 +1,11 @@
 package net.spenc.worstgame;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 
 public class Patroller extends Entity {
     public Vector2[] waypoints;
     public int currentWaypoint = 0;
     public float speed = 1f;
-    Sound collideWithPlayerSound;
 
     public Patroller WithWaypoints(Vector2[] waypoints) {
         this.waypoints = waypoints;
@@ -16,11 +14,6 @@ public class Patroller extends Entity {
 
     public Patroller WithSpeed(float speed) {
         this.speed = speed;
-        return this;
-    }
-
-    public Patroller WithCollideWithPlayerSound(Sound sound) {
-        this.collideWithPlayerSound = sound;
         return this;
     }
 
@@ -33,12 +26,6 @@ public class Patroller extends Entity {
         } else {
             direction.nor();
             position.add(direction.scl(speed * delta));
-        }
-    }
-
-    public void playSound() {
-        if (collideWithPlayerSound != null) {
-            collideWithPlayerSound.play();
         }
     }
 }

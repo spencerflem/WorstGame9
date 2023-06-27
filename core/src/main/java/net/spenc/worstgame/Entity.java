@@ -1,9 +1,9 @@
 package net.spenc.worstgame;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
@@ -22,6 +22,8 @@ public class Entity {
     public Texture texture;
 
     private final HashSet<UUID> collidingWith = new HashSet<>();
+
+    private Sound sound = null;
 
     public Entity WithTexture(Texture texture) {
         this.texture = texture;
@@ -73,6 +75,17 @@ public class Entity {
             if (other != this && overlaps(other)) {
                 onCollision(other);
             }
+        }
+    }
+
+    public Entity WithSound(Sound sound) {
+        this.sound = sound;
+        return this;
+    }
+
+    public void playSound() {
+        if (sound != null) {
+            sound.play();
         }
     }
 

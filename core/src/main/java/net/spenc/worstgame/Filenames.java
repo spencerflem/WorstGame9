@@ -9,7 +9,11 @@ public enum Filenames {
 
     SPIKE("textures/spike.png"),
     BfChicken("textures/buffChicken.png"),
+
     SPRING("textures/spring.png"),
+    SPRING_0_SFX("sfx/spring0.ogg"),
+    SPRING_1_SFX("sfx/spring1.ogg"),
+
     PORTAL("textures/level_portal.png"),
     MUSIC("music/background_music.mp3");
 

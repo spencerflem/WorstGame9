@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -147,8 +148,8 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
                     if (textureStr.equals("BIBL")) {
                         prefab = prefabLoader.NewBiblPrefab();
                     } else if (textureStr.equals("DONUT")) {
-                        Sound collideWithPlayerSound = host.assets.get(Filenames.DONUT_SFX.getFilename(), Sound.class);
-                        prefab = prefabLoader.NewDoNUTPrefab().WithCollideWithPlayerSound(collideWithPlayerSound);
+                        Sound sound = host.assets.get(Filenames.DONUT_SFX.getFilename(), Sound.class);
+                        prefab = (Patroller) prefabLoader.NewDoNUTPrefab().WithSound(sound);
                     }
 
                     entities.add(prefab.WithWaypoints(path).WithSpawnPosition(new Vector2(x, y)));
@@ -168,8 +169,17 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
                     float impulseDirY = Float.parseFloat(impulseDirStrSplit[1]);
                     Vector2 impulseDir = new Vector2(impulseDirX, impulseDirY);
 
+                    // random string either Filenames.SPRING_0_SFX or Filenames.SPRING_1_SFX
+                    String soundFile = MathUtils.randomBoolean() ? Filenames.SPRING_0_SFX.getFilename()
+                            : Filenames.SPRING_1_SFX.getFilename();
+
+                    // log the sound file
+                    Gdx.app.log("Sound File", soundFile);
+
+                    Sound sound = host.assets.get(soundFile, Sound.class);
+
                     entities.add(prefabLoader.NewSpringPrefab().WithSpringiness(springiness).WithImpulseDir(impulseDir)
-                            .WithSpawnPosition(new Vector2(x, y)));
+                            .WithSpawnPosition(new Vector2(x, y)).WithSound(sound));
                 }
 
                 if (type.equalsIgnoreCase("entity")) {
