@@ -88,13 +88,15 @@ public class Player extends Entity {
         this.stateTime += deltaTime;
 
         boolean jump = hostRef.focusedInput().isKeyPressed(Input.Keys.SPACE) || isTouched(0.5f, 1)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftY) > 0);
+                || (controller != null && controller.getAxis(controller.getMapping().axisLeftY) > 0);
 
-        boolean right = hostRef.focusedInput().isKeyPressed(Input.Keys.RIGHT) || hostRef.focusedInput().isKeyPressed(Input.Keys.D) || isTouched(0.25f, 0.5f)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
+        boolean right = hostRef.focusedInput().isKeyPressed(Input.Keys.RIGHT)
+                || hostRef.focusedInput().isKeyPressed(Input.Keys.D) || isTouched(0.25f, 0.5f)
+                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
 
-        boolean left = hostRef.focusedInput().isKeyPressed(Input.Keys.LEFT) || hostRef.focusedInput().isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
+        boolean left = hostRef.focusedInput().isKeyPressed(Input.Keys.LEFT)
+                || hostRef.focusedInput().isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)
+                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
 
         // check input and apply to velocity & state
         if (jump && this.grounded) {
@@ -208,7 +210,7 @@ public class Player extends Entity {
         }
     }
 
-//        Controller controller = Controllers.getCurrent();
+    // Controller controller = Controllers.getCurrent();
 
     private boolean isTouched(float startX, float endX) {
         // Check for touch inputs between startX and endX
@@ -254,6 +256,12 @@ public class Player extends Entity {
     public void onCollisionEnter(Entity other) {
         if (other instanceof Patroller) {
             respawn();
+        }
+        if (other instanceof Player) {
+            Player otherPlayer = (Player) other;
+            if (otherPlayer.root == null) {
+                respawn();
+            }
         }
     }
 
