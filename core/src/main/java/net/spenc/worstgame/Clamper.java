@@ -75,7 +75,7 @@ public class Clamper extends Entity {
 
             // if the player is within range of the second position, then reset it
             if (player.position.y > secondY - height / 4 && player.position.y < secondY + height / 4) {
-                if (player.root != null) {
+                if (player.root == null) {
                     this.playSound();
                 }
                 player.respawn();
