@@ -10,6 +10,8 @@ public enum Filenames {
     DONUT_SFX("sfx/doNUT.ogg"),
 
     SPIKE("textures/spike.png"),
+    SPIKE_SFX("sfx/spike.ogg"),
+
     BfChicken("textures/buffChicken.png"),
 
     SPRING("textures/spring.png"),

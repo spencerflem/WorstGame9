@@ -187,7 +187,9 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
                     // parse the TexturerEnum
                     String textureStr = obj.getProperties().get("TextureEnum", String.class);
                     if (textureStr.equals("SPIKE")) {
-                        Entity prefab = prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(x, y));
+                        Sound sound = host.assets.get(Filenames.SPIKE_SFX.getFilename(), Sound.class);
+                        Entity prefab = prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(x, y))
+                                .WithSound(sound);
                         entities.add(prefab);
                     }
                 }
