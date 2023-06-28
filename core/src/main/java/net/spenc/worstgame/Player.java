@@ -241,7 +241,7 @@ public class Player extends Entity {
         }
     }
 
-    private void respawn() {
+    public void respawn() {
         if (this.root != null) {
             float spawnX = root.position.x + cloneNumber;
             this.position.x = spawnX;
@@ -254,7 +254,7 @@ public class Player extends Entity {
 
     @Override
     public void onCollisionEnter(Entity other) {
-        if (this.root == null) {
+        if (this.root == null && !(other instanceof Clamper)) {
             other.playSound();
         }
         if (other instanceof Patroller) {

@@ -18,6 +18,9 @@ public enum Filenames {
     SPRING_0_SFX("sfx/spring0.ogg"),
     SPRING_1_SFX("sfx/spring1.ogg"),
 
+    BRED("textures/bred.png"),
+    BRED_SFX("sfx/bred.ogg"),
+
     PORTAL("textures/level_portal.png"),
     MUSIC("music/background_music.mp3");
 

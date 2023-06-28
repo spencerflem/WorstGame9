@@ -86,9 +86,6 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
     }
 
     private void createEntities() {
-        Player p = prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera).WithHostRef(host);
-        entities.add(p);
-        entities.add(prefabLoader.NewBuffChickPrefab().WithTarget(p));
         // loads entities from map @TODO replace all the other loaded prefabs
         map.getLayers().forEach(layer -> {
             // log the layer name
@@ -208,6 +205,16 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
                     if (textureStr.equals("BfChicken")) {
                         Entity prefab = prefabLoader.NewBuffChickPrefab().WithSpawnPosition(new Vector2(x, y));
                         entities.add(prefab);
+                    }
+                }
+
+                if (type.equalsIgnoreCase("clamper")) {
+                    // parse the TexturerEnum
+                    String textureStr = obj.getProperties().get("TextureEnum", String.class);
+                    if (textureStr.equals("BRED")) {
+                        Sound bredSound = host.assets.get(Filenames.BRED_SFX.getFilename(), Sound.class);
+                        entities.add(
+                                prefabLoader.NewBredPrefab().WithSpawnPosition(new Vector2(x, y)).WithSound(bredSound));
                     }
                 }
             });
