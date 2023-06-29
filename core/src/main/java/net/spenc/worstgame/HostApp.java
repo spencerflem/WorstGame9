@@ -43,7 +43,7 @@ public class HostApp extends ApplicationAdapter {
         assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
         loadAssetsFolder(assets, "maps", "tmx", TiledMap.class, resolver);
         assets.finishLoading();
-        mainWindow = newPopup(true);
+        mainWindow = newMainWindow();
     }
 
     private <T> void loadAssetsFolder(AssetManager assets, String folderName, String extension, Class<T> type,
@@ -85,7 +85,7 @@ public class HostApp extends ApplicationAdapter {
         }
     }
 
-    public Lwjgl3Window newPopup(boolean main) {
+    private Lwjgl3Window newMainWindow() {
         ClientApp app = new ClientApp();
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, WindowUtils.getDefaultConfiguration());
         window.setWindowListener(new Lwjgl3WindowAdapter() {
@@ -97,14 +97,30 @@ public class HostApp extends ApplicationAdapter {
             @Override
             public boolean closeRequested() {
                 windows.removeValue(window, true);
-                if (main) {
-                    Gdx.app.exit();
-                }
+                Gdx.app.exit();
                 return true;
             }
         });
         setLevel("level1", window);
         return window;
+    }
+
+    public void newPopup(PopupApp.PopupType type) {
+        ClientApp app = new ClientApp();
+        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, WindowUtils.getDefaultConfiguration());
+        window.setWindowListener(new Lwjgl3WindowAdapter() {
+            @Override
+            public void created(Lwjgl3Window window) {
+                windows.add(window);
+            }
+
+            @Override
+            public boolean closeRequested() {
+                windows.removeValue(window, true);
+                return true;
+            }
+        });
+        app.setScreen(PopupApp.fromType(this, type));
     }
 
     public Input focusedInput() {

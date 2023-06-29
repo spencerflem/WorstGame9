@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 
 public class WorstScreen extends ScreenAdapter implements ClientScreen {
     private final HostApp host;
@@ -30,6 +31,9 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
     private final Viewport viewport;
     private final Array<Entity> entities = new Array<>();
     private final PrefabLoader prefabLoader;
+    private final Random random = new Random();
+
+    private float popupTime = 38;
 
     public WorstScreen(HostApp host, String level) {
         this.host = host;
@@ -52,6 +56,12 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
     public void render(float delta) {
         ScreenUtils.clear(0.7f, 0.7f, 1, 1);
 
+        popupTime -= delta;
+        if (popupTime < 0) {
+            popupTime = random.nextInt(10, 40);
+            host.newPopup(PopupApp.PopupType.randomPopup());
+        }
+
         camera.update();
 
         // draw the map
@@ -65,11 +75,6 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
             entity.draw(batch);
         }
         batch.end();
-
-        // if 'P' just pressed - make a pop-up
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            host.newPopup(false);
-        }
     }
 
     @Override
