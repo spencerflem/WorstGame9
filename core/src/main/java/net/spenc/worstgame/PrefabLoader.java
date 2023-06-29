@@ -1,6 +1,7 @@
 package net.spenc.worstgame;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.backends.lwjgl3.audio.Mp3.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
@@ -63,6 +64,15 @@ public class PrefabLoader {
     public Portal NewPortalPrefab() {
         Texture texture = managerRef.get(Filenames.PORTAL.getFilename(), Texture.class);
         return (Portal) new Portal()
+                .WithTexture(texture)
+                .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
+    }
+
+    public Clamper NewBredPrefab() {
+        Texture texture = managerRef.get(Filenames.BRED.getFilename(), Texture.class);
+        return (Clamper) new Clamper()
+                .WithSpeed(0.05f)
+                .WithYPositions(0, 20)
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
