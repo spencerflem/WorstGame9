@@ -9,6 +9,10 @@ import com.badlogic.gdx.utils.Array;
 public class ClientApp extends Game {
     public interface ClientScreen extends Screen {
         Array<Entity> getEntities();
+        int boundsLeft();
+        int boundsRight();
+        int boundsTop();
+        int boundsBottom();
     }
 
     private Input input;

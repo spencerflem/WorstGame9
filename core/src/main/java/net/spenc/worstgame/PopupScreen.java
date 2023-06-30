@@ -205,6 +205,26 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
     }
 
     @Override
+    public int boundsLeft() {
+        return 0;
+    }
+
+    @Override
+    public int boundsRight() {
+        return width;
+    }
+
+    @Override
+    public int boundsTop() {
+        return 0;
+    }
+
+    @Override
+    public int boundsBottom() {
+        return height;
+    }
+
+    @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
         animationElapsed += delta;
@@ -263,9 +283,9 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
     }
 
     private void fire() {
-        entities.add(prefabLoader.NewHellorbPrefab()
-            .WithSpawnPosition(new Vector2(barrelPosX, barrelPosY))
-            .WithSound(host.assets.get(Filenames.HELLORBKILL.getFilename()))
-        );
+//        entities.add(prefabLoader.NewHellorbPrefab()
+//            .WithSpawnPosition(new Vector2(barrelPosX, barrelPosY))
+//            .WithSound(host.assets.get(Filenames.HELLORBKILL.getFilename()))
+//        );
     }
 }
