@@ -166,11 +166,11 @@ public class HostApp extends ApplicationAdapter {
         return (ClientApp) window.getListener();
     }
 
-    private ClientScreen getClientScreen(Lwjgl3Window window) {
-        return (ClientScreen) getClientApp(window).getScreen();
+    private ClientApp.ClientScreen getClientScreen(Lwjgl3Window window) {
+        return (ClientApp.ClientScreen) getClientApp(window).getScreen();
     }
 
-    public void disposeClient(ClientScreen client) {
+    public void disposeClient(ClientApp.ClientScreen client) {
         for (Entity entity : client.getEntities()) {
             entity.dispose();
         }

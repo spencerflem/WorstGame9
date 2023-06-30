@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Random;
 
-public class PopupScreen extends ScreenAdapter implements ClientScreen {
+public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen {
 
     public enum PopupType {
         WAR,

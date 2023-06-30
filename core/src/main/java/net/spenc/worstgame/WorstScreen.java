@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
-public class WorstScreen extends ScreenAdapter implements ClientScreen {
+public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen {
     private final HostApp host;
     private final Music music;
     private final TiledMap map;
