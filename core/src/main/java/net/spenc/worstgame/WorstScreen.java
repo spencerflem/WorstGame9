@@ -32,7 +32,7 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
     private final PrefabLoader prefabLoader;
     private final Random random = new Random();
 
-    private float popupTime = 20;
+    private float popupTime = 15;
 
     public WorstScreen(HostApp host, String level) {
         this.host = host;
@@ -57,7 +57,7 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
 
         popupTime -= delta;
         if (popupTime < 0) {
-            popupTime = random.nextInt(5, 30);
+            popupTime = random.nextInt(1, 10);
             host.newPopup(PopupScreen.PopupType.randomPopup());
         }
 

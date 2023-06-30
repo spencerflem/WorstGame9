@@ -41,7 +41,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 Filenames.WAR_POPUP_2S.getFilename(),
                 Filenames.WAR_POPUP_LOOP.getFilename(),
                 Filenames.WAR_POPUP_SHOOT.getFilename(),
-                0.08f,
+                0.1f,
                 3,
                 "BUY!!!!! DOLLARS!!!",
                 null,
@@ -60,11 +60,11 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 Filenames.WIN_POPUP_2S.getFilename(),
                 Filenames.WIN_POPUP_LOOP.getFilename(),
                 Filenames.WIN_POPUP_SHOOT.getFilename(),
-                0.12f,
+                0.15f,
                 3,
                 "Win big NOW Slots Gambling Casino Online Win Mega Cash Rewards ONLINE FREE",
                 null,
-                300,
+                350,
                 40,
                 300,
                 600,
@@ -84,7 +84,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 "Baby",
                 null,
                 0,
-                -350,
+                -250,
                 970,
                 250,
                 0,
@@ -98,7 +98,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 null,
                 Filenames.WIZARD_POPUP_LOOP.getFilename(),
                 null,
-                2f,
+                0.4f,
                 0,
                 "The Legend of the Wizard: Ultimate Choices - Build Your Kingdom",
                 "https://tbug20.itch.io/the-legend-of-the-wizard-of-dissuading-people-from-making-really-bad-choices",
@@ -211,7 +211,6 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
 
     @Override
     public void dispose() {
-        Gdx.app.log("DISPOSE", "buh bye");
         loop.stop(loopId);
     }
 }
