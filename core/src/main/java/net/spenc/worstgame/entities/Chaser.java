@@ -1,6 +1,8 @@
-package net.spenc.worstgame;
+package net.spenc.worstgame.entities;
 
 import com.badlogic.gdx.math.Vector2;
+
+import net.spenc.worstgame.Entity;
 
 //An entity that chases down the player character with the intent to kill or maim
 public class Chaser extends Entity {

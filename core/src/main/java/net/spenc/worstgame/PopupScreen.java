@@ -6,6 +6,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -48,14 +49,14 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 0.1f,
                 3,
                 1,
-                "BUY!!!!! DOLLARS!!!",
+                "BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY BUY",
                 null,
                 -440,
                 -100,
                 300,
                 600,
-                0,
-                0
+                293,
+                284
             );
             case WIN -> new PopupScreen(
                 host,
@@ -66,7 +67,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 Filenames.WIN_POPUP_LOOP.getFilename(),
                 Filenames.WIN_POPUP_SHOOT.getFilename(),
                 0.15f,
-                3,
+                6,
                 2,
                 "Win big NOW Slots Gambling Casino Online Win Mega Cash Rewards ONLINE FREE",
                 null,
@@ -74,8 +75,8 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 40,
                 300,
                 600,
-                0,
-                0
+                8,
+                316
             );
             case BABY -> new PopupScreen(
                 host,
@@ -86,7 +87,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 Filenames.BABY_POPUP_LOOP.getFilename(),
                 Filenames.BABY_POPUP_SHOOT.getFilename(),
                 0.2f,
-                3,
+                1,
                 4,
                 "Baby",
                 null,
@@ -94,8 +95,8 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 -250,
                 970,
                 250,
-                0,
-                0
+                20,
+                40
             );
             case WIZARD -> new PopupScreen(
                 host,
@@ -158,7 +159,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
     private final Sound loop;
     private final Sound shoot;
     private final long loopId;
-
+    private final PrefabLoader prefabLoader;
     private float animationElapsed = 0;
     private boolean isFrame1 = true;
 
@@ -187,6 +188,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(width, height, camera);
 
+        this.prefabLoader = new PrefabLoader(host.assets, 1);
         this.tex1 = host.assets.get(texture1);
         this.tex2 = texture2 == null? null : host.assets.get(texture2);
         this.shootTex1 = shootingTexture1 == null? null : host.assets.get(shootingTexture1);
@@ -244,6 +246,9 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
         host.batch.setProjectionMatrix(camera.combined);
         host.batch.begin();
         host.batch.draw(isFiring? (isFrame1? shootTex1 : shootTex2) : (isFrame1 ? tex1 : tex2), 0, 0, width, height);
+        for (Entity entity : entities) {
+            entity.draw(host.batch);
+        }
         host.batch.end();
     }
 
@@ -258,6 +263,9 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
     }
 
     private void fire() {
-
+        entities.add(prefabLoader.NewHellorbPrefab()
+            .WithSpawnPosition(new Vector2(barrelPosX, barrelPosY))
+            .WithSound(host.assets.get(Filenames.HELLORBKILL.getFilename()))
+        );
     }
 }

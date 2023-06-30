@@ -1,4 +1,7 @@
-package net.spenc.worstgame;
+package net.spenc.worstgame.entities;
+
+import net.spenc.worstgame.Entity;
+import net.spenc.worstgame.HostApp;
 
 public class Portal extends Entity {
     private HostApp host;

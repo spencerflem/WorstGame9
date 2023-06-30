@@ -50,7 +50,8 @@ public enum Filenames {
     CAR_POPUP_1("textures/carad.png"),
     CAR_POPUP_LOOP("sfx/caralarm.wav"),
 
-    HELL_ORB("textures/hellorb.png");
+    HELLORB("textures/hellorb.png"),
+    HELLORBKILL("sfx/hellorbkill.wav");
 
     private String filename;
 

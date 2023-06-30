@@ -15,6 +15,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import net.spenc.worstgame.entities.Chaser;
+import net.spenc.worstgame.entities.Patroller;
+import net.spenc.worstgame.entities.Player;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
@@ -247,6 +251,9 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
         for (Chaser chaser : chaserRefs) {
             chaser = chaser.WithTarget(playerRef);
         }
+
+        // TODO: REMOVE
+        entities.add(prefabLoader.NewHellorbPrefab().WithSpawnPosition(new Vector2(10, 10)).WithSound(host.assets.get(Filenames.HELLORBKILL.getFilename())));
 
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));

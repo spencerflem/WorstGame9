@@ -1,4 +1,4 @@
-package net.spenc.worstgame;
+package net.spenc.worstgame.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -13,6 +13,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+
+import net.spenc.worstgame.Entity;
+import net.spenc.worstgame.HostApp;
 
 public class Player extends Entity {
     public Player root = null;
@@ -260,6 +263,9 @@ public class Player extends Entity {
         if (other instanceof Patroller) {
             respawn();
         }
+//        if (other instanceof Homer) {
+//            respawn();
+//        }
         if (other instanceof Player) {
             Player otherPlayer = (Player) other;
             if (otherPlayer.root == null) {

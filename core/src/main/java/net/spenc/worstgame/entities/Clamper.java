@@ -1,6 +1,8 @@
-package net.spenc.worstgame;
+package net.spenc.worstgame.entities;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+
+import net.spenc.worstgame.Entity;
 
 public class Clamper extends Entity {
     // the clamper consists of two imaages that start at ymax and ymin

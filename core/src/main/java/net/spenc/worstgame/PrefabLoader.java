@@ -1,9 +1,15 @@
 package net.spenc.worstgame;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.backends.lwjgl3.audio.Mp3.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
+
+import net.spenc.worstgame.entities.Chaser;
+import net.spenc.worstgame.entities.Clamper;
+import net.spenc.worstgame.entities.Homer;
+import net.spenc.worstgame.entities.Patroller;
+import net.spenc.worstgame.entities.Player;
+import net.spenc.worstgame.entities.Portal;
+import net.spenc.worstgame.entities.Spring;
 
 public class PrefabLoader {
     private Float PIXEL2TILE;
@@ -75,5 +81,13 @@ public class PrefabLoader {
                 .WithYPositions(0, 20)
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
+    }
+
+    public Homer NewHellorbPrefab() {
+        Texture texture = managerRef.get(Filenames.HELLORB.getFilename(), Texture.class);
+        return (Homer) new Homer()
+            .WithTexture(texture)
+            .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE)
+            .AndLoItCanEscape();
     }
 }

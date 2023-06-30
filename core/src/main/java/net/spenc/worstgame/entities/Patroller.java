@@ -1,6 +1,8 @@
-package net.spenc.worstgame;
+package net.spenc.worstgame.entities;
 
 import com.badlogic.gdx.math.Vector2;
+
+import net.spenc.worstgame.Entity;
 
 public class Patroller extends Entity {
     public Vector2[] waypoints;
