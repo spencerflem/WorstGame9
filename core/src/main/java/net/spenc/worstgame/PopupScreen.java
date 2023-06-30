@@ -1,5 +1,7 @@
 package net.spenc.worstgame;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,6 +11,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import java.util.Random;
 
@@ -142,7 +147,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
     private final float frameTime;
     private final float cooldown;
     private final int shootFrames;
-    private final String url;
+    private final URI uri;
     private final int barrelPosX;
     private final int barrelPosY;
 
@@ -173,7 +178,6 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
         this.shootFrames = shootFrames;
         this.cooldown = cooldown;
         this.title = title;
-        this.url = url;
         this.relativePosX = relativePosX;
         this.relativePosY = relativePosY;
         this.width = width;
@@ -189,6 +193,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
         this.shootTex2 = shootingTexture2 == null? null : host.assets.get(shootingTexture2);
         this.loop = host.assets.get(loopSound);
         this.shoot = shootingSound == null? null : host.assets.get(shootingSound);
+        this.uri = url == null? null : URI.create(url);
         loopId = loop.loop();
     }
 
@@ -226,6 +231,13 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 if (shoot != null) {
                     shoot.play();
                 }
+            }
+        }
+        if (uri != null && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            try {
+                Desktop.getDesktop().browse(uri);
+            } catch (IOException e) {
+                Gdx.app.error("Popup", "open browser", e);
             }
         }
         camera.update();
