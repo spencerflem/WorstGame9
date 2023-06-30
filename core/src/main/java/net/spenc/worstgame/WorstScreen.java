@@ -1,7 +1,6 @@
 package net.spenc.worstgame;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -33,7 +32,7 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
     private final PrefabLoader prefabLoader;
     private final Random random = new Random();
 
-    private float popupTime = 38;
+    private float popupTime = 20;
 
     public WorstScreen(HostApp host, String level) {
         this.host = host;
@@ -58,9 +57,13 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
 
         popupTime -= delta;
         if (popupTime < 0) {
-            popupTime = random.nextInt(10, 40);
-            host.newPopup(PopupApp.PopupType.randomPopup());
+            popupTime = random.nextInt(5, 30);
+            host.newPopup(PopupScreen.PopupType.randomPopup());
         }
+
+        // THIS SHOULDN'T BE NECESSARY
+        // but the viewport gets very wierd without it, whenever a new popup is made
+        viewport.update(viewport.getScreenWidth(), viewport.getScreenHeight());
 
         camera.update();
 
@@ -79,6 +82,7 @@ public class WorstScreen extends ScreenAdapter implements ClientScreen {
 
     @Override
     public void resize(int width, int height) {
+        Gdx.app.log("RESIZE", "width: " + width + " , height: " + height);
         viewport.update(width, height);
     }
 

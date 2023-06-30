@@ -11,6 +11,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +19,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.Objects;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Manages shared objects, launching windows, and updating entity state
@@ -38,22 +40,22 @@ public class HostApp extends ApplicationAdapter {
         assets = new AssetManager();
         batch = new SpriteBatch();
         FileHandleResolver resolver = new InternalFileHandleResolver();
-        loadAssetsFolder(assets, "textures", "png", Texture.class, resolver);
-        loadAssetsFolder(assets, "sfx", "ogg", Sound.class, resolver);
+        loadAssetsFolder(assets, "textures", Collections.singletonList("png"), Texture.class, resolver);
+        loadAssetsFolder(assets, "sfx", List.of("ogg", "wav", "mp3"), Sound.class, resolver);
         assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
-        loadAssetsFolder(assets, "maps", "tmx", TiledMap.class, resolver);
+        loadAssetsFolder(assets, "maps", Collections.singletonList("tmx"), TiledMap.class, resolver);
         assets.finishLoading();
         mainWindow = newMainWindow();
     }
 
-    private <T> void loadAssetsFolder(AssetManager assets, String folderName, String extension, Class<T> type,
-            FileHandleResolver resolver) {
+    private <T> void loadAssetsFolder(AssetManager assets, String folderName, List<String> extensions, Class<T> type,
+                                      FileHandleResolver resolver) {
         FileHandle folder = resolver.resolve("").child(folderName);
         if (!folder.exists()) {
             return;
         }
         for (FileHandle asset : folder.list()) {
-            if (Objects.equals(asset.extension(), extension)) {
+            if (extensions.contains(asset.extension())) {
                 assets.load(asset.path(), type);
             }
         }
@@ -105,9 +107,14 @@ public class HostApp extends ApplicationAdapter {
         return window;
     }
 
-    public void newPopup(PopupApp.PopupType type) {
+    public void newPopup(PopupScreen.PopupType type) {
         ClientApp app = new ClientApp();
-        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, WindowUtils.getDefaultConfiguration());
+        PopupScreen screen = PopupScreen.fromType(this, type);
+        Lwjgl3WindowConfiguration configuration = WindowUtils.getDefaultConfiguration();
+        configuration.setTitle(screen.title);
+        configuration.setWindowedMode(screen.width, screen.height);
+        configuration.setWindowPosition(mainWindow.getPositionX() + screen.relativePosX, mainWindow.getPositionY() + screen.relativePosY); // verify fully within desktop, add random offset
+        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, configuration);
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
             public void created(Lwjgl3Window window) {
@@ -117,10 +124,11 @@ public class HostApp extends ApplicationAdapter {
             @Override
             public boolean closeRequested() {
                 windows.removeValue(window, true);
+                screen.dispose();
                 return true;
             }
         });
-        app.setScreen(PopupApp.fromType(this, type));
+        app.setScreen(screen);
     }
 
     public Input focusedInput() {
