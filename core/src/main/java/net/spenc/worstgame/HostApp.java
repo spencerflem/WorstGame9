@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Manages shared objects, launching windows, and updating entity state
@@ -34,6 +35,7 @@ public class HostApp extends ApplicationAdapter {
     private double accumulator = 0.0;
     private final Array<Lwjgl3Window> windows = new Array<>();
     private Lwjgl3Window mainWindow;
+    private Random random = new Random();
 
     @Override
     public void create() {
@@ -113,7 +115,10 @@ public class HostApp extends ApplicationAdapter {
         Lwjgl3WindowConfiguration configuration = WindowUtils.getDefaultConfiguration();
         configuration.setTitle(screen.title);
         configuration.setWindowedMode(screen.width, screen.height);
-        configuration.setWindowPosition(mainWindow.getPositionX() + screen.relativePosX, mainWindow.getPositionY() + screen.relativePosY); // verify fully within desktop, add random offset
+        configuration.setWindowPosition(
+            mainWindow.getPositionX() + screen.relativePosX + random.nextInt(-100, 100),
+            mainWindow.getPositionY() + screen.relativePosY + random.nextInt(-50, 50)
+        ); // TODO: verify fully within desktop
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, configuration);
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override

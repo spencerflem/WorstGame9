@@ -1,6 +1,5 @@
 package net.spenc.worstgame;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -43,6 +42,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 Filenames.WAR_POPUP_SHOOT.getFilename(),
                 0.1f,
                 3,
+                1,
                 "BUY!!!!! DOLLARS!!!",
                 null,
                 -440,
@@ -62,6 +62,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 Filenames.WIN_POPUP_SHOOT.getFilename(),
                 0.15f,
                 3,
+                2,
                 "Win big NOW Slots Gambling Casino Online Win Mega Cash Rewards ONLINE FREE",
                 null,
                 350,
@@ -81,6 +82,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 Filenames.BABY_POPUP_SHOOT.getFilename(),
                 0.2f,
                 3,
+                4,
                 "Baby",
                 null,
                 0,
@@ -99,6 +101,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 Filenames.WIZARD_POPUP_LOOP.getFilename(),
                 null,
                 0.4f,
+                0,
                 0,
                 "The Legend of the Wizard: Ultimate Choices - Build Your Kingdom",
                 "https://tbug20.itch.io/the-legend-of-the-wizard-of-dissuading-people-from-making-really-bad-choices",
@@ -119,6 +122,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
                 null,
                 0,
                 0,
+                0,
                 "Drive It Away NOW! Ultimate Cheap Car Budget Rental Free Savings Discount Dealership",
                 null,
                 10,
@@ -136,6 +140,7 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
     private final OrthographicCamera camera;
     private final Viewport viewport;
     private final float frameTime;
+    private final float cooldown;
     private final int shootFrames;
     private final String url;
     private final int barrelPosX;
@@ -149,8 +154,12 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
     private final Sound shoot;
     private final long loopId;
 
-    private float elapsed = 0;
-    private boolean frame1 = true;
+    private float animationElapsed = 0;
+    private boolean isFrame1 = true;
+
+    private float cooldownElapsed = 0.5f;
+    private float shootFramesElapsed = 0;
+    private boolean isFiring = false;
 
     public final String title;
     public final int relativePosX;
@@ -158,10 +167,11 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
     public final int width;
     public final int height;
 
-    public PopupScreen(HostApp host, String texture1, String texture2, String shootingTexture1, String shootingTexture2, String loopSound, String shootingSound, float frameTime, int shootFrames, String title, String url, int relativePosX, int relativePosY, int width, int height, int barrelPosX, int barrelPosY) {
+    public PopupScreen(HostApp host, String texture1, String texture2, String shootingTexture1, String shootingTexture2, String loopSound, String shootingSound, float frameTime, int shootFrames, float cooldown, String title, String url, int relativePosX, int relativePosY, int width, int height, int barrelPosX, int barrelPosY) {
         this.host = host;
         this.frameTime = frameTime;
         this.shootFrames = shootFrames;
+        this.cooldown = cooldown;
         this.title = title;
         this.url = url;
         this.relativePosX = relativePosX;
@@ -190,17 +200,38 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
-        elapsed += delta;
+        animationElapsed += delta;
         if (frameTime > 0 && tex2 != null) {
-            while (elapsed > frameTime) {
-                frame1 = !frame1;
-                elapsed -= frameTime;
+            while (animationElapsed > frameTime) {
+                isFrame1 = !isFrame1;
+                animationElapsed -= frameTime;
+            }
+        }
+        if (isFiring) {
+            if (shootFramesElapsed == shootFrames) {
+                shootFramesElapsed = 0;
+                isFiring = false;
+            } else {
+                shootFramesElapsed++;
+            }
+        }
+        cooldownElapsed += delta;
+        if (cooldown > 0) {
+            if (cooldownElapsed > cooldown) {
+                fire();
+                cooldownElapsed = 0;
+                if (shootTex1 != null) {
+                    isFiring = true;
+                }
+                if (shoot != null) {
+                    shoot.play();
+                }
             }
         }
         camera.update();
         host.batch.setProjectionMatrix(camera.combined);
         host.batch.begin();
-        host.batch.draw(frame1? tex1 : tex2, 0, 0, width, height);
+        host.batch.draw(isFiring? (isFrame1? shootTex1 : shootTex2) : (isFrame1 ? tex1 : tex2), 0, 0, width, height);
         host.batch.end();
     }
 
@@ -212,5 +243,9 @@ public class PopupScreen extends ScreenAdapter implements ClientScreen {
     @Override
     public void dispose() {
         loop.stop(loopId);
+    }
+
+    private void fire() {
+
     }
 }
