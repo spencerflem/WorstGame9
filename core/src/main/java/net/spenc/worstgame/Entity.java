@@ -90,7 +90,7 @@ public class Entity {
     }
 
     public void playSound() {
-        if (sound != null) {
+        if (sound != null && System.getenv("DEV") == null) {
             sound.play();
         }
     }

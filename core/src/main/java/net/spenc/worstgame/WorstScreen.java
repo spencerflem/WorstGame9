@@ -59,10 +59,12 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     public void render(float delta) {
         ScreenUtils.clear(0.7f, 0.7f, 1, 1);
 
-        popupTime -= delta;
-        if (popupTime < 0) {
-            popupTime = random.nextInt(1, 10);
-            host.newPopup(PopupScreen.PopupType.randomPopup());
+        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
+            popupTime -= delta;
+            if (popupTime < 0) {
+                popupTime = random.nextInt(1, 10);
+                host.newPopup(PopupScreen.PopupType.randomPopup());
+            }
         }
 
         // THIS SHOULDN'T BE NECESSARY
@@ -251,6 +253,9 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
         for (Chaser chaser : chaserRefs) {
             chaser = chaser.WithTarget(playerRef);
         }
+
+        // TODO: REMOVE
+        entities.add(prefabLoader.NewHellorbPrefab().WithSpawnPosition(new Vector2(10, 10)).WithSound(host.assets.get(Filenames.HELLORBKILL.getFilename())));
 
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
