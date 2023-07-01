@@ -215,10 +215,10 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 0,
                 "***FREE DOWNLOAD*** Squares Angles Square Pythagoras Acute Rectangle Beach Party",
                 "https://lolmanbruh.itch.io/square-invaders",
-                0,
-                0,
-                191,
-                138,
+                30,
+                150,
+                800,
+                600,
                 0,
                 0
             );
