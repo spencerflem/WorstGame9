@@ -56,7 +56,7 @@ public class HostApp extends ApplicationAdapter {
     }
 
     private <T> void loadAssetsFolder(AssetManager assets, String folderName, List<String> extensions, Class<T> type,
-                                      FileHandleResolver resolver) {
+            FileHandleResolver resolver) {
         FileHandle folder = resolver.resolve("").child(folderName);
         if (!folder.exists()) {
             return;
@@ -110,7 +110,7 @@ public class HostApp extends ApplicationAdapter {
                 return true;
             }
         });
-        setLevel((System.getenv("LEVEL") == null) ? "level2" : System.getenv("LEVEL"), window);
+        setLevel((System.getenv("LEVEL") == null) ? "level3" : System.getenv("LEVEL"), window);
         return window;
     }
 
@@ -118,7 +118,7 @@ public class HostApp extends ApplicationAdapter {
         ClientApp app = new ClientApp();
         Lwjgl3WindowConfiguration configuration = WindowUtils.getOverlayConfiguration();
         configuration.setWindowedMode(Gdx.graphics.getDisplayMode().width - 2,
-            Gdx.graphics.getDisplayMode().height - 2);
+                Gdx.graphics.getDisplayMode().height - 2);
         configuration.setWindowPosition(1, 1);
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, configuration);
         window.setWindowListener(new Lwjgl3WindowAdapter() {
@@ -145,8 +145,8 @@ public class HostApp extends ApplicationAdapter {
         configuration.setTitle(screen.title);
         configuration.setWindowedMode(screen.width, screen.height);
         configuration.setWindowPosition(
-            mainWindow.getPositionX() + screen.relativePosX + random.nextInt(-100, 100),
-            mainWindow.getPositionY() + screen.relativePosY + random.nextInt(-50, 50)); // TODO: verify fully within
+                mainWindow.getPositionX() + screen.relativePosX + random.nextInt(-100, 100),
+                mainWindow.getPositionY() + screen.relativePosY + random.nextInt(-50, 50)); // TODO: verify fully within
         // desktop
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, configuration);
         window.setWindowListener(new Lwjgl3WindowAdapter() {
@@ -221,9 +221,9 @@ public class HostApp extends ApplicationAdapter {
         for (Lwjgl3Window window : windows) {
             if (getClientScreen(window) == screen) {
                 entity.spawnPosition.add(
-                    window.getPositionX(),
-                    Gdx.graphics.getDisplayMode().height - window.getPositionY() - getClientApp(window).getGraphics().getHeight()
-                );
+                        window.getPositionX(),
+                        Gdx.graphics.getDisplayMode().height - window.getPositionY()
+                                - getClientApp(window).getGraphics().getHeight());
             }
         }
         getEntities(overlay).add(entity);
@@ -234,9 +234,8 @@ public class HostApp extends ApplicationAdapter {
         entity.width = 1.5f;
         entity.height = 1.5f;
         entity.position.set(((WorstScreen) getClientScreen(mainWindow)).getEntrancePosition(new Vector2(
-            ((Homer) entity).moveRight ? 0 : getClientApp(mainWindow).getGraphics().getWidth(),
-            ((Homer) entity).targetHeight * getClientApp(mainWindow).getGraphics().getHeight()
-        )));
+                ((Homer) entity).moveRight ? 0 : getClientApp(mainWindow).getGraphics().getWidth(),
+                ((Homer) entity).targetHeight * getClientApp(mainWindow).getGraphics().getHeight())));
         getEntities(mainWindow).add(entity);
     }
 
@@ -245,9 +244,10 @@ public class HostApp extends ApplicationAdapter {
             vector.set(-10000, -10000);
         } else {
             vector.set(
-                mainWindow.getPositionX() + (moveRight ? 0 : Math.round(getClientApp(mainWindow).getGraphics().getWidth())),
-                getClientApp(overlay).getGraphics().getHeight() - mainWindow.getPositionY() - (getClientApp(mainWindow).getGraphics().getHeight() * height)
-            );
+                    mainWindow.getPositionX()
+                            + (moveRight ? 0 : Math.round(getClientApp(mainWindow).getGraphics().getWidth())),
+                    getClientApp(overlay).getGraphics().getHeight() - mainWindow.getPositionY()
+                            - (getClientApp(mainWindow).getGraphics().getHeight() * height));
         }
     }
 
