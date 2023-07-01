@@ -35,6 +35,7 @@ public class HostApp extends ApplicationAdapter {
     private double accumulator = 0.0;
     private final Array<Lwjgl3Window> windows = new Array<>();
     private Lwjgl3Window mainWindow;
+    private Lwjgl3Window overlay;
     private Random random = new Random();
 
     @Override
@@ -80,7 +81,7 @@ public class HostApp extends ApplicationAdapter {
 
     private void updateClients() {
         for (int i = 0; i < windows.size; i++) {
-            Array<Entity> entities = getClientScreen(windows.get(i)).getEntities();
+            Array<Entity> entities = getEntities(windows.get(i));
             for (int j = 0; j < entities.size; j++) {
                 Entity entity = entities.get(j);
                 entity.update(TIMESTEP);
@@ -106,6 +107,29 @@ public class HostApp extends ApplicationAdapter {
             }
         });
         setLevel("level1", window);
+        return window;
+    }
+
+    private Lwjgl3Window newOverlayWindow() {
+        ClientApp app = new ClientApp();
+        Lwjgl3WindowConfiguration configuration = WindowUtils.getOverlayConfiguration();
+        configuration.setWindowedMode(Gdx.graphics.getDisplayMode().width - 2, Gdx.graphics.getDisplayMode().height - 2);
+        configuration.setWindowPosition(1, 1);
+        Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, configuration);
+        window.setWindowListener(new Lwjgl3WindowAdapter() {
+            @Override
+            public void created(Lwjgl3Window window) {
+                windows.add(window);
+                WindowUtils.setOverlay(window, true);
+            }
+
+            @Override
+            public boolean closeRequested() {
+                windows.removeValue(window, true);
+                return false;
+            }
+        });
+        app.setScreen(new OverlayScreen(this));
         return window;
     }
 
@@ -162,6 +186,10 @@ public class HostApp extends ApplicationAdapter {
         }
     }
 
+    private Array<Entity> getEntities(Lwjgl3Window window) {
+        return getClientScreen(window).getEntities();
+    }
+
     private ClientApp getClientApp(Lwjgl3Window window) {
         return (ClientApp) window.getListener();
     }
@@ -174,5 +202,16 @@ public class HostApp extends ApplicationAdapter {
         for (Entity entity : client.getEntities()) {
             entity.dispose();
         }
+    }
+
+    public void addToOverlay(Entity entity) {
+        // TODO: Set entity position, scale
+        getEntities(overlay).add(entity);
+    }
+
+    public void moveOverlayToMain(Entity entity) {
+        getEntities(overlay).removeValue(entity, true);
+        // TODO: Set entity position, scale
+        getEntities(mainWindow).add(entity);
     }
 }

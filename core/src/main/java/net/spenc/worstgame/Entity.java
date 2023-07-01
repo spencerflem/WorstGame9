@@ -59,8 +59,8 @@ public class Entity {
     }
 
     public void updateCollisions(Array<Entity> entities) {
-
-        for (Entity other : entities) {
+        for (int i = 0; i < entities.size; i++) {
+            Entity other = entities.get(i);
             if (collidingWith.contains(other.id)) {
                 if (!overlaps(other)) {
                     onCollisionExit(other);

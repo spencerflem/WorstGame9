@@ -235,7 +235,7 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 }
             }
         }
-        if (uri != null && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if (uri != null && Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             try {
                 Desktop.getDesktop().browse(uri);
             } catch (IOException e) {

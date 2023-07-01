@@ -43,6 +43,7 @@ public class WindowUtils {
         if (overlay) {
             GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_MOUSE_PASSTHROUGH, GLFW.GLFW_TRUE);
             GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FLOATING, GLFW.GLFW_TRUE);
+            GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FOCUS_ON_SHOW, GLFW.GLFW_FALSE);
         } else {
             GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_MOUSE_PASSTHROUGH, GLFW.GLFW_FALSE);
             GLFW.glfwSetWindowAttrib(window.getWindowHandle(), GLFW.GLFW_FLOATING, GLFW.GLFW_FALSE);

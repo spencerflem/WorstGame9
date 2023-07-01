@@ -252,9 +252,6 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
             chaser = chaser.WithTarget(playerRef);
         }
 
-        // TODO: REMOVE
-        entities.add(prefabLoader.NewHellorbPrefab().WithSpawnPosition(new Vector2(10, 10)).WithSound(host.assets.get(Filenames.HELLORBKILL.getFilename())));
-
         // after creating all entities, sort them by layer for rendering
         entities.sort(Comparator.comparingInt(a -> a.layer));
     }

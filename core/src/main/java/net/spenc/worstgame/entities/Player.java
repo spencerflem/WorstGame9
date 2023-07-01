@@ -263,9 +263,9 @@ public class Player extends Entity {
         if (other instanceof Patroller) {
             respawn();
         }
-//        if (other instanceof Homer) {
-//            respawn();
-//        }
+        if (other instanceof Homer) {
+            respawn();
+        }
         if (other instanceof Player) {
             Player otherPlayer = (Player) other;
             if (otherPlayer.root == null) {
