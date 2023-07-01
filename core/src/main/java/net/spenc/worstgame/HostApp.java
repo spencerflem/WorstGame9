@@ -115,7 +115,7 @@ public class HostApp extends ApplicationAdapter {
                 return true;
             }
         });
-        setLevel((System.getenv("LEVEL") == null) ? "level3" : System.getenv("LEVEL"), window);
+        setLevel((System.getenv("LEVEL") == null) ? "level1" : System.getenv("LEVEL"), window);
         return window;
     }
 

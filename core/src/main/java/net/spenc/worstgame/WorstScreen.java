@@ -37,6 +37,8 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     private final PrefabLoader prefabLoader;
     private final Random random = new Random();
     private int level = 0;
+    private int minAdTimer = 0;
+    private int maxAdTimer = 0;
 
     private float popupTime = 15;
 
@@ -60,11 +62,10 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.7f, 0.7f, 1, 1);
-
-        if (System.getenv("DEV") == null && level != 0) { // example: DEV=1 sh gradlew run
+        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
             popupTime -= delta;
             if (popupTime < 0) {
-                popupTime = random.nextInt(1, 10);
+                popupTime = random.nextInt(minAdTimer, maxAdTimer);
                 host.newPopup(PopupScreen.PopupType.randomPopup());
             }
         } else {
@@ -128,12 +129,19 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                     Gdx.app.log("Player", "Found a player");
                     int level = obj.getProperties().get("level", Integer.class);
                     this.level = level;
+
+                    String adTimerRange = obj.getProperties().get("adTimerRange", String.class);
+                    String[] adTimerRangeSplit = adTimerRange.split(",");
+                    int minAdTimer = Integer.parseInt(adTimerRangeSplit[0]);
+                    int maxAdTimer = Integer.parseInt(adTimerRangeSplit[1]);
+                    this.minAdTimer = minAdTimer;
+                    this.maxAdTimer = maxAdTimer;
                     Player root = (Player) prefabLoader.NewPlayerPrefab().WithLevel(level).WithMapRef(map)
                         .WithCameraRef(camera)
                         .WithEntitiesRef(entities)
                         .WithHostRef(host).WithSpawnPosition(new Vector2(x, y));
                     entities.add(root);
-                    if (level != 0) {
+                    if (level >= 2) {
                         // spawn 40 more players, spaced evenly around the root player
                         for (int i = 0; i < 40; i++) {
                             // first 20 are on the left, second 20 are on the right
