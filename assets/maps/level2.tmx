@@ -102,7 +102,7 @@
   </object>
   <object id="54" name="Portal" type="Portal" x="3247.71" y="254.813">
    <properties>
-    <property name="target" value="level1"/>
+    <property name="target" value="level3"/>
    </properties>
    <point/>
   </object>
