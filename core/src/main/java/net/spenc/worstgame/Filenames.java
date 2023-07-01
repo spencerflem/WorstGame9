@@ -50,8 +50,18 @@ public enum Filenames {
     CAR_POPUP_1("textures/carad.png"),
     CAR_POPUP_LOOP("sfx/caralarm.wav"),
 
+    FEARD_POPUP_1("textures/kingsfeard.png"),
+    FEARD_POPUP_LOOP("sfx/feard.wav"),
+
+    XXX_POPUP_1("textures/xxxlove.png"),
+    XXX_POPUP_LOOP("sfx/xxx.wav"),
+
     HELLORB("textures/hellorb.png"),
-    HELLORBKILL("sfx/hellorbkill.wav");
+    HELLORBKILL("sfx/hellorbkill.wav"),
+
+    HOTWIZ_POPUP_1("textures/hotwizardsad.png"),
+    HOTWIZ_POPUP_2("textures/hotwizardsad2.png"),
+    HOTWIZ_POPUP_LOOP("sfx/hotwizard.wav");
 
     private String filename;
 
