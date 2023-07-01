@@ -120,7 +120,7 @@
   </object>
   <object id="57" name="Codex" type="Codex" x="1162.5" y="264.402">
    <properties>
-    <property name="target" value="level1"/>
+    <property name="target" value="level3"/>
    </properties>
    <point/>
   </object>
