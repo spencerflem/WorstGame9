@@ -210,7 +210,7 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 null,
                 Filenames.SQUARE_POPUP_LOOP.getFilename(),
                 null,
-                0,
+                0.32f,
                 0,
                 0,
                 "***FREE DOWNLOAD*** Squares Angles Square Pythagoras Acute Rectangle Beach Party",
