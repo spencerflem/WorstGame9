@@ -20,6 +20,7 @@ import net.spenc.worstgame.HostApp;
 public class Player extends Entity {
     public Player root = null;
     private int cloneNumber = 0;
+    private int level = 0;
 
     public static float MAX_VELOCITY = 10f;
     public static float JUMP_VELOCITY = 60f;
@@ -68,6 +69,11 @@ public class Player extends Entity {
     public Player WithRoot(Player root, int cloneNumber) {
         this.root = root;
         this.cloneNumber = cloneNumber;
+        return this;
+    }
+
+    public Player WithLevel(int level) {
+        this.level = level;
         return this;
     }
 
@@ -178,7 +184,7 @@ public class Player extends Entity {
                 // we actually reset the koala y-position here
                 // so it is just below/above the tile we collided with
                 // this removes bouncing :)
-                if (this.velocity.y > 0) {
+                if (this.velocity.y > 0 && this.level == 1) {
                     this.position.y = tile.y - this.height;
                     // we hit a block jumping upwards, let's destroy it!
                     TiledMapTileLayer layer = (TiledMapTileLayer) mapRef.getLayers().get("walls");

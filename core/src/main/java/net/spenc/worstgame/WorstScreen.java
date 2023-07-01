@@ -35,6 +35,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     private final Array<Entity> entities = new Array<>();
     private final PrefabLoader prefabLoader;
     private final Random random = new Random();
+    private int level = 0;
 
     private float popupTime = 15;
 
@@ -59,7 +60,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     public void render(float delta) {
         ScreenUtils.clear(0.7f, 0.7f, 1, 1);
 
-        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
+        if (System.getenv("DEV") == null && level != 0) { // example: DEV=1 sh gradlew run
             popupTime -= delta;
             if (popupTime < 0) {
                 popupTime = random.nextInt(1, 10);
@@ -121,20 +122,26 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
 
                 if (type.equalsIgnoreCase("player")) {
                     Gdx.app.log("Player", "Found a player");
-                    Player root = (Player) prefabLoader.NewPlayerPrefab().WithMapRef(map).WithCameraRef(camera)
+                    int level = obj.getProperties().get("level", Integer.class);
+                    this.level = level;
+                    Player root = (Player) prefabLoader.NewPlayerPrefab().WithLevel(level).WithMapRef(map)
+                            .WithCameraRef(camera)
                             .WithHostRef(host).WithSpawnPosition(new Vector2(x, y));
                     entities.add(root);
-                    // spawn 40 more players, spaced evenly around the root player
-                    for (int i = 0; i < 40; i++) {
-                        // first 20 are on the left, second 20 are on the right
-                        int adjustedI = (-40 / 2) + i;
-                        float spawnX = x + (adjustedI);
-                        Player clone = (Player) prefabLoader.NewPlayerPrefab().WithRoot(root, adjustedI).WithMapRef(map)
-                                .WithHostRef(host)
-                                .WithSpawnPosition(new Vector2(spawnX, y));
-                        entities.add(clone);
+                    if (level != 0) {
+                        // spawn 40 more players, spaced evenly around the root player
+                        for (int i = 0; i < 40; i++) {
+                            // first 20 are on the left, second 20 are on the right
+                            int adjustedI = (-40 / 2) + i;
+                            float spawnX = x + (adjustedI);
+                            Player clone = (Player) prefabLoader.NewPlayerPrefab().WithRoot(root, adjustedI)
+                                    .WithLevel(level)
+                                    .WithMapRef(map)
+                                    .WithHostRef(host)
+                                    .WithSpawnPosition(new Vector2(spawnX, y));
+                            entities.add(clone);
+                        }
                     }
-
                 }
 
                 if (type.equalsIgnoreCase("patroller")) {
