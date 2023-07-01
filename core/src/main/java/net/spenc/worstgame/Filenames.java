@@ -61,7 +61,11 @@ public enum Filenames {
 
     HOTWIZ_POPUP_1("textures/hotwizardsad.png"),
     HOTWIZ_POPUP_2("textures/hotwizardsad2.png"),
-    HOTWIZ_POPUP_LOOP("sfx/hotwizard.wav");
+    HOTWIZ_POPUP_LOOP("sfx/hotwizard.wav"),
+
+    SQUARE_POPUP_1("textures/cubead.png"),
+    SQUARE_POPUP_2("textures/cubead2.png"),
+    SQUARE_POPUP_LOOP("sfx/giggles.wav");
 
     private String filename;
 

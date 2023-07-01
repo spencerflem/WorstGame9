@@ -28,7 +28,8 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
         CAR,
         HOTWIZ,
         FEARD,
-        XXX;
+        XXX,
+        SQUARE;
 
         private static final List<PopupType> VALUES = List.of(values());
         private static final int SIZE = VALUES.size();
@@ -194,6 +195,26 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 0,
                 "S*X *EX SE* S*X *EX SE* S*X *EX SE* S*X *EX SE* S*X *EX SE* S*X *EX SE*",
                 null,
+                0,
+                0,
+                191,
+                138,
+                0,
+                0
+            );
+            case SQUARE -> new PopupScreen(
+                host,
+                Filenames.SQUARE_POPUP_1.getFilename(),
+                Filenames.SQUARE_POPUP_2.getFilename(),
+                null,
+                null,
+                Filenames.SQUARE_POPUP_LOOP.getFilename(),
+                null,
+                0,
+                0,
+                0,
+                "***FREE DOWNLOAD*** Squares Angles Square Pythagoras Acute Rectangle Beach Party",
+                "https://lolmanbruh.itch.io/square-invaders",
                 0,
                 0,
                 191,
