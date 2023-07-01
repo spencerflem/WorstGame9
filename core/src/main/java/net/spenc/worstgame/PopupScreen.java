@@ -77,7 +77,7 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 2,
                 "Win big NOW Slots Gambling Casino Online Win Mega Cash Rewards ONLINE FREE",
                 "https://mgc-ml.itch.io/ml",
-                350,
+                550,
                 40,
                 300,
                 600,
