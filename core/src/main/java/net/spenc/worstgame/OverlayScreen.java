@@ -1,8 +1,6 @@
 package net.spenc.worstgame;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Array;
@@ -10,10 +8,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class OverlayScreen extends ScreenAdapter implements ClientApp.ClientScreen {
-    private HostApp host;
-    private OrthographicCamera camera;
-    private ScreenViewport viewport;
-    private Array<Entity> entities = new Array<>();
+    private final HostApp host;
+    private final OrthographicCamera camera;
+    private final ScreenViewport viewport;
+    private final Array<Entity> entities = new Array<>();
 
     OverlayScreen(HostApp host) {
         this.host = host;
@@ -23,7 +21,7 @@ public class OverlayScreen extends ScreenAdapter implements ClientApp.ClientScre
 
     @Override
     public void render(float delta) {
-        ((Lwjgl3Input) Gdx.input).windowHandleChanged(0);
+        host.setOverlayVisible(entities.size > 0);
         ScreenUtils.clear(Color.CLEAR);
         camera.update();
         host.batch.setProjectionMatrix(camera.combined);

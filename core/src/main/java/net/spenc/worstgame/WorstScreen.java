@@ -1,6 +1,7 @@
 package net.spenc.worstgame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -51,7 +52,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
         }
         this.camera = new OrthographicCamera();
         this.camera.position.y = 10;
-        this.viewport = new FitViewport(30, 20, camera);
+        this.viewport = new FitViewport(26, 20, camera);
         this.prefabLoader = new PrefabLoader(host.assets, pixels2tiles);
         createEntities();
     }
@@ -66,11 +67,15 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 popupTime = random.nextInt(1, 10);
                 host.newPopup(PopupScreen.PopupType.randomPopup());
             }
+        } else {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+                host.newPopup(PopupScreen.PopupType.WIN);
+            }
         }
 
         // THIS SHOULDN'T BE NECESSARY
         // but the viewport gets very wierd without it, whenever a new popup is made
-        viewport.update(viewport.getScreenWidth(), viewport.getScreenHeight());
+        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         camera.update();
 
@@ -268,5 +273,9 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     @Override
     public Array<Entity> getEntities() {
         return entities;
+    }
+
+    public Vector2 getEntrancePosition(Vector2 screenCoords) {
+        return viewport.unproject(screenCoords);
     }
 }

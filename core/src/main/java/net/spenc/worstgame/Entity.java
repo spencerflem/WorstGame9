@@ -20,7 +20,6 @@ public class Entity {
     public final Vector2 position = new Vector2();
     public final Vector2 spawnPosition = new Vector2();
     public Texture texture;
-    public boolean escapes = false;
 
     private final HashSet<UUID> collidingWith = new HashSet<>();
 
@@ -81,11 +80,6 @@ public class Entity {
 
     public Entity WithSound(Sound sound) {
         this.sound = sound;
-        return this;
-    }
-
-    public Entity AndLoItCanEscape() {
-        this.escapes = true;
         return this;
     }
 

@@ -17,7 +17,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
+import net.spenc.worstgame.entities.Homer;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +36,7 @@ public class HostApp extends ApplicationAdapter {
     private static final float TIMESTEP = 0.01f;
     private static final float MAX_ACCUMULATOR = 0.1f;
     private double accumulator = 0.0;
-    private final Array<Lwjgl3Window> windows = new Array<>();
+    private final Array<Lwjgl3Window> windows = new Array<>(); // TODO: Store Screens, Apps & lookup window from that?
     private Lwjgl3Window mainWindow;
     private Lwjgl3Window overlay;
     private Random random = new Random();
@@ -48,11 +51,12 @@ public class HostApp extends ApplicationAdapter {
         assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
         loadAssetsFolder(assets, "maps", Collections.singletonList("tmx"), TiledMap.class, resolver);
         assets.finishLoading();
+        overlay = newOverlayWindow();
         mainWindow = newMainWindow();
     }
 
     private <T> void loadAssetsFolder(AssetManager assets, String folderName, List<String> extensions, Class<T> type,
-            FileHandleResolver resolver) {
+                                      FileHandleResolver resolver) {
         FileHandle folder = resolver.resolve("").child(folderName);
         if (!folder.exists()) {
             return;
@@ -106,7 +110,7 @@ public class HostApp extends ApplicationAdapter {
                 return true;
             }
         });
-        setLevel("level2", window);
+        setLevel((System.getenv("LEVEL") == null) ? "level2" : System.getenv("LEVEL"), window);
         return window;
     }
 
@@ -114,7 +118,7 @@ public class HostApp extends ApplicationAdapter {
         ClientApp app = new ClientApp();
         Lwjgl3WindowConfiguration configuration = WindowUtils.getOverlayConfiguration();
         configuration.setWindowedMode(Gdx.graphics.getDisplayMode().width - 2,
-                Gdx.graphics.getDisplayMode().height - 2);
+            Gdx.graphics.getDisplayMode().height - 2);
         configuration.setWindowPosition(1, 1);
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, configuration);
         window.setWindowListener(new Lwjgl3WindowAdapter() {
@@ -141,9 +145,9 @@ public class HostApp extends ApplicationAdapter {
         configuration.setTitle(screen.title);
         configuration.setWindowedMode(screen.width, screen.height);
         configuration.setWindowPosition(
-                mainWindow.getPositionX() + screen.relativePosX + random.nextInt(-100, 100),
-                mainWindow.getPositionY() + screen.relativePosY + random.nextInt(-50, 50)); // TODO: verify fully within
-                                                                                            // desktop
+            mainWindow.getPositionX() + screen.relativePosX + random.nextInt(-100, 100),
+            mainWindow.getPositionY() + screen.relativePosY + random.nextInt(-50, 50)); // TODO: verify fully within
+        // desktop
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, configuration);
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
@@ -205,14 +209,49 @@ public class HostApp extends ApplicationAdapter {
         }
     }
 
-    public void addToOverlay(Entity entity) {
-        // TODO: Set entity position, scale
+    public void destroyEntityInMain(Entity entity) {
+        getEntities(mainWindow).removeValue(entity, true);
+    }
+
+    public void setOverlayVisible(boolean visible) {
+        overlay.setVisible(visible);
+    }
+
+    public void addToOverlay(Entity entity, ClientApp.ClientScreen screen) {
+        for (Lwjgl3Window window : windows) {
+            if (getClientScreen(window) == screen) {
+                entity.spawnPosition.add(
+                    window.getPositionX(),
+                    Gdx.graphics.getDisplayMode().height - window.getPositionY() - getClientApp(window).getGraphics().getHeight()
+                );
+            }
+        }
         getEntities(overlay).add(entity);
     }
 
     public void moveOverlayToMain(Entity entity) {
         getEntities(overlay).removeValue(entity, true);
-        // TODO: Set entity position, scale
+        entity.width = 1.5f;
+        entity.height = 1.5f;
+        entity.position.set(((WorstScreen) getClientScreen(mainWindow)).getEntrancePosition(new Vector2(
+            ((Homer) entity).moveRight ? 0 : getClientApp(mainWindow).getGraphics().getWidth(),
+            ((Homer) entity).targetHeight * getClientApp(mainWindow).getGraphics().getHeight()
+        )));
         getEntities(mainWindow).add(entity);
+    }
+
+    public void getMainWindowTarget(Vector2 vector, boolean moveRight, float height) {
+        if (getClientApp(mainWindow).getGraphics() == null) {
+            vector.set(-10000, -10000);
+        } else {
+            vector.set(
+                mainWindow.getPositionX() + (moveRight ? 0 : Math.round(getClientApp(mainWindow).getGraphics().getWidth())),
+                getClientApp(overlay).getGraphics().getHeight() - mainWindow.getPositionY() - (getClientApp(mainWindow).getGraphics().getHeight() * height)
+            );
+        }
+    }
+
+    public boolean getMainWindowTargetMoveRight(Vector2 position) {
+        return position.x <= (mainWindow.getPositionX() + (getClientApp(mainWindow).getGraphics().getWidth() / 2.0));
     }
 }

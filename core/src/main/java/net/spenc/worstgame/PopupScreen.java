@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import net.spenc.worstgame.entities.Homer;
+
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -280,7 +282,11 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
         this.loop = host.assets.get(loopSound);
         this.shoot = shootingSound == null? null : host.assets.get(shootingSound);
         this.uri = url == null? null : URI.create(url);
-        loopId = loop.loop();
+        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
+            loopId = loop.loop();
+        } else {
+            loopId = 0;
+        }
     }
 
     @Override
@@ -347,9 +353,10 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
     }
 
     private void fire() {
-        entities.add(prefabLoader.NewHellorbPrefab()
+        // auto-added to overlay
+        ((Homer) prefabLoader.NewHellorbPrefab()
             .WithSpawnPosition(new Vector2(barrelPosX, barrelPosY))
-            .WithSound(host.assets.get(Filenames.HELLORBKILL.getFilename()))
-        );
+            .WithSound(host.assets.get(Filenames.HELLORBKILL.getFilename())))
+            .WithHost(host, this);
     }
 }

@@ -87,7 +87,7 @@ public class PrefabLoader {
         Texture texture = managerRef.get(Filenames.HELLORB.getFilename(), Texture.class);
         return (Homer) new Homer()
             .WithTexture(texture)
-            .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE)
-            .AndLoItCanEscape();
+            .WithLayer(10)
+            .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
     }
 }
