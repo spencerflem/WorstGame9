@@ -52,7 +52,7 @@ public class HostApp extends ApplicationAdapter {
     }
 
     private <T> void loadAssetsFolder(AssetManager assets, String folderName, List<String> extensions, Class<T> type,
-                                      FileHandleResolver resolver) {
+            FileHandleResolver resolver) {
         FileHandle folder = resolver.resolve("").child(folderName);
         if (!folder.exists()) {
             return;
@@ -106,14 +106,15 @@ public class HostApp extends ApplicationAdapter {
                 return true;
             }
         });
-        setLevel("level1", window);
+        setLevel("level2", window);
         return window;
     }
 
     private Lwjgl3Window newOverlayWindow() {
         ClientApp app = new ClientApp();
         Lwjgl3WindowConfiguration configuration = WindowUtils.getOverlayConfiguration();
-        configuration.setWindowedMode(Gdx.graphics.getDisplayMode().width - 2, Gdx.graphics.getDisplayMode().height - 2);
+        configuration.setWindowedMode(Gdx.graphics.getDisplayMode().width - 2,
+                Gdx.graphics.getDisplayMode().height - 2);
         configuration.setWindowPosition(1, 1);
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, configuration);
         window.setWindowListener(new Lwjgl3WindowAdapter() {
@@ -140,9 +141,9 @@ public class HostApp extends ApplicationAdapter {
         configuration.setTitle(screen.title);
         configuration.setWindowedMode(screen.width, screen.height);
         configuration.setWindowPosition(
-            mainWindow.getPositionX() + screen.relativePosX + random.nextInt(-100, 100),
-            mainWindow.getPositionY() + screen.relativePosY + random.nextInt(-50, 50)
-        ); // TODO: verify fully within desktop
+                mainWindow.getPositionX() + screen.relativePosX + random.nextInt(-100, 100),
+                mainWindow.getPositionY() + screen.relativePosY + random.nextInt(-50, 50)); // TODO: verify fully within
+                                                                                            // desktop
         Lwjgl3Window window = ((Lwjgl3Application) Gdx.app).newWindow(app, configuration);
         window.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override

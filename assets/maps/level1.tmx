@@ -162,6 +162,9 @@
    <point/>
   </object>
   <object id="32" name="Player" type="Player" x="160" y="32">
+   <properties>
+    <property name="level" type="int" value="1"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>
