@@ -2,6 +2,8 @@ package net.spenc.worstgame;
 
 public enum Filenames {
     PLAYER("textures/tentacle_guy.png"),
+    DEFAULT_FONT("fonts/default.fnt"),
+    BACKGROUND_MUSIC("music/background_music.mp3"),
 
     BIBL("textures/bibl.png"),
     BIBL_SFX("sfx/bibl.ogg"),
@@ -58,6 +60,9 @@ public enum Filenames {
 
     HELLORB("textures/hellorb.png"),
     HELLORBKILL("sfx/hellorbkill.wav"),
+
+    ULTRACODEX("textures/ultracodex.png"),
+    CODEXBG("textures/codexbg.png"),
 
     HOTWIZ_POPUP_1("textures/hotwizardsad.png"),
     HOTWIZ_POPUP_2("textures/hotwizardsad2.png"),

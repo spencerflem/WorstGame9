@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import net.spenc.worstgame.entities.Chaser;
 import net.spenc.worstgame.entities.Clamper;
+import net.spenc.worstgame.entities.Codex;
 import net.spenc.worstgame.entities.Homer;
 import net.spenc.worstgame.entities.Patroller;
 import net.spenc.worstgame.entities.Player;
@@ -72,6 +73,13 @@ public class PrefabLoader {
         return (Portal) new Portal()
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE);
+    }
+
+    public Codex NewCodexPrefab() {
+        Texture texture = managerRef.get(Filenames.ULTRACODEX.getFilename(), Texture.class);
+        return (Codex) new Codex()
+            .WithTexture(texture)
+            .WithSize(texture.getWidth() * PIXEL2TILE / 2, texture.getHeight() * PIXEL2TILE / 2);
     }
 
     public Clamper NewBredPrefab() {

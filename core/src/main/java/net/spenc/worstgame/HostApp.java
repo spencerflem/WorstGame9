@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -39,17 +41,20 @@ public class HostApp extends ApplicationAdapter {
     private final Array<Lwjgl3Window> windows = new Array<>(); // TODO: Store Screens, Apps & lookup window from that?
     private Lwjgl3Window mainWindow;
     private Lwjgl3Window overlay;
-    private Random random = new Random();
+    private final Random random = new Random();
+    private int codexCount = 0;
 
     @Override
     public void create() {
         assets = new AssetManager();
         batch = new SpriteBatch();
         FileHandleResolver resolver = new InternalFileHandleResolver();
-        loadAssetsFolder(assets, "textures", Collections.singletonList("png"), Texture.class, resolver);
+        loadAssetsFolder(assets, "textures", List.of("png", "jpg"), Texture.class, resolver);
         loadAssetsFolder(assets, "sfx", List.of("ogg", "wav", "mp3"), Sound.class, resolver);
         assets.setLoader(TiledMap.class, new TmxMapLoader(resolver));
         loadAssetsFolder(assets, "maps", Collections.singletonList("tmx"), TiledMap.class, resolver);
+        loadAssetsFolder(assets, "fonts", Collections.singletonList("fnt"), BitmapFont.class, resolver);
+        loadAssetsFolder(assets, "music", Collections.singletonList("mp3"), Music.class, resolver);
         assets.finishLoading();
         overlay = newOverlayWindow();
         mainWindow = newMainWindow();
@@ -253,5 +258,22 @@ public class HostApp extends ApplicationAdapter {
 
     public boolean getMainWindowTargetMoveRight(Vector2 position) {
         return position.x <= (mainWindow.getPositionX() + (getClientApp(mainWindow).getGraphics().getWidth() / 2.0));
+    }
+
+    public void openCodex() {
+        ClientApp app = getClientApp(mainWindow);
+        Screen oldScreen = app.getScreen();
+        Screen newScreen = new CodexScreen(this, codexCount, oldScreen);
+        app.setScreen(newScreen);
+    }
+
+    public void closeCodex(Screen origScreen) {
+        ClientApp app = getClientApp(mainWindow);
+        Screen oldScreen = app.getScreen();
+        app.setScreen(origScreen);
+        if (oldScreen != null) {
+            oldScreen.dispose();
+        }
+        codexCount++;
     }
 }

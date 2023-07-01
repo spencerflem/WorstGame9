@@ -5,4 +5,5 @@ dependencies {
   api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion" // obviously a bad idea
+  implementation "com.github.tommyettinger:textratypist:0.8.3"
 }

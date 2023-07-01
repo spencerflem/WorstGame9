@@ -1,0 +1,42 @@
+{
+  "title": "Eggplant on the Mind",
+  "music": "background_music.mp3",
+  "lines": [
+    {
+      "image": "george.jpg",
+      "sfx": "hotwizard.wav",
+      "text": "Uh. Cheese, pepperoni, eggplant."
+    },
+    {
+      "image": "steinbrenner.jpg",
+      "text": "Eggplant. Yes. That's a hell of a thing."
+    },
+    {
+      "text": "Okay let's get back to business."
+    },
+    {
+      "text": "Okay here you go. Very good, very good."
+    },
+    {
+      "text": "Excellent, excellent calzone you got there Costanza."
+    },
+    {
+      "text": "Okay a little jealous now. Okay lets go."
+    },
+    {
+      "text": "Ok last week ......."
+    },
+    {
+      "text": "You know that eggplant was very good."
+    },
+    {
+      "text": "Everybody out. I got eggplant on my mind."
+    },
+    {
+      "text": "Costanza get me couple of those calzones right now. Pronto. Move out."
+    },
+    {
+      "text": "Big Stein wants an eggplant calzone. Must have one . Everybody out. Out."
+    }
+  ]
+}

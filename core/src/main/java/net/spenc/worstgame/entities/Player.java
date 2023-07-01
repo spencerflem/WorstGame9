@@ -39,6 +39,7 @@ public class Player extends Entity {
     private TiledMap mapRef; // @TODO remove this
     private OrthographicCamera cameraRef; // @TODO remove this
     private HostApp hostRef; // @TODO remove this
+    private Array<Entity> entitiesRef; // @TODO remove this
 
     // BEGIN @TODO: may be able to be handled in the world scope, fix later
     private final Pool<Rectangle> rectPool = new Pool<>() {
@@ -63,6 +64,11 @@ public class Player extends Entity {
 
     public Player WithHostRef(HostApp host) {
         this.hostRef = host;
+        return this;
+    }
+
+    public Player WithEntitiesRef(Array<Entity> entities) {
+        this.entitiesRef = entities;
         return this;
     }
 
@@ -259,6 +265,12 @@ public class Player extends Entity {
         }
         this.position.x = this.spawnPosition.x;
         this.position.y = this.spawnPosition.y;
+        for (int i = 0; i < entitiesRef.size; i++) {
+            Entity entity = entitiesRef.get(i);
+            if (entity instanceof Codex) {
+                ((Codex) entity).unhide();
+            }
+        }
     }
 
     @Override

@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class Homer extends Entity {
     private float dist = 0;
-    private final float firstSpeed = 1f;
-    private final float speed = 10f;
+    private final float firstSpeed = 1.5f;
+    private final float speed = 15f;
     private boolean landed = false;
     private HostApp host;
     private final Vector2 target = new Vector2();

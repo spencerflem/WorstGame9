@@ -1,0 +1,33 @@
+{
+  "title": "A Discussion of Doors",
+  "music": "background_music.mp3",
+  "lines": [
+    {
+      "image": "george.jpg",
+      "sfx": "hotwizard.wav",
+      "text": "I believe the doors on the bathroom stalls, here at the stadium"
+    },
+    {
+      "text": "don't offer much by way of privacy."
+    },
+    {
+      "text": "But I was thinking if we extend the doors all the way to the floors ......"
+    },
+    {
+      "image": "steinbrenner.jpg",
+      "sfx": "hotwizard.wav",
+      "text": "All the way to the floor !"
+    },
+    {
+      "sfx": "hotwizard.wav",
+      "text": "What are you crazy !"
+    },
+    {
+      "text": "You'd suffocate in there. Your lucky you have any doors at all."
+    },
+    {
+      "sfx": "hotwizard.wav",
+      "text": "You know when I was in the army ......"
+    }
+  ]
+}

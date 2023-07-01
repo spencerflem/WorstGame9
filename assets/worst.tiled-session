@@ -1,15 +1,33 @@
 {
-    "activeFile": "",
+    "activeFile": "maps/level2.tmx",
     "expandedProjectPaths": [
+        "maps",
+        "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "maps/level2.tmx": {
+            "scale": 0.45763561320754714,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 618.395928622045,
+                "y": 273.1430780132707
+            }
+        },
+        "maps/level2.tmx#fgtiles-alpha_0": {
+            "scaleInDock": 1
+        },
+        "maps/level2.tmx#tileSet-hd": {
+            "scaleInDock": 1
+        }
     },
     "map.lastUsedFormat": "tmx",
     "openFiles": [
+        "maps/level2.tmx"
     ],
     "project": "worst.tiled-project",
     "property.type": "file",
     "recentFiles": [
+        "maps/level2.tmx"
     ]
 }

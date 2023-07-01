@@ -44,7 +44,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
         this.host = host;
         this.map = host.assets.get("maps/" + level + ".tmx");
         this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, host.batch);
-        music = Gdx.audio.newMusic(Gdx.files.internal(Filenames.MUSIC.getFilename()));
+        music = host.assets.get(Filenames.BACKGROUND_MUSIC.getFilename());
         music.setLooping(true);
         music.setVolume(.02f);
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
@@ -101,7 +101,6 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     @Override
     public void dispose() {
         music.stop();
-        music.dispose();
         renderer.dispose();
         host.disposeClient(this);
     }
@@ -130,8 +129,9 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                     int level = obj.getProperties().get("level", Integer.class);
                     this.level = level;
                     Player root = (Player) prefabLoader.NewPlayerPrefab().WithLevel(level).WithMapRef(map)
-                            .WithCameraRef(camera)
-                            .WithHostRef(host).WithSpawnPosition(new Vector2(x, y));
+                        .WithCameraRef(camera)
+                        .WithEntitiesRef(entities)
+                        .WithHostRef(host).WithSpawnPosition(new Vector2(x, y));
                     entities.add(root);
                     if (level != 0) {
                         // spawn 40 more players, spaced evenly around the root player
@@ -140,10 +140,11 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                             int adjustedI = (-40 / 2) + i;
                             float spawnX = x + (adjustedI);
                             Player clone = (Player) prefabLoader.NewPlayerPrefab().WithRoot(root, adjustedI)
-                                    .WithLevel(level)
-                                    .WithMapRef(map)
-                                    .WithHostRef(host)
-                                    .WithSpawnPosition(new Vector2(spawnX, y));
+                                .WithLevel(level)
+                                .WithMapRef(map)
+                                .WithEntitiesRef(entities)
+                                .WithHostRef(host)
+                                .WithSpawnPosition(new Vector2(spawnX, y));
                             entities.add(clone);
                         }
                     }
@@ -160,7 +161,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                         float pathX = Float.parseFloat(pathPointStrSplit[0]) * pixels2tiles;
                         // remember for y that the map is upside down
                         float pathY = map.getProperties().get("height", Integer.class)
-                                - Float.parseFloat(pathPointStrSplit[1]) * pixels2tiles;
+                            - Float.parseFloat(pathPointStrSplit[1]) * pixels2tiles;
                         // log the xy
                         Gdx.app.log("Path Point", pathX + "," + pathY);
                         path[i] = new Vector2(pathX, pathY);
@@ -196,7 +197,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
 
                     // random string either Filenames.SPRING_0_SFX or Filenames.SPRING_1_SFX
                     String soundFile = MathUtils.randomBoolean() ? Filenames.SPRING_0_SFX.getFilename()
-                            : Filenames.SPRING_1_SFX.getFilename();
+                        : Filenames.SPRING_1_SFX.getFilename();
 
                     // log the sound file
                     Gdx.app.log("Sound File", soundFile);
@@ -204,7 +205,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                     Sound sound = host.assets.get(soundFile, Sound.class);
 
                     entities.add(prefabLoader.NewSpringPrefab().WithSpringiness(springiness).WithImpulseDir(impulseDir)
-                            .WithSpawnPosition(new Vector2(x, y)).WithSound(sound));
+                        .WithSpawnPosition(new Vector2(x, y)).WithSound(sound));
                 }
 
                 if (type.equalsIgnoreCase("entity")) {
@@ -213,7 +214,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                     if (textureStr.equals("SPIKE")) {
                         Sound sound = host.assets.get(Filenames.SPIKE_SFX.getFilename(), Sound.class);
                         Entity prefab = prefabLoader.NewSpikePrefab().WithSpawnPosition(new Vector2(x, y))
-                                .WithSound(sound);
+                            .WithSound(sound);
                         entities.add(prefab);
                     }
                 }
@@ -222,8 +223,14 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                     // parse the level target
                     String target = obj.getProperties().get("target", String.class);
                     entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget(target)
-                            .WithHost(host)
-                            .WithSpawnPosition(new Vector2(x, y)));
+                        .WithHost(host)
+                        .WithSpawnPosition(new Vector2(x, y)));
+                }
+
+                if (type.equalsIgnoreCase("codex")) {
+                    entities.add(prefabLoader.NewCodexPrefab()
+                        .WithHost(host)
+                        .WithSpawnPosition(new Vector2(x, y)));
                 }
 
                 if (type.equalsIgnoreCase("chaser")) {
@@ -241,7 +248,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                     if (textureStr.equals("BRED")) {
                         Sound bredSound = host.assets.get(Filenames.BRED_SFX.getFilename(), Sound.class);
                         entities.add(
-                                prefabLoader.NewBredPrefab().WithSpawnPosition(new Vector2(x, y)).WithSound(bredSound));
+                            prefabLoader.NewBredPrefab().WithSpawnPosition(new Vector2(x, y)).WithSound(bredSound));
                     }
                 }
             });
@@ -277,5 +284,15 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
 
     public Vector2 getEntrancePosition(Vector2 screenCoords) {
         return viewport.unproject(screenCoords);
+    }
+
+    @Override
+    public void show () {
+        music.play();
+    }
+
+    @Override
+    public void hide () {
+        music.pause();
     }
 }
