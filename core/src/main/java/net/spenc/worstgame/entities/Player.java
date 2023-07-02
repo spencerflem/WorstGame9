@@ -92,16 +92,14 @@ public class Player extends Entity {
 
     @Override
     public Entity WithTexture(Texture texture) {
-        this.textureRegion = new TextureRegion(texture);
-        textureRegion.setRegionHeight(50);
-        textureRegion.setRegionWidth(50);
+        this.textureRegion = new TextureRegion(texture, 50, 50);
         return super.WithTexture(texture);
     }
 
     @Override
     public Entity WithSize(float width, float height) {
-        this.width = width/4;
-        this.height = height;
+        this.width = 47/16f;
+        this.height = 48/16f;
         return this;
     }
 
