@@ -275,11 +275,11 @@ public class HostApp extends ApplicationAdapter {
     }
 
     public void openCodex() {
-        codexCount++;
         ClientApp app = getClientApp(mainWindow);
         Screen oldScreen = app.getScreen();
         Screen newScreen = new CodexScreen(this, codexCount, oldScreen);
         app.setScreen(newScreen);
+        codexCount++;
     }
 
     public void closeCodex(Screen origScreen) {
