@@ -98,6 +98,7 @@
    <properties>
     <property name="adTimerRange" value="30,40"/>
     <property name="level" type="int" value="1"/>
+    <property name="bg" value="levelbackdrop.png"/>
    </properties>
    <point/>
   </object>

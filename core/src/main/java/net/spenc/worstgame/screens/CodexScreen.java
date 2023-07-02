@@ -34,6 +34,7 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
     private final Array<Entity> entities = new Array<>();
     private int line = -1;
     private Texture tex;
+    private Texture othertex;
     private final CodexEntry entry;
     private final OrthographicCamera camera;
     private final Viewport viewport;
@@ -53,6 +54,7 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         Json json = new Json();
         this.entry = json.fromJson(CodexEntry.class, text);
         this.tex = host.assets.get(Filenames.CODEXBG.getFilename());
+        this.othertex = host.assets.get(Filenames.TEXTBOX.getFilename());
         this.music = host.assets.get("music/" + entry.music);
         stage = new Stage();
         Table table = new Table();
@@ -122,6 +124,9 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         host.batch.setProjectionMatrix(camera.combined);
         host.batch.begin();
         host.batch.draw(tex, 0, 0, 640, 480);
+        if (line >= 0) {
+            host.batch.draw(othertex, 20, 40, 600, 80);
+        }
         host.batch.end();
         stage.act(delta);
         stage.draw();

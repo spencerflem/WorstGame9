@@ -6,6 +6,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -14,6 +15,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.spenc.worstgame.ClientApp;
@@ -38,10 +41,13 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     private final float pixels2tiles = 1 / tiles2pixels;
     private final OrthogonalTiledMapRenderer renderer;
     private final OrthographicCamera camera;
+    private final OrthographicCamera camera2;
     private final Viewport viewport;
+    private final Viewport viewport2;
     private final Array<Entity> entities = new Array<>();
     private final PrefabLoader prefabLoader;
     private final Random random = new Random();
+    private Texture bgTex;
     private int minAdTimer = 0;
     private int maxAdTimer = 0;
 
@@ -55,8 +61,10 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
         music.setLooping(true);
         music.setVolume(.02f);
         this.camera = new OrthographicCamera();
+        this.camera2 = new OrthographicCamera();
         this.camera.position.y = 10;
         this.viewport = new FitViewport(26, 20, camera);
+        this.viewport2 = new StretchViewport(1, 1, camera2);
         this.prefabLoader = new PrefabLoader(host.assets, pixels2tiles);
         createEntities();
     }
@@ -79,15 +87,25 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
         // THIS SHOULDN'T BE NECESSARY
         // but the viewport gets very wierd without it, whenever a new popup is made
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport2.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         camera.update();
+        camera2.update();
 
+        Batch batch = renderer.getBatch();
+        if (bgTex != null) {
+            batch.setProjectionMatrix(camera2.combined);
+            batch.begin();
+            batch.draw(bgTex, 0, 0, 1, 1);
+            batch.end();
+        }
+
+        batch.setProjectionMatrix(camera.combined);
         // draw the map
         renderer.setView(camera);
         renderer.render();
 
         // draw the entities
-        Batch batch = renderer.getBatch();
         batch.enableBlending();
         batch.begin();
         for (Entity entity : entities) {
@@ -100,6 +118,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     public void resize(int width, int height) {
         Gdx.app.log("RESIZE", "width: " + width + " , height: " + height);
         viewport.update(width, height);
+        viewport2.update(width, height, true);
     }
 
     @Override
@@ -130,6 +149,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 if (type.equalsIgnoreCase("player")) {
                     Gdx.app.log("Player", "Found a player");
                     int level = obj.getProperties().get("level", Integer.class);
+                    bgTex = host.assets.get("textures/"+obj.getProperties().get("bg", String.class));
                     String adTimerRange = obj.getProperties().get("adTimerRange", String.class);
                     String[] adTimerRangeSplit = adTimerRange.split(",");
                     int minAdTimer = Integer.parseInt(adTimerRangeSplit[0]);

@@ -82,7 +82,8 @@ public enum Filenames {
 
     SQUARE_POPUP_1("textures/cubead.png"),
     SQUARE_POPUP_2("textures/cubead2.png"),
-    SQUARE_POPUP_LOOP("sfx/giggles.wav");
+    SQUARE_POPUP_LOOP("sfx/giggles.wav"),
+    TEXTBOX("textures/textboxbg.png");
 
     private String filename;
 

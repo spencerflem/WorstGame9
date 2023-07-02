@@ -13,8 +13,8 @@
             "scale": 0.75,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 708.6666666666667,
-                "y": 254.66666666666663
+                "x": 1695.3333333333333,
+                "y": 160.66666666666663
             }
         },
         "maps/level1.tmx#fgtiles-alpha_0": {
@@ -30,8 +30,8 @@
             "scale": 2,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 504.25,
-                "y": 155.5
+                "x": 1103.25,
+                "y": 159.75
             }
         },
         "maps/level2.tmx#classical_ruin_tiles": {
@@ -47,8 +47,8 @@
             "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 511.75,
-                "y": 220.5
+                "x": 1695.75,
+                "y": 159.75
             }
         },
         "maps/level3.tmx#tileSet-hd": {
@@ -64,8 +64,8 @@
     "project": "worst.tiled-project",
     "property.type": "file",
     "recentFiles": [
+        "maps/level3.tmx",
         "maps/level2.tmx",
-        "maps/level1.tmx",
-        "maps/level3.tmx"
+        "maps/level1.tmx"
     ]
 }
