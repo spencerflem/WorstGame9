@@ -49,9 +49,6 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         this.entry = json.fromJson(CodexEntry.class, text);
         this.tex = host.assets.get(Filenames.CODEXBG.getFilename());
         this.music = host.assets.get("music/" + entry.music);
-//        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
-//            music.play();
-//        }
         stage = new Stage();
         Table table = new Table();
         Label.LabelStyle style = new Label.LabelStyle();
@@ -72,8 +69,20 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
 
     @Override
     public void show() {
-        host.closeAllPopups();
         super.show();
+        host.closeAllPopups();
+        if (music != null && System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
+            music.setLooping(true);
+            music.play();
+        }
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
+        if (music != null) {
+            music.pause();
+        }
     }
 
     @Override
@@ -126,12 +135,5 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
     public void resize(int width, int height) {
         viewport.update(width, height, true);
         stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void dispose() {
-        if (music != null) {
-            music.stop();
-        }
     }
 }

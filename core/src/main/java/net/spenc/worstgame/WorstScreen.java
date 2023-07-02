@@ -49,9 +49,6 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
         music = host.assets.get(Filenames.BACKGROUND_MUSIC.getFilename());
         music.setLooping(true);
         music.setVolume(.02f);
-        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
-            music.play();
-        }
         this.camera = new OrthographicCamera();
         this.camera.position.y = 10;
         this.viewport = new FitViewport(26, 20, camera);
@@ -296,7 +293,10 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
 
     @Override
     public void show () {
-        music.play();
+        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
+            music.setLooping(true);
+            music.play();
+        }
     }
 
     @Override
