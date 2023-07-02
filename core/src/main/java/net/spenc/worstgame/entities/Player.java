@@ -5,7 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
@@ -36,6 +38,8 @@ public class Player extends Entity {
     public boolean facesRight = true;
     public boolean grounded = false;
 
+    private TextureRegion textureRegion;
+
     private TiledMap mapRef; // @TODO remove this
     private OrthographicCamera cameraRef; // @TODO remove this
     private HostApp hostRef; // @TODO remove this
@@ -49,6 +53,9 @@ public class Player extends Entity {
         }
     };
     private final Array<Rectangle> tiles = new Array<>();
+    private float acc = 0;
+    private float frameTime = 0.2f;
+    private boolean frame1 = false;
 
     private static final float GRAVITY = -2.5f;
 
@@ -84,8 +91,33 @@ public class Player extends Entity {
     }
 
     @Override
+    public Entity WithTexture(Texture texture) {
+        this.textureRegion = new TextureRegion(texture);
+        textureRegion.setRegionHeight(50);
+        textureRegion.setRegionWidth(50);
+        return super.WithTexture(texture);
+    }
+
+    @Override
+    public Entity WithSize(float width, float height) {
+        this.width = width/4;
+        this.height = height;
+        return this;
+    }
+
+    @Override
     public void draw(Batch batch) {
-        batch.draw(texture, position.x, position.y, width, height);
+        if (state == State.Standing) {
+            textureRegion.setRegionX(0);
+            textureRegion.setRegionWidth(50);
+        } else if (state == State.Walking) {
+            textureRegion.setRegionX(frame1? 100 : 50);
+            textureRegion.setRegionWidth(50);
+        } else if (state == State.Jumping) {
+            textureRegion.setRegionX(150);
+            textureRegion.setRegionWidth(50);
+        }
+        batch.draw(textureRegion, position.x, position.y-0.5f, width, height);
     }
 
     // END @TODO
@@ -93,6 +125,12 @@ public class Player extends Entity {
     @Override
     public void update(float deltaTime) {
         Controller controller = Controllers.getCurrent();
+
+        acc += deltaTime;
+        while (acc > frameTime) {
+            frame1 = !frame1;
+            acc -= frameTime;
+        }
 
         if (deltaTime == 0)
             return;

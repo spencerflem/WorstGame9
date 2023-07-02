@@ -2,6 +2,7 @@ package net.spenc.worstgame;
 
 public enum Filenames {
     PLAYER("textures/tentacle_guy.png"),
+    PLAYERSHEET("textures/playersheet.png"),
     DEFAULT_FONT("fonts/LibertinusSerif-standard.fnt"),
     BACKGROUND_MUSIC("music/background_music.mp3"),
     TITLE_SCREEN("textures/WGE-TITLESCREEN-Sheet.png"),

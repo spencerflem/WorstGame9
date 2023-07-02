@@ -88,6 +88,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
 
         // draw the entities
         Batch batch = renderer.getBatch();
+        batch.enableBlending();
         batch.begin();
         for (Entity entity : entities) {
             entity.draw(batch);

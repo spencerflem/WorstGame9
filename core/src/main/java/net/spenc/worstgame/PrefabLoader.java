@@ -23,7 +23,7 @@ public class PrefabLoader {
     }
 
     public Player NewPlayerPrefab() {
-        Texture texture = managerRef.get(Filenames.PLAYER.getFilename(), Texture.class);
+        Texture texture = managerRef.get(Filenames.PLAYERSHEET.getFilename(), Texture.class);
         return (Player) new Player()
                 .WithTexture(texture)
                 .WithSize(texture.getWidth() * PIXEL2TILE, texture.getHeight() * PIXEL2TILE)
