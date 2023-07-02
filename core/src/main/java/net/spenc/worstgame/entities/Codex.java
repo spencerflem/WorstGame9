@@ -37,6 +37,6 @@ public class Codex extends Entity {
     }
 
     public void unhide() {
-        this.hidden = host.hasRemainingCodexes();
+        this.hidden = !host.hasRemainingCodexes();
     }
 }
