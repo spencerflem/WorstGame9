@@ -1,4 +1,4 @@
-package net.spenc.worstgame;
+package net.spenc.worstgame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,6 +16,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import net.spenc.worstgame.ClientApp;
+import net.spenc.worstgame.Entity;
+import net.spenc.worstgame.Filenames;
+import net.spenc.worstgame.HostApp;
+import net.spenc.worstgame.PrefabLoader;
 import net.spenc.worstgame.entities.Chaser;
 import net.spenc.worstgame.entities.Codex;
 import net.spenc.worstgame.entities.Patroller;
@@ -37,15 +42,14 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     private final Array<Entity> entities = new Array<>();
     private final PrefabLoader prefabLoader;
     private final Random random = new Random();
-    private int level = 0;
     private int minAdTimer = 0;
     private int maxAdTimer = 0;
 
     private float popupTime = 15;
 
-    public WorstScreen(HostApp host, String level) {
+    public WorstScreen(HostApp host, TiledMap map) {
         this.host = host;
-        this.map = host.assets.get("maps/" + level + ".tmx");
+        this.map = map;
         this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, host.batch);
         music = host.assets.get(Filenames.BACKGROUND_MUSIC.getFilename());
         music.setLooping(true);
@@ -125,8 +129,6 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 if (type.equalsIgnoreCase("player")) {
                     Gdx.app.log("Player", "Found a player");
                     int level = obj.getProperties().get("level", Integer.class);
-                    this.level = level;
-
                     String adTimerRange = obj.getProperties().get("adTimerRange", String.class);
                     String[] adTimerRangeSplit = adTimerRange.split(",");
                     int minAdTimer = Integer.parseInt(adTimerRangeSplit[0]);
@@ -225,9 +227,7 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 }
 
                 if (type.equalsIgnoreCase("portal")) {
-                    // parse the level target
-                    String target = obj.getProperties().get("target", String.class);
-                    entities.add(prefabLoader.NewPortalPrefab().WithLevelTarget(target)
+                    entities.add(prefabLoader.NewPortalPrefab()
                         .WithHost(host)
                         .WithSpawnPosition(new Vector2(x, y)));
                 }

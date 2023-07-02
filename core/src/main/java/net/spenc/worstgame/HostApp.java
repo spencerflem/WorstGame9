@@ -25,6 +25,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import net.spenc.worstgame.entities.Homer;
+import net.spenc.worstgame.screens.CodexScreen;
+import net.spenc.worstgame.screens.OverlayScreen;
+import net.spenc.worstgame.screens.PopupScreen;
+import net.spenc.worstgame.screens.WorstScreen;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +38,6 @@ import java.util.Random;
  * Manages shared objects, launching windows, and updating entity state
  */
 public class HostApp extends ApplicationAdapter {
-    private static final String FIRSTLEVEL = "Interstitial:codexbg.png,hotwizard.wav;Level:level1";
     public AssetManager assets;
     public SpriteBatch batch;
 
@@ -47,6 +50,7 @@ public class HostApp extends ApplicationAdapter {
     private final Random random = new Random();
     private int codexCount = 0;
     private boolean controllerWasPressed = false;
+    private int currentLevel = 0;
 
     @Override
     public void create() {
@@ -119,7 +123,7 @@ public class HostApp extends ApplicationAdapter {
                 return true;
             }
         });
-        setLevel((System.getenv("LEVEL") == null) ? FIRSTLEVEL : System.getenv("LEVEL"), window);
+        setLevel((System.getenv("LEVEL") == null) ? currentLevel : Integer.parseInt(System.getenv("LEVEL")), window);
         return window;
     }
 
@@ -186,24 +190,15 @@ public class HostApp extends ApplicationAdapter {
         return Gdx.input;
     }
 
-    public void setLevel(String level) {
-        setLevel(level, mainWindow);
+    public void advanceLevel() {
+        currentLevel++;
+        setLevel(currentLevel, mainWindow);
     }
 
-    private void setLevel(String level, Lwjgl3Window window) {
+    private void setLevel(int level, Lwjgl3Window window) {
         ClientApp app = getClientApp(window);
         Screen oldScreen = app.getScreen();
-        List<String> parts = List.of(level.split(";"));
-        Screen newScreen = null;
-        String[] bobs = parts.get(0).split(":");
-        if (bobs[0].equals("Interstitial")) {
-            String[] bits = bobs[1].split(",");
-            newScreen = new InterstitialScreen(this, bits[0], bits[1], String.join(";", parts.subList(1, parts.size())));
-        } else if (bobs[0].equals("Level")) {
-            newScreen = new WorstScreen(this, bobs[1]);
-        } else if (bobs[0].equals("END")) {
-            Gdx.app.exit();
-        }
+        Screen newScreen = ScreenChoreographer.screenFor(this, level);
         if (oldScreen != null) {
             oldScreen.dispose();
         }
@@ -288,10 +283,14 @@ public class HostApp extends ApplicationAdapter {
         return codexCount < Gdx.files.internal("cutscenes/").list().length;
     }
 
+    public int getCurrentCodexEntry() {
+        return codexCount;
+    }
+
     public void openCodex() {
         ClientApp app = getClientApp(mainWindow);
         Screen oldScreen = app.getScreen();
-        Screen newScreen = new CodexScreen(this, codexCount, oldScreen);
+        Screen newScreen = new CodexScreen(this, oldScreen);
         app.setScreen(newScreen);
         codexCount++;
     }
@@ -303,6 +302,13 @@ public class HostApp extends ApplicationAdapter {
             oldScreen.dispose();
         }
         app.setScreen(origScreen);
+        if (origScreen == null) {
+            if (hasRemainingCodexes()) {
+                openCodex();
+            } else {
+                advanceLevel();
+            }
+        }
     }
 
     public boolean justPressed() {

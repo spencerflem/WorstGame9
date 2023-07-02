@@ -105,9 +105,6 @@
    <point/>
   </object>
   <object id="55" name="Portal" type="Portal" x="3256" y="265.333">
-   <properties>
-    <property name="target" value="Interstitial:codexbg.png,hotwizard.wav;Level:level2"/>
-   </properties>
    <point/>
   </object>
   <object id="56" name="Codex" type="Codex" x="2250.67" y="280">

@@ -103,15 +103,18 @@ public class Player extends Entity {
         this.stateTime += deltaTime;
 
         boolean jump = hostRef.focusedInput().isKeyPressed(Input.Keys.SPACE) || isTouched(0.5f, 1)
-                || (controller != null && controller.getAxis(controller.getMapping().axisLeftY) > 0);
+            || (controller != null && controller.getButton(controller.getMapping().buttonA))
+            || (controller != null && controller.getButton(controller.getMapping().buttonDpadUp));
 
         boolean right = hostRef.focusedInput().isKeyPressed(Input.Keys.RIGHT)
-                || hostRef.focusedInput().isKeyPressed(Input.Keys.D) || isTouched(0.25f, 0.5f)
-                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
+            || hostRef.focusedInput().isKeyPressed(Input.Keys.D) || isTouched(0.25f, 0.5f)
+            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0.1)
+            || (controller != null && controller.getButton(controller.getMapping().buttonDpadRight));
 
         boolean left = hostRef.focusedInput().isKeyPressed(Input.Keys.LEFT)
-                || hostRef.focusedInput().isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)
-                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0);
+            || hostRef.focusedInput().isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)
+            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) < -0.1)
+            || (controller != null && controller.getButton(controller.getMapping().buttonDpadLeft));
 
         // check input and apply to velocity & state
         if (jump && this.grounded) {
@@ -257,19 +260,22 @@ public class Player extends Entity {
     }
 
     public void respawn() {
-        if (this.root != null) {
-            float spawnX = root.position.x + cloneNumber;
-            this.position.x = spawnX;
-            this.position.y = this.spawnPosition.y;
-            return;
-        }
-        this.position.x = this.spawnPosition.x;
-        this.position.y = this.spawnPosition.y;
-        for (int i = 0; i < entitiesRef.size; i++) {
-            Entity entity = entitiesRef.get(i);
-            if (entity instanceof Codex) {
-                ((Codex) entity).refresh();
+        if (System.getenv("INVINCIBLE") == null || this.root != null) {
+            if (this.root != null) {
+                this.position.x = root.position.x + cloneNumber;
+                this.position.y = this.spawnPosition.y;
+                return;
             }
+            this.position.x = this.spawnPosition.x;
+            this.position.y = this.spawnPosition.y;
+            for (int i = 0; i < entitiesRef.size; i++) {
+                Entity entity = entitiesRef.get(i);
+                if (entity instanceof Codex) {
+                    ((Codex) entity).refresh();
+                }
+            }
+        } else {
+            this.position.y = this.spawnPosition.y;
         }
     }
 

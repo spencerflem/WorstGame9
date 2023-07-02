@@ -1,4 +1,4 @@
-package net.spenc.worstgame;
+package net.spenc.worstgame.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -7,13 +7,17 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import net.spenc.worstgame.ClientApp;
+import net.spenc.worstgame.Entity;
+import net.spenc.worstgame.HostApp;
+
 public class OverlayScreen extends ScreenAdapter implements ClientApp.ClientScreen {
     private final HostApp host;
     private final OrthographicCamera camera;
     private final ScreenViewport viewport;
     private final Array<Entity> entities = new Array<>();
 
-    OverlayScreen(HostApp host) {
+    public OverlayScreen(HostApp host) {
         this.host = host;
         this.camera = new OrthographicCamera();
         this.viewport = new ScreenViewport(camera);

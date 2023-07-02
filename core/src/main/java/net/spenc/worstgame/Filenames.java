@@ -4,6 +4,15 @@ public enum Filenames {
     PLAYER("textures/tentacle_guy.png"),
     DEFAULT_FONT("fonts/default.fnt"),
     BACKGROUND_MUSIC("music/background_music.mp3"),
+    TITLE_SCREEN("textures/titlescreen.png"),
+
+    LEVEL_1("maps/level1.tmx"),
+    LEVEL_2("maps/level2.tmx"),
+    LEVEL_3("maps/level3.tmx"),
+    LEVEL_1_TITLE("textures/hauntedhinterlands.png"),
+    LEVEL_2_TITLE("textures/doughydominion.png"),
+    LEVEL_3_TITLE("textures/greengauntlet.png"),
+    THANKS("textures/thanks.png"),
 
     BIBL("textures/bibl.png"),
     BIBL_SFX("sfx/bibl.ogg"),

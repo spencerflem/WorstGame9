@@ -1,0 +1,19 @@
+{
+  "title": "Insufficient Tidings (Les faibles doivent être éliminés)",
+  "music": "background_music.mp3",
+  "lines": [
+    {
+      "image": "george.jpg",
+      "text": "Jules eut un sourire narquois comme un personnage mal écrit."
+    },
+    {
+      "text": "« La bureaucratie a survécu aux révolutions,"
+    },
+    {
+      "text": "elle a survécu à la guerre, à l'ombrage, au changement ethnique et à la conflagration religieuse."
+    },
+    {
+      "text": "Pourquoi ne pas y penser. »"
+    }
+  ]
+}

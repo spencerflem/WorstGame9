@@ -1,4 +1,4 @@
-package net.spenc.worstgame;
+package net.spenc.worstgame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -20,6 +20,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.textra.TextraLabel;
 import com.github.tommyettinger.textra.TypingLabel;
 
+import net.spenc.worstgame.ClientApp;
+import net.spenc.worstgame.CodexEntry;
+import net.spenc.worstgame.Entity;
+import net.spenc.worstgame.Filenames;
+import net.spenc.worstgame.HostApp;
+
 public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen {
     private final HostApp host;
     private final Screen returnScreen;
@@ -35,12 +41,12 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
     private final TextraLabel indexLabel;
     private final TypingLabel textLabel;
 
-    CodexScreen(HostApp host, int entryId, Screen returnScreen) {
+    public CodexScreen(HostApp host, Screen returnScreen) {
         this.host = host;
         this.returnScreen = returnScreen;
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(640, 480, camera);
-        FileHandle file = Gdx.files.internal("cutscenes/anticodex" + (entryId + 1) + ".txt");
+        FileHandle file = Gdx.files.internal("cutscenes/codex" + (host.getCurrentCodexEntry() + 1) + ".json");
         String text = file.readString();
         Json json = new Json();
         this.entry = json.fromJson(CodexEntry.class, text);
@@ -53,7 +59,7 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         titleLabel = new TextraLabel(entry.title, style);
         titleLabel.setPosition(20, 250);
         titleLabel.setColor(Color.BLACK);
-        indexLabel = new TextraLabel("Ultra Codex " + String.format("%03d", entryId + 1) + "/" +  String.format("%03d", Gdx.files.internal("cutscenes/").list().length), style);
+        indexLabel = new TextraLabel("Ultra Codex " + String.format("%03d", host.getCurrentCodexEntry() + 1) + "/" +  String.format("%03d", Gdx.files.internal("cutscenes/").list().length), style);
         indexLabel.setPosition(450, 320);
         textLabel = new TypingLabel("", style);
         textLabel.setPosition(40, 40);

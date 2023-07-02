@@ -1,0 +1,28 @@
+{
+  "title": "First Contact (Cœur de la ville)",
+  "music": "background_music.mp3",
+  "lines": [
+    {
+      "image": "george.jpg",
+      "text": "Au milieu du smog étouffant des cigarettes, se figeant dans l'air"
+    },
+    {
+      "text": "comme la ville de New York opprimée par un feu de forêt canadien, se tiennent nos protagonistes de la foire."
+    },
+    {
+      "text": "Leur rencontre est engagée d'où leurs yeux se croisent,"
+    },
+    {
+      "text": "se saisissant dans l'éclat de la pierre et du béton qui les sépare de l'autre côté du hall."
+    },
+    {
+      "text": "Ils ne sont pas des étrangers, car ils se sont rencontrés grâce aux relations de leurs propres amis de travail,"
+    },
+    {
+      "text": "les amis d'amis d'amis d'affaires,"
+    },
+    {
+      "text": "le lien innombrable et charmant forgé uniquement par les forces incessantes du capital."
+    }
+  ]
+}

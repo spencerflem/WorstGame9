@@ -5,15 +5,9 @@ import net.spenc.worstgame.HostApp;
 
 public class Portal extends Entity {
     private HostApp host;
-    private String target;
 
     public Portal WithHost(HostApp host) {
         this.host = host;
-        return this;
-    }
-
-    public Portal WithLevelTarget(String target) {
-        this.target = target;
         return this;
     }
 
@@ -21,7 +15,7 @@ public class Portal extends Entity {
     public void onCollisionEnter(Entity other) {
         if (other instanceof Player) {
             if (((Player) other).root == null) {
-                host.setLevel(target);
+                host.advanceLevel();
             }
         }
     }

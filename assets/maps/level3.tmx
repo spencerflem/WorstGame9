@@ -27,9 +27,6 @@
    <point/>
   </object>
   <object id="39" name="Portal" type="Portal" x="3264" y="256">
-   <properties>
-    <property name="target" value="Interstitial:codexbg.png,hotwizard.wav;END"/>
-   </properties>
    <point/>
   </object>
   <object id="22" name="Bibl4" type="Patroller" x="2640" y="288">

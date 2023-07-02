@@ -1,7 +1,7 @@
 package net.spenc.worstgame;
 
 public class CodexLine {
-    String image;
-    String sfx;
-    String text;
+    public String image;
+    public String sfx;
+    public String text;
 }
