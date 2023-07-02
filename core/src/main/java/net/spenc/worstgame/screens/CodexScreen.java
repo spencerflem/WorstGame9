@@ -59,10 +59,13 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         titleLabel = new TextraLabel(entry.title, style);
         titleLabel.setPosition(20, 250);
         titleLabel.setColor(Color.BLACK);
-        indexLabel = new TextraLabel("Ultra Codex " + String.format("%03d", host.getCurrentCodexEntry() + 1) + "/" +  String.format("%03d", Gdx.files.internal("cutscenes/").list().length), style);
+        indexLabel = new TextraLabel("Ultra Codex " + String.format("%03d", host.getCurrentCodexEntry() + 1) + "/"
+                + String.format("%03d", Gdx.files.internal("cutscenes/").list().length), style);
         indexLabel.setPosition(450, 320);
         textLabel = new TypingLabel("", style);
-        textLabel.setPosition(40, 40);
+        textLabel.setPosition(40, 80);
+        textLabel.setWidth(560);
+        textLabel.wrap = true;
         table.setFillParent(true);
         stage.addActor(table);
         table.addActor(titleLabel);
@@ -94,8 +97,7 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         if (host.justPressed()) {
             if (line >= 0 && !textLabel.hasEnded()) {
                 textLabel.skipToTheEnd();
-            }
-            else {
+            } else {
                 line++;
                 if (line >= entry.lines.size()) {
                     host.closeCodex(returnScreen);
