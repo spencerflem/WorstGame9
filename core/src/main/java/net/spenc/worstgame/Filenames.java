@@ -4,7 +4,7 @@ public enum Filenames {
     PLAYER("textures/tentacle_guy.png"),
     DEFAULT_FONT("fonts/default.fnt"),
     BACKGROUND_MUSIC("music/background_music.mp3"),
-    TITLE_SCREEN("textures/titlescreen.png"),
+    TITLE_SCREEN("textures/WGE-TITLESCREEN-Sheet.png"),
 
     LEVEL_1("maps/level1.tmx"),
     LEVEL_2("maps/level2.tmx"),
