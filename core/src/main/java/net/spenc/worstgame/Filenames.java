@@ -4,8 +4,11 @@ public enum Filenames {
     PLAYER("textures/tentacle_guy.png"),
     PLAYERSHEET("textures/playersheet.png"),
     DEFAULT_FONT("fonts/LibertinusSerif-standard.fnt"),
+
+    TITLE_MUSIC("music/title.mp3"),
     BACKGROUND_MUSIC("music/background_music.mp3"),
     KALIMBA_MUSIC("music/kalimba.mp3"),
+
     TITLE_SCREEN("textures/WGE-TITLESCREEN-Sheet.png"),
 
     LEVEL_1("maps/level1.tmx"),

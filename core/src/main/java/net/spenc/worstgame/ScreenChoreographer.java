@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class ScreenChoreographer {
     private static final List<Function<HostApp, ClientApp.ClientScreen>> SCREEN_ORDER = List.of(
-            host -> new TitleScreen(host, host.assets.get(Filenames.TITLE_SCREEN.getFilename()), null),
+            host -> new TitleScreen(host, host.assets.get(Filenames.TITLE_SCREEN.getFilename())),
             host -> new InterstitialScreen(host, host.assets.get(Filenames.LEVEL_1_TITLE.getFilename()), null),
             host -> new WorstScreen(host, host.assets.get(Filenames.LEVEL_1.getFilename())),
             host -> new InterstitialScreen(host, host.assets.get(Filenames.LEVEL_2_TITLE.getFilename()), null),

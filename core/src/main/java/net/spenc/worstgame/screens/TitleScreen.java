@@ -1,7 +1,7 @@
 package net.spenc.worstgame.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.backends.lwjgl3.audio.Mp3.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,13 +12,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.spenc.worstgame.ClientApp.ClientScreenAdapter;
+import net.spenc.worstgame.Filenames;
 import net.spenc.worstgame.HostApp;
 
 public class TitleScreen extends ClientScreenAdapter {
     private final HostApp host;
     private final OrthographicCamera camera;
     private final Viewport viewport;
-    private final Sound sound;
+    private final Music music;
     private long soundId = 0;
 
     private Animation<TextureRegion> animation;
@@ -27,9 +28,9 @@ public class TitleScreen extends ClientScreenAdapter {
     private float holdTimerDuration = 3f;
     private float holdTimer = holdTimerDuration;
 
-    public TitleScreen(HostApp host, Texture texture, Sound sound) {
+    public TitleScreen(HostApp host, Texture texture) {
         this.host = host;
-        this.sound = sound;
+        this.music = host.assets.get(Filenames.TITLE_MUSIC.getFilename());
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(640, 480, camera);
 
@@ -55,16 +56,16 @@ public class TitleScreen extends ClientScreenAdapter {
 
     @Override
     public void show() {
-        if (sound != null) {
-            sound.stop(soundId);
-            soundId = sound.play();
+        if (music != null && System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
+            music.setLooping(true);
+            music.play();
         }
     }
 
     @Override
     public void hide() {
-        if (sound != null) {
-            sound.stop(soundId);
+        if (music != null) {
+            music.pause();
         }
     }
 
