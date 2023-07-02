@@ -163,6 +163,7 @@
     <property name="adTimerRange" value="1,10"/>
     <property name="level" type="int" value="3"/>
     <property name="bg" value="levelbackdropgreen.png"/>
+    <property name="music" value="doughy.mp3"/>
    </properties>
    <point/>
   </object>

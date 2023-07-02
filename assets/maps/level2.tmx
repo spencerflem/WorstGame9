@@ -28,6 +28,7 @@
     <property name="adTimerRange" value="20,30"/>
     <property name="level" type="int" value="2"/>
     <property name="bg" value="blueskyBackdrop.png"/>
+    <property name="music" value="doughy.mp3"/>
    </properties>
    <point/>
   </object>

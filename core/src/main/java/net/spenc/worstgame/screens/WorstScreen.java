@@ -15,7 +15,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -35,7 +34,7 @@ import java.util.Random;
 
 public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen {
     private final HostApp host;
-    private final Music music;
+    private Music music;
     private final TiledMap map;
     private final float tiles2pixels = 16f;
     private final float pixels2tiles = 1 / tiles2pixels;
@@ -57,9 +56,6 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
         this.host = host;
         this.map = map;
         this.renderer = new OrthogonalTiledMapRenderer(map, pixels2tiles, host.batch);
-        music = host.assets.get(Filenames.BACKGROUND_MUSIC.getFilename());
-        music.setLooping(true);
-        music.setVolume(.02f);
         this.camera = new OrthographicCamera();
         this.camera2 = new OrthographicCamera();
         this.camera.position.y = 10;
@@ -149,7 +145,10 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 if (type.equalsIgnoreCase("player")) {
                     Gdx.app.log("Player", "Found a player");
                     int level = obj.getProperties().get("level", Integer.class);
-                    bgTex = host.assets.get("textures/"+obj.getProperties().get("bg", String.class));
+                    bgTex = host.assets.get("textures/" + obj.getProperties().get("bg", String.class));
+                    music = host.assets.get("music/" + obj.getProperties().get("music", String.class));
+                    music.setLooping(true);
+                    music.setVolume(.2f);
                     String adTimerRange = obj.getProperties().get("adTimerRange", String.class);
                     String[] adTimerRangeSplit = adTimerRange.split(",");
                     int minAdTimer = Integer.parseInt(adTimerRangeSplit[0]);
@@ -313,10 +312,12 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     }
 
     @Override
-    public void show () {
+    public void show() {
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
-            music.setLooping(true);
-            music.play();
+            if (music != null) {
+                music.setLooping(true);
+                music.play();
+            }
         }
         for (Entity entity : entities) {
             if (entity instanceof Codex) {
@@ -328,7 +329,9 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
     }
 
     @Override
-    public void hide () {
-        music.pause();
+    public void hide() {
+        if (music != null) {
+            music.pause();
+        }
     }
 }

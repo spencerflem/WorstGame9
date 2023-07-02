@@ -47,8 +47,8 @@
             "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1695.75,
-                "y": 159.75
+                "x": 1692.5,
+                "y": 156.5
             }
         },
         "maps/level3.tmx#tileSet-hd": {
@@ -64,8 +64,8 @@
     "project": "worst.tiled-project",
     "property.type": "file",
     "recentFiles": [
-        "maps/level3.tmx",
         "maps/level2.tmx",
-        "maps/level1.tmx"
+        "maps/level1.tmx",
+        "maps/level3.tmx"
     ]
 }
