@@ -68,12 +68,17 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         table.addActor(titleLabel);
         table.addActor(indexLabel);
         table.addActor(textLabel);
+    }
 
+    @Override
+    public void show() {
+        host.closeAllPopups();
+        super.show();
     }
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.RED);
+        ScreenUtils.clear(Color.BLACK);
         if (isPressed()) {
             if (line >= 0 && !textLabel.hasEnded()) {
                 textLabel.skipToTheEnd();

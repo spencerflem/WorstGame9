@@ -271,7 +271,7 @@ public class HostApp extends ApplicationAdapter {
     }
 
     public boolean hasRemainingCodexes() {
-        return codexCount >= Gdx.files.internal("cutscenes/").list().length;
+        return codexCount < Gdx.files.internal("cutscenes/").list().length;
     }
 
     public void openCodex() {
