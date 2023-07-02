@@ -3,7 +3,7 @@
   "music": "background_music.mp3",
   "lines": [
     {
-      "image": "george.jpg",
+      "image": "14.jpg",
       "text": "La vape est récupérée."
     },
     {
@@ -13,6 +13,7 @@
       "text": "ou sinon cela, que son application littérale."
     },
     {
+      "image": "15.jpg",
       "text": "L'odeur réveille chez Julien des souvenirs d'enfance de montagnes ternes, de centres commerciaux déroutants,"
     },
     {

@@ -3,7 +3,7 @@
   "music": "background_music.mp3",
   "lines": [
     {
-      "image": "george.jpg",
+      "image": "1.jpg",
       "text": "Quelque part sur les rives de la Seine, l'éternel soleil cramoisi-magenta"
     },
     {
@@ -22,6 +22,7 @@
       "text": "exsanguisant et transformant la forme en poussière tachetée dans la chaleur de la mort de sa propre subjectivité ;"
     },
     {
+      "image": "2.jpg",
       "text": "c'est entendre que nous plantons notre scène, dans notre ville la plus belle et la plus intacte "
     },
     {

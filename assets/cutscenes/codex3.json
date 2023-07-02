@@ -3,7 +3,7 @@
   "music": "background_music.mp3",
   "lines": [
     {
-      "image": "george.jpg",
+      "image": "4.jpg",
       "text": "À bâbord : Juliene Jules, cheveux raides ébène et lunettes rondes, le teint"
     },
     {
@@ -13,6 +13,7 @@
       "text": "Une bombe du milieu pourrait-on dire."
     },
     {
+      "image": "5.jpg",
       "text": "Tribord : Julien Vouls Joul, photographe amateur et interlocuteur professionnel."
     },
     {
