@@ -24,6 +24,9 @@ public class TitleScreen extends ClientScreenAdapter {
     private Animation<TextureRegion> animation;
     private float stateTime = 0f;
 
+    private float holdTimerDuration = 3f;
+    private float holdTimer = holdTimerDuration;
+
     public TitleScreen(HostApp host, Texture texture, Sound sound) {
         this.host = host;
         this.sound = sound;
@@ -45,7 +48,7 @@ public class TitleScreen extends ClientScreenAdapter {
                 frames[index] = tmp[i][j];
             }
         }
-        this.animation = new Animation<TextureRegion>(0.1f, frames);
+        this.animation = new Animation<TextureRegion>(0.16f, frames);
 
         this.stateTime = 0f;
     }
@@ -67,8 +70,18 @@ public class TitleScreen extends ClientScreenAdapter {
 
     @Override
     public void render(float delta) {
-        stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
+        // if we're on the last frame, stop looping
+        if (currentFrame != animation.getKeyFrames()[animation.getKeyFrames().length - 1]) {
+            stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
+        } else {
+            if (holdTimer > 0) {
+                holdTimer -= Gdx.graphics.getDeltaTime();
+            } else {
+                stateTime = 0;
+                holdTimer = holdTimerDuration;
+            }
+        }
 
         ScreenUtils.clear(Color.BLACK);
         camera.update();
