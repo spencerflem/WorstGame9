@@ -190,7 +190,7 @@ public class Player extends Entity {
                 // we actually reset the koala y-position here
                 // so it is just below/above the tile we collided with
                 // this removes bouncing :)
-                if (this.velocity.y > 0 && this.level == 1) {
+                if (this.velocity.y > 0 && this.level == 3) {
                     this.position.y = tile.y - this.height;
                     // we hit a block jumping upwards, let's destroy it!
                     TiledMapTileLayer layer = (TiledMapTileLayer) mapRef.getLayers().get("walls");
