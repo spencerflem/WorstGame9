@@ -90,6 +90,7 @@ public class TitleScreen extends ClientScreenAdapter {
         host.batch.draw(currentFrame, 0, 0, 640, 480);
         host.batch.end();
         if (host.justPressed()) {
+            host.newPopup(PopupScreen.PopupType.CREDITS);
             host.advanceLevel();
         }
     }

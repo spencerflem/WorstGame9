@@ -37,14 +37,15 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
         HOTWIZ,
         FEARD,
         XXX,
-        SQUARE;
+        SQUARE,
+        CREDITS;
 
         private static final List<PopupType> VALUES = List.of(values());
         private static final int SIZE = VALUES.size();
         private static final Random RANDOM = new Random();
 
         public static PopupType randomPopup() {
-            return VALUES.get(RANDOM.nextInt(SIZE));
+            return VALUES.get(RANDOM.nextInt(SIZE-1)); // SKIP CREDITS
         }
     }
 
@@ -227,6 +228,26 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 150,
                 800,
                 600,
+                0,
+                0
+            );
+            case CREDITS -> new PopupScreen(
+                host,
+                Filenames.CREDITS1.getFilename(),
+                Filenames.CREDITS2.getFilename(),
+                null,
+                null,
+                Filenames.HUMMING.getFilename(),
+                null,
+                0.32f,
+                0,
+                0,
+                "~~~ Worst Team 9 ~~~~",
+                "https://lolmanbruh.itch.io/square-invaders",
+                -200,
+                -30,
+                200,
+                640,
                 0,
                 0
             );

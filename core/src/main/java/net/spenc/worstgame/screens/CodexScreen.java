@@ -26,6 +26,8 @@ import net.spenc.worstgame.Entity;
 import net.spenc.worstgame.Filenames;
 import net.spenc.worstgame.HostApp;
 
+import java.nio.charset.StandardCharsets;
+
 public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen {
     private final HostApp host;
     private final Screen returnScreen;
@@ -47,7 +49,7 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(640, 480, camera);
         FileHandle file = Gdx.files.internal("cutscenes/codex" + (host.getCurrentCodexEntry() + 1) + ".json");
-        String text = file.readString();
+        String text = file.readString(StandardCharsets.UTF_8.name());
         Json json = new Json();
         this.entry = json.fromJson(CodexEntry.class, text);
         this.tex = host.assets.get(Filenames.CODEXBG.getFilename());
@@ -56,6 +58,7 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         Table table = new Table();
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = host.assets.get(Filenames.DEFAULT_FONT.getFilename());
+        style.font.getData().setScale(0.3f);
         titleLabel = new TextraLabel(entry.title, style);
         titleLabel.setPosition(20, 250);
         titleLabel.setColor(Color.BLACK);

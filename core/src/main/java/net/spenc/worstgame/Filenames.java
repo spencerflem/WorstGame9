@@ -2,7 +2,7 @@ package net.spenc.worstgame;
 
 public enum Filenames {
     PLAYER("textures/tentacle_guy.png"),
-    DEFAULT_FONT("fonts/default.fnt"),
+    DEFAULT_FONT("fonts/LibertinusSerif-standard.fnt"),
     BACKGROUND_MUSIC("music/background_music.mp3"),
     TITLE_SCREEN("textures/WGE-TITLESCREEN-Sheet.png"),
 
@@ -12,6 +12,9 @@ public enum Filenames {
     LEVEL_1_TITLE("textures/hauntedhinterlands.png"),
     LEVEL_2_TITLE("textures/doughydominion.png"),
     LEVEL_3_TITLE("textures/greengauntlet.png"),
+    CREDITS1("textures/credits1.png"),
+    CREDITS2("textures/credits2.png"),
+    HUMMING("sfx/humming2.mp3"),
     THANKS("textures/thanks.png"),
 
     BIBL("textures/bibl.png"),
@@ -33,7 +36,6 @@ public enum Filenames {
     BRED_SFX("sfx/bred.ogg"),
 
     PORTAL("textures/level_portal.png"),
-    MUSIC("music/background_music.mp3"),
 
     WAR_POPUP_1("textures/warad.png"),
     WAR_POPUP_2("textures/warad2.png"),
