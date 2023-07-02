@@ -98,24 +98,26 @@ public class Player extends Entity {
 
     @Override
     public Entity WithSize(float width, float height) {
-        this.width = 47/16f;
-        this.height = 48/16f;
+        this.width = 47 / 16f;
+        this.height = 48 / 16f;
         return this;
     }
 
     @Override
     public void draw(Batch batch) {
+        // create a copy fot texture region
+        TextureRegion tmpTextureRegion = new TextureRegion(textureRegion);
+
         if (state == State.Standing) {
-            textureRegion.setRegionX(0);
-            textureRegion.setRegionWidth(50);
-        } else if (state == State.Walking) {
-            textureRegion.setRegionX(frame1? 100 : 50);
-            textureRegion.setRegionWidth(50);
-        } else if (state == State.Jumping) {
-            textureRegion.setRegionX(150);
-            textureRegion.setRegionWidth(50);
+            tmpTextureRegion = new TextureRegion(this.textureRegion, 0, 0, 50, 50);
         }
-        batch.draw(textureRegion, position.x, position.y-0.5f, width, height);
+        if (state == State.Walking) {
+            tmpTextureRegion = new TextureRegion(this.textureRegion, frame1 ? 100 : 50, 0, 50, 50);
+        }
+        if (state == State.Jumping) {
+            tmpTextureRegion = new TextureRegion(this.textureRegion, 150, 0, 50, 50);
+        }
+        batch.draw(tmpTextureRegion, position.x, position.y - 0.5f, width, height);
     }
 
     // END @TODO
@@ -139,37 +141,32 @@ public class Player extends Entity {
         this.stateTime += deltaTime;
 
         boolean jump = hostRef.focusedInput().isKeyPressed(Input.Keys.SPACE) || isTouched(0.5f, 1)
-            || (controller != null && controller.getButton(controller.getMapping().buttonA))
-            || (controller != null && controller.getButton(controller.getMapping().buttonDpadUp));
+                || (controller != null && controller.getButton(controller.getMapping().buttonA))
+                || (controller != null && controller.getButton(controller.getMapping().buttonDpadUp));
 
         boolean right = hostRef.focusedInput().isKeyPressed(Input.Keys.RIGHT)
-            || hostRef.focusedInput().isKeyPressed(Input.Keys.D) || isTouched(0.25f, 0.5f)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0.1)
-            || (controller != null && controller.getButton(controller.getMapping().buttonDpadRight));
+                || hostRef.focusedInput().isKeyPressed(Input.Keys.D) || isTouched(0.25f, 0.5f)
+                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) > 0.1)
+                || (controller != null && controller.getButton(controller.getMapping().buttonDpadRight));
 
         boolean left = hostRef.focusedInput().isKeyPressed(Input.Keys.LEFT)
-            || hostRef.focusedInput().isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)
-            || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) < -0.1)
-            || (controller != null && controller.getButton(controller.getMapping().buttonDpadLeft));
+                || hostRef.focusedInput().isKeyPressed(Input.Keys.A) || isTouched(0, 0.25f)
+                || (controller != null && controller.getAxis(controller.getMapping().axisLeftX) < -0.1)
+                || (controller != null && controller.getButton(controller.getMapping().buttonDpadLeft));
 
         // check input and apply to velocity & state
         if (jump && this.grounded) {
             this.velocity.y += Player.JUMP_VELOCITY;
-            this.state = Player.State.Jumping;
             this.grounded = false;
         }
 
         if (left) {
             this.velocity.x = -Player.MAX_VELOCITY;
-            if (this.grounded)
-                this.state = Player.State.Walking;
             this.facesRight = false;
         }
 
         if (right) {
             this.velocity.x = Player.MAX_VELOCITY;
-            if (this.grounded)
-                this.state = Player.State.Walking;
             this.facesRight = true;
         }
 
@@ -178,13 +175,6 @@ public class Player extends Entity {
 
         // clamp the velocity to the maximum, x-axis only
         this.velocity.x = MathUtils.clamp(this.velocity.x, -Player.MAX_VELOCITY, Player.MAX_VELOCITY);
-
-        // If the velocity is < 1, set it to 0 and set state to Standing
-        if (Math.abs(this.velocity.x) < 1) {
-            this.velocity.x = 0;
-            if (this.grounded)
-                this.state = Player.State.Standing;
-        }
 
         // multiply by delta time so we know how far we go
         // in this frame
@@ -262,6 +252,10 @@ public class Player extends Entity {
         if (cameraRef != null) {
             cameraRef.position.x = this.position.x;
         }
+
+        // set the state based on the current velocity
+        this.state = Math.abs(velocity.x) <= 0.1 ? State.Standing : State.Walking;
+        this.state = Math.abs(velocity.y) >= 0.1 || !this.grounded ? State.Jumping : this.state;
     }
 
     // Controller controller = Controllers.getCurrent();
