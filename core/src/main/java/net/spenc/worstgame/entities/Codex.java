@@ -19,7 +19,7 @@ public class Codex extends Entity {
 
     @Override
     public void onCollisionEnter(Entity other) {
-        if (!hidden) {
+        if (!hidden && host.hasRemainingCodexes()) {
             if (other instanceof Player) {
                 if (((Player) other).root == null) {
                     hidden = true;
@@ -36,7 +36,7 @@ public class Codex extends Entity {
         }
     }
 
-    public void unhide() {
+    public void refresh() {
         this.hidden = !host.hasRemainingCodexes();
     }
 }

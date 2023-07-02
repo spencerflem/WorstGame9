@@ -268,7 +268,7 @@ public class Player extends Entity {
         for (int i = 0; i < entitiesRef.size; i++) {
             Entity entity = entitiesRef.get(i);
             if (entity instanceof Codex) {
-                ((Codex) entity).unhide();
+                ((Codex) entity).refresh();
             }
         }
     }

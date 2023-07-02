@@ -190,10 +190,10 @@ public class HostApp extends ApplicationAdapter {
         ClientApp app = getClientApp(window);
         Screen oldScreen = app.getScreen();
         Screen newScreen = new WorstScreen(this, level);
-        app.setScreen(newScreen);
         if (oldScreen != null) {
             oldScreen.dispose();
         }
+        app.setScreen(newScreen);
     }
 
     private Array<Entity> getEntities(Lwjgl3Window window) {
@@ -275,6 +275,7 @@ public class HostApp extends ApplicationAdapter {
     }
 
     public void openCodex() {
+        codexCount++;
         ClientApp app = getClientApp(mainWindow);
         Screen oldScreen = app.getScreen();
         Screen newScreen = new CodexScreen(this, codexCount, oldScreen);
@@ -288,6 +289,5 @@ public class HostApp extends ApplicationAdapter {
             oldScreen.dispose();
         }
         app.setScreen(origScreen);
-        codexCount++;
     }
 }

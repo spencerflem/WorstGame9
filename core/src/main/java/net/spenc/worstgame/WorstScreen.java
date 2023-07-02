@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.spenc.worstgame.entities.Chaser;
+import net.spenc.worstgame.entities.Codex;
 import net.spenc.worstgame.entities.Patroller;
 import net.spenc.worstgame.entities.Player;
 
@@ -98,7 +99,6 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
 
     @Override
     public void dispose() {
-        music.stop();
         renderer.dispose();
         host.disposeClient(this);
     }
@@ -296,6 +296,13 @@ public class WorstScreen extends ScreenAdapter implements ClientApp.ClientScreen
         if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
             music.setLooping(true);
             music.play();
+        }
+        for (Entity entity : entities) {
+            if (entity instanceof Codex) {
+                if (!host.hasRemainingCodexes()) {
+                    ((Codex) entity).refresh();
+                }
+            }
         }
     }
 

@@ -245,7 +245,7 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
     private final Texture shootTex2;
     private final Sound loop;
     private final Sound shoot;
-    private final long loopId;
+    private long loopId;
     private final PrefabLoader prefabLoader;
     private float animationElapsed = 0;
     private boolean isFrame1 = true;
@@ -283,11 +283,6 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
         this.loop = host.assets.get(loopSound);
         this.shoot = shootingSound == null? null : host.assets.get(shootingSound);
         this.uri = url == null? null : URI.create(url);
-        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
-            loopId = loop.loop();
-        } else {
-            loopId = 0;
-        }
     }
 
     @Override
@@ -349,7 +344,14 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
     }
 
     @Override
-    public void dispose() {
+    public void show() {
+        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
+            loopId = loop.loop();
+        }
+    }
+
+    @Override
+    public void hide() {
         loop.stop(loopId);
     }
 
