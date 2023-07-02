@@ -17,14 +17,16 @@ public class InterstitialScreen extends ScreenAdapter implements ClientApp.Clien
     private final Viewport viewport;
     private final Texture texture;
     private final Sound sound;
+    private final String nextLevel;
     private long soundId = 0;
 
-    InterstitialScreen(HostApp host, String texture, String sound, String target) {
+    InterstitialScreen(HostApp host, String texture, String sound, String nextLevel) {
         this.host = host;
         this.texture = host.assets.get("textures/" + texture);
         this.sound = host.assets.get("sfx/" + sound);
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(640, 480, camera);
+        this.nextLevel = nextLevel;
     }
 
     @Override
@@ -46,11 +48,14 @@ public class InterstitialScreen extends ScreenAdapter implements ClientApp.Clien
         host.batch.begin();
         host.batch.draw(texture, 0, 0, 640, 480);
         host.batch.end();
+        if (host.justPressed()) {
+            host.setLevel(nextLevel);
+        }
     }
 
     @Override
     public Array<Entity> getEntities() {
-        return null;
+        return entities;
     }
 
     @Override

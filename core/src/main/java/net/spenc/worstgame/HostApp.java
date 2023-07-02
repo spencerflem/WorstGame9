@@ -13,6 +13,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowConfiguration;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -32,6 +34,7 @@ import java.util.Random;
  * Manages shared objects, launching windows, and updating entity state
  */
 public class HostApp extends ApplicationAdapter {
+    private static final String FIRSTLEVEL = "Interstitial:codexbg.png,hotwizard.wav;Level:level1";
     public AssetManager assets;
     public SpriteBatch batch;
 
@@ -43,6 +46,7 @@ public class HostApp extends ApplicationAdapter {
     private Lwjgl3Window overlay;
     private final Random random = new Random();
     private int codexCount = 0;
+    private boolean controllerWasPressed = false;
 
     @Override
     public void create() {
@@ -115,7 +119,7 @@ public class HostApp extends ApplicationAdapter {
                 return true;
             }
         });
-        setLevel((System.getenv("LEVEL") == null) ? "level1" : System.getenv("LEVEL"), window);
+        setLevel((System.getenv("LEVEL") == null) ? FIRSTLEVEL : System.getenv("LEVEL"), window);
         return window;
     }
 
@@ -186,10 +190,20 @@ public class HostApp extends ApplicationAdapter {
         setLevel(level, mainWindow);
     }
 
-    public void setLevel(String level, Lwjgl3Window window) {
+    private void setLevel(String level, Lwjgl3Window window) {
         ClientApp app = getClientApp(window);
         Screen oldScreen = app.getScreen();
-        Screen newScreen = new WorstScreen(this, level);
+        List<String> parts = List.of(level.split(";"));
+        Screen newScreen = null;
+        String[] bobs = parts.get(0).split(":");
+        if (bobs[0].equals("Interstitial")) {
+            String[] bits = bobs[1].split(",");
+            newScreen = new InterstitialScreen(this, bits[0], bits[1], String.join(";", parts.subList(1, parts.size())));
+        } else if (bobs[0].equals("Level")) {
+            newScreen = new WorstScreen(this, bobs[1]);
+        } else if (bobs[0].equals("END")) {
+            Gdx.app.exit();
+        }
         if (oldScreen != null) {
             oldScreen.dispose();
         }
@@ -289,5 +303,21 @@ public class HostApp extends ApplicationAdapter {
             oldScreen.dispose();
         }
         app.setScreen(origScreen);
+    }
+
+    public boolean justPressed() {
+        Controller controller = Controllers.getCurrent();
+        boolean controllerPressed = false;
+        if (controller != null && controller.getButton(controller.getMapping().buttonA)) {
+            if (!controllerWasPressed) {
+                controllerPressed = true;
+            }
+            controllerWasPressed = true;
+        } else {
+            controllerWasPressed = false;
+        }
+        return focusedInput().isKeyJustPressed(Input.Keys.SPACE)
+            || focusedInput().isButtonJustPressed(Input.Buttons.LEFT)
+            || (controllerPressed);
     }
 }

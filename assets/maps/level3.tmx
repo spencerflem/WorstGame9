@@ -28,7 +28,7 @@
   </object>
   <object id="39" name="Portal" type="Portal" x="3264" y="256">
    <properties>
-    <property name="target" value="level1"/>
+    <property name="target" value="Interstitial:codexbg.png,hotwizard.wav;END"/>
    </properties>
    <point/>
   </object>
@@ -169,33 +169,18 @@
    <point/>
   </object>
   <object id="43" name="Codex" type="Codex" x="3026.5" y="152.5">
-   <properties>
-    <property name="target" value="level1"/>
-   </properties>
    <point/>
   </object>
   <object id="44" name="Codex" type="Codex" x="2224.5" y="207">
-   <properties>
-    <property name="target" value="level1"/>
-   </properties>
    <point/>
   </object>
   <object id="45" name="Codex" type="Codex" x="1754" y="277.5">
-   <properties>
-    <property name="target" value="level1"/>
-   </properties>
    <point/>
   </object>
   <object id="46" name="Codex" type="Codex" x="927" y="215">
-   <properties>
-    <property name="target" value="level1"/>
-   </properties>
    <point/>
   </object>
   <object id="47" name="Codex" type="Codex" x="423.5" y="282.5">
-   <properties>
-    <property name="target" value="level1"/>
-   </properties>
    <point/>
   </object>
  </objectgroup>
