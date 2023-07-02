@@ -238,10 +238,12 @@ public class HostApp extends ApplicationAdapter {
         getEntities(overlay).removeValue(entity, true);
         entity.width = 1.5f;
         entity.height = 1.5f;
-        entity.position.set(((WorstScreen) getClientScreen(mainWindow)).getEntrancePosition(new Vector2(
+        if (getClientScreen(mainWindow) instanceof WorstScreen) {
+            entity.position.set(((WorstScreen) getClientScreen(mainWindow)).getEntrancePosition(new Vector2(
                 ((Homer) entity).moveRight ? 0 : getClientApp(mainWindow).getGraphics().getWidth(),
                 ((Homer) entity).targetHeight * getClientApp(mainWindow).getGraphics().getHeight())));
-        getEntities(mainWindow).add(entity);
+            getEntities(mainWindow).add(entity);
+        }
     }
 
     public void getMainWindowTarget(Vector2 vector, boolean moveRight, float height) {
@@ -258,6 +260,18 @@ public class HostApp extends ApplicationAdapter {
 
     public boolean getMainWindowTargetMoveRight(Vector2 position) {
         return position.x <= (mainWindow.getPositionX() + (getClientApp(mainWindow).getGraphics().getWidth() / 2.0));
+    }
+
+    public void closeAllPopups() {
+        for (Lwjgl3Window window : windows) {
+            if (window != mainWindow && window != overlay) {
+                window.closeWindow();
+            }
+        }
+    }
+
+    public boolean hasRemainingCodexes() {
+        return codexCount >= Gdx.files.internal("cutscenes/").list().length;
     }
 
     public void openCodex() {

@@ -11,6 +11,9 @@ public class Codex extends Entity {
 
     public Codex WithHost(HostApp host) {
         this.host = host;
+        if (!host.hasRemainingCodexes()) {
+            this.hidden = true;
+        }
         return this;
     }
 
@@ -34,6 +37,6 @@ public class Codex extends Entity {
     }
 
     public void unhide() {
-        this.hidden = false;
+        this.hidden = host.hasRemainingCodexes();
     }
 }

@@ -49,9 +49,9 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
         this.entry = json.fromJson(CodexEntry.class, text);
         this.tex = host.assets.get(Filenames.CODEXBG.getFilename());
         this.music = host.assets.get("music/" + entry.music);
-        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
-            music.play();
-        }
+//        if (System.getenv("DEV") == null) { // example: DEV=1 sh gradlew run
+//            music.play();
+//        }
         stage = new Stage();
         Table table = new Table();
         Label.LabelStyle style = new Label.LabelStyle();
