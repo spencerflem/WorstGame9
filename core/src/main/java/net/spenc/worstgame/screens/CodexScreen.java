@@ -45,6 +45,9 @@ public class CodexScreen extends ScreenAdapter implements ClientApp.ClientScreen
     private final TypingLabel textLabel;
 
     public CodexScreen(HostApp host, Screen returnScreen) {
+        if (!host.hasRemainingCodexes()) {
+            host.closeCodex(returnScreen);
+        }
         this.host = host;
         this.returnScreen = returnScreen;
         this.camera = new OrthographicCamera();

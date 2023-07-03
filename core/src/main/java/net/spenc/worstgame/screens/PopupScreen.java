@@ -347,13 +347,13 @@ public class PopupScreen extends ScreenAdapter implements ClientApp.ClientScreen
                 }
             }
         }
-        if (uri != null && Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            try {
-                Desktop.getDesktop().browse(uri);
-            } catch (IOException e) {
-                Gdx.app.error("Popup", "open browser", e);
-            }
-        }
+//        if (uri != null && Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+//            try {
+//                Desktop.getDesktop().browse(uri);
+//            } catch (IOException e) {
+//                Gdx.app.error("Popup", "open browser", e);
+//            }
+//        }
         camera.update();
         host.batch.setProjectionMatrix(camera.combined);
         host.batch.begin();

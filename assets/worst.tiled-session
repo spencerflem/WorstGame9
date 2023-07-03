@@ -1,11 +1,25 @@
 {
-    "activeFile": "maps/level3.tmx",
+    "activeFile": "C:/Users/me/Downloads/worstgame9/maps/level1.tmx",
     "expandedProjectPaths": [
         "maps",
         "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "C:/Users/me/Downloads/worstgame9/maps/level1.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1696.9696969696968,
+                "y": 160.60606060606074
+            }
+        },
+        "C:/Users/me/Downloads/worstgame9/maps/level1.tmx#fgtiles-alpha_0": {
+            "scaleInDock": 1
+        },
+        "C:/Users/me/Downloads/worstgame9/maps/level1.tmx#tileSet-hd": {
+            "scaleInDock": 1
+        },
         "maps/level1.tmx": {
             "expandedObjectLayers": [
                 5
@@ -13,8 +27,8 @@
             "scale": 0.75,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 1695.3333333333333,
-                "y": 160.66666666666663
+                "x": 1686.6666666666665,
+                "y": 150.66666666666666
             }
         },
         "maps/level1.tmx#fgtiles-alpha_0": {
@@ -30,8 +44,8 @@
             "scale": 2,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 1103.25,
-                "y": 159.75
+                "x": 1092.5,
+                "y": 156.5
             }
         },
         "maps/level2.tmx#classical_ruin_tiles": {
@@ -59,13 +73,15 @@
     "openFiles": [
         "maps/level2.tmx",
         "maps/level3.tmx",
-        "maps/level1.tmx"
+        "maps/level1.tmx",
+        "C:/Users/me/Downloads/worstgame9/maps/level1.tmx"
     ],
     "project": "worst.tiled-project",
     "property.type": "file",
     "recentFiles": [
         "maps/level2.tmx",
+        "maps/level3.tmx",
         "maps/level1.tmx",
-        "maps/level3.tmx"
+        "C:/Users/me/Downloads/worstgame9/maps/level1.tmx"
     ]
 }
